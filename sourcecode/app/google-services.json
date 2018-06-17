@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "883030996929",
+    "firebase_url": "https://foodr-6f6d1.firebaseio.com",
+    "project_id": "foodr-6f6d1",
+    "storage_bucket": "foodr-6f6d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883030996929:android:a19bb93db3160bf0",
+        "android_client_info": {
+          "package_name": "ateam.foodr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "883030996929-6r0es7ahdl4lr07shhv71nflvdkgqp92.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ateam.foodr",
+            "certificate_hash": "2f9054551049f4e7a7187d2a97b09f6e5e97fa82"
+          }
+        },
+        {
+          "client_id": "883030996929-6o1ehis6vmsoc2t59te0haspvqpccscu.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "883030996929-6o1ehis6vmsoc2t59te0haspvqpccscu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDzVUbvPESj8DVUMYNgPcjLyvQVUusod4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "883030996929-6o1ehis6vmsoc2t59te0haspvqpccscu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
