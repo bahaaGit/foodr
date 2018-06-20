@@ -52,5 +52,12 @@
             android:layout_height="wrap_content"
             android:text="Log in" />
 
+
+        <Switch
+            android:id="@+id/ownerToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log in as restaurant owner?" />
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
