@@ -43,6 +43,9 @@ captures/
 .idea/dictionaries
 .idea/libraries
 
+# Sourcecode
+sourcecode/.idea/*
+
 .idea/caches
 */.idea/*
 
