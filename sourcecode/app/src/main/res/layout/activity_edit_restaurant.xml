@@ -22,13 +22,40 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:ems="10"
-           android:inputType="textPersonName"
-           android:text="Name" />
+           android:inputType="textPersonName" />
+
+       <TextView
+           android:id="@+id/businessIDTextbox"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Business id:"/>
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:inputType="text"/>
 
        <TextView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="Description:" />
+           android:text="Address:"/>
+
+       <EditText
+           android:id="@+id/addressTextbox"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:inputType="textPostalAddress"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Phone number:" />
+
+       <EditText
+           android:id="@+id/phoneTextbox"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:inputType="phone"/>
 
 
    </LinearLayout>
