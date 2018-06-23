@@ -30,10 +30,28 @@
            android:layout_height="wrap_content"
            android:text="Business id:"/>
 
-       <EditText
+       <LinearLayout
            android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:inputType="text"/>
+           android:layout_height="wrap_content">
+
+           <EditText
+               android:id="@+id/businessIDFirstTextbox"
+               android:layout_width="50dp"
+               android:layout_height="wrap_content"
+               android:maxLength="2"
+               android:inputType="number"/>
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="-" />
+           <EditText
+               android:id="@+id/businessIDSecondTextbox"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:maxLength="7"
+               android:inputType="number"/>
+
+       </LinearLayout>
 
        <TextView
            android:layout_width="match_parent"
