@@ -42,6 +42,8 @@ captures/
 .idea/gradle.xml
 .idea/dictionaries
 .idea/libraries
+sourcecode/.idea/misc.xml
+sourcecode/.idea/caches/build_file_checksums.ser
 
 # Sourcecode
 sourcecode/.idea/*
