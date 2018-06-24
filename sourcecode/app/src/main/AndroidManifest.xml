@@ -21,6 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
         </activity>
+        <activity android:name=".RegistrationActivity"
+            android:parentActivityName=".SimplerLoginActivity"
+            >
+        </activity>
         <activity
             android:name=".OwnerRestaurantListActivity"
             android:label="@string/title_activity_owner_restaurant_list"
