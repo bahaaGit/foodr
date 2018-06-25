@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditRestaurantActivity">
+    tools:context=".CreateRestaurantActivity">
 
 
    <LinearLayout
@@ -74,6 +74,12 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:inputType="phone"/>
+
+       <Button
+           android:id="@+id/createButton"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Create" />
 
 
    </LinearLayout>

@@ -3,13 +3,13 @@ package ateam.foodr;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class EditRestaurantActivity extends AppCompatActivity
+public class CreateRestaurantActivity extends AppCompatActivity
 {
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_restaurant);
+        setContentView(R.layout.activity_create_restaurant);
     }
 }

@@ -28,7 +28,7 @@
             android:name=".OwnerRestaurantListActivity"
             android:label="@string/title_activity_owner_restaurant_list"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EditRestaurantActivity"></activity>
+        <activity android:name=".CreateRestaurantActivity"></activity>
     </application>
 
 </manifest>
