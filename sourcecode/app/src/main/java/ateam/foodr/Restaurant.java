@@ -4,11 +4,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class Restaurant
 {
-    public String name;
-    public String description;
+    // Boilerplate accessors
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public String getBusinessNumber() {return businessNumber; }
+    public String getPhoneNumber() { return phoneNumber; }
 
-    public String businessNumber;
-    public String phoneNumber;
+    // Private fields
+    private String name;
+    private String description;
+    private String businessNumber;
+    private String phoneNumber;
 
     // TODO: Location field
     // TODO: Menu array
