@@ -9,21 +9,21 @@ public class Restaurant
     // Boilerplate accessors
     public String getName() { return name; }
     public String getDescription() { return description; }
-    public Address getAddress() {return address;}
+    public String getAddress() {return address;}
     public String getBusinessNumber() {return businessNumber; }
     public String getPhoneNumber() { return phoneNumber; }
 
     // Private fields
     private String name;
     private String description;
-    private Address address;
+    private String address;
     private String businessNumber;
     private String phoneNumber;
 
     // TODO: Menu array
 
     /** Standard boilerplate constructor. */
-    public Restaurant(String name, String description, Address address, String phoneNumber, String businessNumber)
+    public Restaurant(String name, String description, String address, String phoneNumber, String businessNumber)
     {
         this.name = name;
         this.description = description;
