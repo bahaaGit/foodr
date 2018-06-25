@@ -10,7 +10,6 @@ import android.view.View;
 
 public class OwnerRestaurantListActivity extends AppCompatActivity
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
