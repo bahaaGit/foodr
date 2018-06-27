@@ -117,6 +117,8 @@ public class SimplerLoginActivity extends AppCompatActivity
 
                     //Initialize the user object
                     user.setEmail(dataSnapshot.child("email").getValue().toString());
+
+                    //Check if the child exists
                     if (dataSnapshot.hasChild("password_hash"))
                     {
                         user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
