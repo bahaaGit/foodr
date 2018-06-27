@@ -58,34 +58,24 @@ public class CreateRestaurantActivity extends AppCompatActivity
         // Put that information into a Restaurant object
         Restaurant r = new Restaurant(name, "", address, phoneNumber, businessID);
 
-        // TODO: Submit to firebase
-        try
-        {
-            submitToFirebase(r);
-        }
-        catch (InterruptedException e)
-        {
-            String err = "ERROR: InterruptedException\n";
-            err += e.toString();
-            Toast.makeText(getApplicationContext(), "Error: interrupted", Toast.LENGTH_LONG).show();
-        }
+        // Get the user's restaurant list so we can add this restaurant to it.
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        DatabaseReference userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 
-        // Return to the previous activity
-        finish();
+        DatabaseReference restaurantList = userDB.child("Restaurants");
+
+        // Send it to the database
+        restaurantList.setValue(r.toHashMap()).addOnFailureListener((task) ->
+        {
+            Toast.makeText(this, "There is a error",Toast.LENGTH_LONG).show();
+        }).addOnSuccessListener((task) ->
+        {
+            finish();   // Return to the previous activity
+        });
+
+
     }
 
     // Misc methods
-
-    private void submitToFirebase(Restaurant r) throws InterruptedException
-    {
-        // Get this user's list of restaurants so we can add it
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
-
-        DatabaseReference userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-        DatabaseReference restaurantList = userDB.child("Restaurants");
-
-        // Send the restaurant
-        restaurantList.setValue(r.toHashMap()).
-    }
 }
