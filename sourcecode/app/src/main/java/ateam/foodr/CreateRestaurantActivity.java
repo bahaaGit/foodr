@@ -66,10 +66,10 @@ public class CreateRestaurantActivity extends AppCompatActivity
         DatabaseReference restaurantList = userDB.child("Restaurants");
 
         // Send it to the database
-        restaurantList.setValue(r.toHashMap())
+        restaurantList.setValue(r)
 
                 // If it failed, show an error message
-                .addOnFailureListener((task) -> Utils.showToast(this, "Error"))
+                .addOnFailureListener((Exception e) -> Utils.showToast(this, e.getMessage()))
 
                 // If it succeeded, return to the previous Activity
                 .addOnSuccessListener((task) -> finish());

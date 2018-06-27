@@ -37,20 +37,4 @@ public class Restaurant
     // TODO: addFood method
     // TODO: removeFood method
     // TODO: Some way to access the food items
-
-    /**
-     *  Returns a hashmap representation for this object.
-     */
-    public HashMap<String, String> toHashMap()
-    {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("name", name);
-        map.put("description", description);
-        map.put("address", address);
-        map.put("businessNumber", businessNumber);
-        map.put("phoneNumber", phoneNumber);
-        // TODO: food array?
-
-        return map;
-    }
 }
