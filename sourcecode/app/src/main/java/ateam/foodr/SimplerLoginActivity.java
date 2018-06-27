@@ -28,6 +28,9 @@ public class SimplerLoginActivity extends AppCompatActivity
     private EditText lUserPassword;
     private Switch lAdmnBtn;
 
+    //The User Object
+    public static User user;
+
     //FireBase Authentication Linker
     private FirebaseAuth mAuth;
 
@@ -51,6 +54,10 @@ public class SimplerLoginActivity extends AppCompatActivity
 
         //Initialize the progress dialog
         mLoginProgress = new ProgressDialog(this);
+
+        //Initialize the first state of the user object (without identification of user)
+        user = new User();
+        userInit();
 
         //This will initialize the authentication State
 
@@ -95,7 +102,7 @@ public class SimplerLoginActivity extends AppCompatActivity
 
             loginUser(email, password);
 
-            String uid = mAuth.getUid();
+            final String uid = mAuth.getUid();
 
             //The database reference for the user
             mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
@@ -107,6 +114,16 @@ public class SimplerLoginActivity extends AppCompatActivity
 
                     //Check the user type
                     String user_type = dataSnapshot.child("user_type").getValue().toString();
+
+                    //Initialize the user object
+                    user.setEmail(dataSnapshot.child("email").getValue().toString());
+
+                    //Check if the child exists
+                    if (dataSnapshot.hasChild("password_hash"))
+                    {
+                        user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
+                    }
+                    user.setId(uid);
 
                     // If the user marked themselves as an owner, take them to the owner page
                     Switch ownerToggle = findViewById(R.id.login_ownerToggle);
@@ -132,6 +149,9 @@ public class SimplerLoginActivity extends AppCompatActivity
 
                         //Sign out the current user
                         mAuth.signOut();
+
+                        //Return the user object to its initial state
+                        userInit();
                     }
 
                 }
@@ -175,5 +195,15 @@ public class SimplerLoginActivity extends AppCompatActivity
                     }
                 });
 
+    }
+
+    //Initialize the user object
+    public static void userInit()
+    {
+        user.setId("0");
+        user.setPassword_hash("0");
+        String[] restArray = {"null"};
+        user.setRestaurant(restArray);
+        user.setEmail("root@root.com");
     }
 }
