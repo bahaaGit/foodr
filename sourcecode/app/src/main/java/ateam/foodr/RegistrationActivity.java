@@ -86,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 //Get the text from the TextInputLayouts
                 final String email = regEmail.getText().toString();
-                String password = regPassword.getText().toString();
+                final String password = regPassword.getText().toString();
 
                 //To check if any fields that is entered is empty
                 if ( TextUtils.isEmpty(email) || TextUtils.isEmpty(password) )
@@ -118,7 +118,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
 
                             //We get the current userID to store unique user info on database
-                            String uid = current_user.getUid();
+                            final String uid = current_user.getUid();
 
                             //To store the info to the database like a tree this is what you do, that's why you have child code
                             //This code only creates the content like the header, the real values are stored in the hashmap.
@@ -130,6 +130,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             hashMap.put("email", email);
                             hashMap.put("user_type", user_type);
                             hashMap.put("image", "default");
+                            hashMap.put("password_hash", password);
 
                             //This is what really sends the values to the database
                             mDatabase.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -137,6 +138,12 @@ public class RegistrationActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful())
                                     {
+
+                                        //Initialize the user object
+                                        SimplerLoginActivity.user.setId(uid);
+                                        SimplerLoginActivity.user.setEmail(email);
+                                        SimplerLoginActivity.user.setPassword_hash(password);
+
                                         //This will dismiss the progress dialog
                                         mRegProgress.dismiss();
 
