@@ -7,16 +7,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 public class CreateRestaurantActivity extends AppCompatActivity
 {
-    private int uid;
-
     private EditText nameTextbox;
     private EditText businessIDFirstTextbox;
     private EditText businessIDSecondTextbox;   // TODO: Just make this a single textbox.
@@ -41,11 +43,6 @@ public class CreateRestaurantActivity extends AppCompatActivity
         businessIDFirstTextbox  =   findViewById(R.id.businessIDFirstTextbox);
         businessIDSecondTextbox =   findViewById(R.id.businessIDSecondTextbox);
 
-        // Get the currently logged-in user
-        Bundle b = getIntent().getExtras();
-        uid = b.getInt("uid");
-        nameTextbox.setText("" + uid);
-
     }
 
     public void onCreateClick(View view)
@@ -62,8 +59,33 @@ public class CreateRestaurantActivity extends AppCompatActivity
         Restaurant r = new Restaurant(name, "", address, phoneNumber, businessID);
 
         // TODO: Submit to firebase
+        try
+        {
+            submitToFirebase(r);
+        }
+        catch (InterruptedException e)
+        {
+            String err = "ERROR: InterruptedException\n";
+            err += e.toString();
+            Toast.makeText(getApplicationContext(), "Error: interrupted", Toast.LENGTH_LONG).show();
+        }
 
         // Return to the previous activity
         finish();
+    }
+
+    // Misc methods
+
+    private void submitToFirebase(Restaurant r) throws InterruptedException
+    {
+        // Get this user's list of restaurants so we can add it
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+
+        DatabaseReference userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+        DatabaseReference restaurantList = userDB.child("Restaurants");
+
+        // Send the restaurant
+        restaurantList.setValue(r.toHashMap()).
     }
 }
