@@ -24,6 +24,7 @@ import java.util.Map;
 public class OwnerRestaurantListActivity extends AppCompatActivity implements ChildEventListener
 {
     private RecyclerView recycler;
+    private RestaurantAdapter adapter;
     private List<Restaurant> restaurants = new ArrayList<>();
 
     @Override
@@ -55,7 +56,7 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
         recycler.setLayoutManager(new LinearLayoutManager(this));
 
         // Set up the adapter
-        RestaurantAdapter adapter = new RestaurantAdapter(this, restaurants);
+        adapter = new RestaurantAdapter(this, restaurants);
         // TODO: Connect a click listener to the adapter
         recycler.setAdapter(adapter);
     }
@@ -70,22 +71,15 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
     public void onCancelled(DatabaseError error)
     {
         // TODO: Stuff
+
     }
 
     public void onChildAdded(DataSnapshot snapshot, String prevChildName)
     {
+        // Add it to the list
         Restaurant r = snapshot.getValue(Restaurant.class);
         restaurants.add(r);
-
-        // Add a textview to the list
-        // TODO: Make it a button or something
-        /*TextView tv = new TextView(this);
-        list.addView(tv);
-
-        // Associate the textview with the Restaurant object
-        Restaurant r = snapshot.getValue(Restaurant.class);
-        tv.setTag(r);
-        tv.setText(r.getName());*/
+        adapter.notifyDataSetChanged();
     }
 
     public void onChildChanged(DataSnapshot snapshot, String prevChildName)

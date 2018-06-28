@@ -2,6 +2,7 @@ package ateam.foodr;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 
@@ -33,7 +34,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         Restaurant r = data.get(position);
-        holder.myTextView.setText(r.getName());
+        holder.nameTextbox.setText(r.getName());
+        Log.d("RestaurantAdapter", r.getName());
     }
 
     // total number of rows
@@ -47,12 +49,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        TextView myTextView;
+        TextView nameTextbox;
 
         ViewHolder(View itemView)
         {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.nameTextbox);
+            nameTextbox = itemView.findViewById(R.id.nameTextbox);
             itemView.setOnClickListener(this);
         }
 
