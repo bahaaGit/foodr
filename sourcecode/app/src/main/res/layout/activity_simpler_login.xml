@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".SimplerLoginActivity">
 
-    <Switch
+
+<Switch
         android:id="@+id/login_ownerToggle"
         android:layout_width="364dp"
         android:layout_height="wrap_content"

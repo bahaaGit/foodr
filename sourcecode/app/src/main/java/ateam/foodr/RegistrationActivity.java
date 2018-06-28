@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +34,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText regPassword;
     private Button regButton;
     private Switch regTog;
+    private android.support.v7.widget.Toolbar toolbar;
 
     //Progress Dialog that will apper when something loads
     private ProgressDialog mRegProgress;
@@ -54,14 +56,16 @@ public class RegistrationActivity extends AppCompatActivity {
         //Initialize the progress dialog
         mRegProgress = new ProgressDialog(this);
 
-        //This puts the arrow to go back to the view that we set in the AndroidManifest.xml file specificly for this view
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         //Get the user info from the UI
         regEmail =  (EditText) findViewById(R.id.reg_emailBox);
         regPassword = (EditText) findViewById(R.id.reg_passwordBox);
         regButton = (Button) findViewById(R.id.reg_regButton);
         regTog = (Switch) findViewById(R.id.reg_tog);
+        toolbar =  findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+
+        //This puts the arrow to go back to the view that we set in the AndroidManifest.xml file specificly for this view
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Set the user type to be regular
         user_type = "normal";
