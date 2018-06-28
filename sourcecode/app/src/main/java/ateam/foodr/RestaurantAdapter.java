@@ -10,11 +10,11 @@ import java.util.List;
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder>
 {
 
-    private List<String> data;
+    private List<Restaurant> data;
     private LayoutInflater inflater;
     private ItemClickListener clickListener;
 
-    public RestaurantAdapter(Context context, List<String> data)
+    public RestaurantAdapter(Context context, List<Restaurant> data)
     {
         this.inflater = LayoutInflater.from(context);
         this.data = data;
@@ -32,8 +32,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-        String animal = data.get(position);
-        holder.myTextView.setText(animal);
+        Restaurant r = data.get(position);
+        holder.myTextView.setText(r.getName());
     }
 
     // total number of rows
@@ -65,13 +65,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     }
 
     // convenience method for getting data at click position
-    String getItem(int id)
+    Restaurant getItem(int id)
     {
         return data.get(id);
     }
 
     // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener)
+    public void setClickListener(ItemClickListener itemClickListener)
     {
         this.clickListener = itemClickListener;
     }
