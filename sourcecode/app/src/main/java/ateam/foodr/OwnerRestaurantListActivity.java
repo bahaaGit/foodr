@@ -57,7 +57,7 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
 
         // Set up the adapter
         adapter = new RestaurantAdapter(this, restaurants);
-        // TODO: Connect a click listener to the adapter
+        adapter.setClickListener(this::onItemClick);
         recycler.setAdapter(adapter);
     }
 
@@ -95,5 +95,12 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
     public void onChildRemoved(DataSnapshot snapshot)
     {
 
+    }
+
+    public void onItemClick(View v, int pos)
+    {
+        // View that restaurant's menu
+        Intent menuIntent = new Intent(this, UserFoodMenu.class);
+        startActivity(menuIntent);
     }
 }
