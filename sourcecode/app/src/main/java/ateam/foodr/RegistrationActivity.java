@@ -179,6 +179,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                             .addOnFailureListener((Exception e) ->
                                             {
                                                 Utils.showToast(RegistrationActivity.this, e.getMessage());
+                                                mRegProgress.dismiss();
                                             });
 
 

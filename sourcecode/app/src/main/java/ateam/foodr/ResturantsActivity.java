@@ -62,16 +62,20 @@ public class ResturantsActivity extends AppCompatActivity {
                     public void onChildAdded(DataSnapshot dataSnapshot, String s)
                     {
                         // Add this restaurant to the list
-                        try {
+                        Restaurant r = null;
+                        try
+                        {
                             Log.d("Restaurant snapshot: ", dataSnapshot.toString());
-                            Restaurant r = dataSnapshot.getValue(Restaurant.class);
-                            resturantList.add(r);
-                            adapter.notifyDataSetChanged();
+                            r = dataSnapshot.getValue(Restaurant.class);
+
                         }
                         catch (Exception e)
                         {
                             // TODO: This is a big no-no, but we're in a hurry.
+                            return;
                         }
+                        resturantList.add(r);
+                        adapter.notifyDataSetChanged();
 
                     }
 
