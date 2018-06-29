@@ -42,11 +42,17 @@ public class SimplerLoginActivity extends AppCompatActivity
     //Progress Dialog that will apper when something loads
     private ProgressDialog mLoginProgress;
 
+    //The variable to check if there is a error
+    private int error;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simpler_login);
+
+        //Set the error to be 0
+        error = 0;
 
         //Initialize the registration button for the login page
         switchRegBtn = (Button) findViewById(R.id.log_regPgBtn);
@@ -117,8 +123,7 @@ public class SimplerLoginActivity extends AppCompatActivity
 
     }
 
-    public void onLoginClick(View view)
-    {
+    public void onLoginClick(View view) {
 
         //Get the parameters for sign in
         String email = lUserEmail.getText().toString();
@@ -143,7 +148,14 @@ public class SimplerLoginActivity extends AppCompatActivity
 
             loginUser(email, password);
 
-            final String uid = mAuth.getUid();
+            //If there is a error
+            if (error == 1)
+                return;
+
+            String uid = mAuth.getUid();
+
+            if (uid == null)
+                return;
 
             //The database reference for the user
             mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
@@ -153,6 +165,7 @@ public class SimplerLoginActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
+                    String uid1 = mAuth.getUid();
                     //Check the user type
                     String user_type = dataSnapshot.child("user_type").getValue().toString();
 
@@ -164,7 +177,7 @@ public class SimplerLoginActivity extends AppCompatActivity
                     {
                         user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
                     }
-                    user.setId(uid);
+                    user.setId(uid1);
 
                     // If the user marked themselves as an owner, take them to the owner page
                     Switch ownerToggle = findViewById(R.id.login_ownerToggle);
@@ -229,6 +242,8 @@ public class SimplerLoginActivity extends AppCompatActivity
 
                             //Get rid of the progress dialog
                             mLoginProgress.hide();
+
+                            error = 1;
 
                             //Print the text to say that there is a error
                             Toast.makeText(SimplerLoginActivity.this, "We couldn't find your account!",Toast.LENGTH_LONG).show();
