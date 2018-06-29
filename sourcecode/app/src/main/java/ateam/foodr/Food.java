@@ -2,7 +2,7 @@ package ateam.foodr;
 
 public class Food {
     private int image;
-    private String name, price, desc;
+    private String name, price, desc;   // TODO: Make price an integer
 
 
 
