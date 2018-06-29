@@ -23,8 +23,8 @@ public class UserFoodMenu extends AppCompatActivity {
         // Populate the food list
         foodList = new ArrayList<>();
 
-        foodList.add(new Food(R.drawable.topmenubar2,"Food1","23","The is good food"));
-        foodList.add(new Food(R.drawable.topmenubar2,"Food1","23","The is good food"));
+        foodList.add(new Food("url","Food1","23","The is good food"));
+        foodList.add(new Food("url","Food1","23","The is good food"));
 
         // Set up the recycler view
         FoodAdapter adapter = new FoodAdapter(this,foodList);
