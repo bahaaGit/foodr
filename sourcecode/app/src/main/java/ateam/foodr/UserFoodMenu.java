@@ -23,8 +23,9 @@ public class UserFoodMenu extends AppCompatActivity {
         // Populate the food list
         foodList = new ArrayList<>();
 
-        foodList.add(new Food("url","Food1","23","The is good food"));
-        foodList.add(new Food("url","Food1","23","The is good food"));
+        foodList.add(new Food("url",R.drawable.topmenubar2,"Food1","The is good food","desc"));
+        foodList.add(new Food("url",R.drawable.topmenubar2,"Food1","The is good food","desc"));
+
 
         // Set up the recycler view
         FoodAdapter adapter = new FoodAdapter(this,foodList);
@@ -38,3 +39,13 @@ public class UserFoodMenu extends AppCompatActivity {
 
     }
 }
+
+
+
+   /* LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
+            LinearLayoutManager.VERTICAL, false);
+
+    recyclerView.setLayoutManager(linearLayoutManager);
+
+        ResturantAdapter resturantAdapter = new ResturantAdapter(this,resturantList);
+        recyclerView.setAdapter(resturantAdapter);*/

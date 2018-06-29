@@ -56,7 +56,7 @@ public class CreateRestaurantActivity extends AppCompatActivity
         String phoneNumber = phoneTextbox.getText().toString();
 
         // Put that information into a Restaurant object
-        Restaurant r = new Restaurant(name, "", address, phoneNumber, businessID);
+        Restaurant r = new Restaurant("sss",9, "sss","sss", "ss", "ss","ss");
 
         // Get the user's restaurant list so we can add this restaurant to it.
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

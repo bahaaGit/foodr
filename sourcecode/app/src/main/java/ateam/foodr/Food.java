@@ -1,24 +1,31 @@
 package ateam.foodr;
 
 public class Food {
-    private String image;
-    private String name, price, desc;   // TODO: Make price an integer
+
+    private int image;
+    // TODO: Make price an integer
+
+    private int rate;
+    private String name, price, desc, Imageurl;
+
 
     /** This constructor is necessary so Firebase will deserialize this class */
     public Food() {}
 
-    public Food(String image, String name, String price, String desc) {
+
+    public Food(String Imageurl,int image, String name, String price, String desc) {
+        this.Imageurl = Imageurl;
         this.image = image;
         this.name = name;
-        this.price = price;
+        this.rate =rate;
         this.desc = desc;
     }
 
-    public String getImage() {
+    public int getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(int image) {
         this.image = image;
     }
 
@@ -30,12 +37,12 @@ public class Food {
         this.name = name;
     }
 
-    public String getPrice() {
-        return price;
+    public int getRate() {
+        return rate;
     }
 
     public void setPrice(String price) {
-        this.price = price;
+        this.rate = rate;
     }
 
     public String getDesc() {
@@ -44,5 +51,13 @@ public class Food {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getImageurl() {
+        return Imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        Imageurl = imageurl;
     }
 }

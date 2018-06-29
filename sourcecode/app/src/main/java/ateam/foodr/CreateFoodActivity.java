@@ -123,6 +123,7 @@ public class CreateFoodActivity extends AppCompatActivity
         Food f = new Food
         (
                 url,     // TODO: Fill this in
+                0,
                 nameTextbox.getText().toString(),
                 priceTextbox.getText().toString(),     // TODO: Make this an int
                 descTextbox.getText().toString()
