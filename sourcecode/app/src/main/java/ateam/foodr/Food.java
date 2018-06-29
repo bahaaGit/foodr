@@ -2,9 +2,10 @@ package ateam.foodr;
 
 public class Food {
     private int image;
-    private String name, price, desc;
+    private String name, price, desc;   // TODO: Make price an integer
 
-
+    /** This constructor is necessary so Firebase will deserialize this class */
+    public Food() {}
 
     public Food(int image, String name, String price, String desc) {
         this.image = image;

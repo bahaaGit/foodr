@@ -2,8 +2,6 @@ package ateam.foodr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,13 +19,15 @@ import com.google.firebase.database.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class OwnerRestaurantListActivity extends AppCompatActivity implements ChildEventListener
 {
     private RecyclerView recycler;
     private RestaurantAdapter adapter;
     private List<Restaurant> restaurants = new ArrayList<>();
+    private List<String> restaurantKeys  = new ArrayList<>();   // HACK: Storing the keys in a parallel array
+                                                                // so we can pass them by reference to
+                                                                // another activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,7 +59,7 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
 
         // Set up the adapter
         adapter = new RestaurantAdapter(this, restaurants);
-        // TODO: Connect a click listener to the adapter
+        adapter.setClickListener(this::onItemClick);
         recycler.setAdapter(adapter);
     }
 
@@ -117,6 +114,9 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
         Restaurant r = snapshot.getValue(Restaurant.class);
         restaurants.add(r);
         adapter.notifyDataSetChanged();
+
+        // HACK: Save the restaurant's key so we can pass it to other activities
+        restaurantKeys.add(snapshot.getRef().toString());
     }
 
     public void onChildChanged(DataSnapshot snapshot, String prevChildName)
@@ -131,6 +131,17 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
 
     public void onChildRemoved(DataSnapshot snapshot) {
 
+    }
+
+    public void onItemClick(View v, int pos)
+    {
+        // View that restaurant's menu
+        Intent menuIntent = new Intent(this, OwnerFoodMenu.class);
+
+        // HACK: Pass the restaurant's key to the next activity so it knows what food to get.
+        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, restaurantKeys.get(pos));
+
+        startActivity(menuIntent);
     }
 }
 

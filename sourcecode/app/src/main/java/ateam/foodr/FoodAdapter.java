@@ -44,13 +44,12 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         price = holder.item_price;
         desc = holder.item_desc;
 
-        image.setImageResource(foodItem.getImage());
+        // TODO: Re-enable this
+        //image.setImageResource(foodItem.getImage());
 
         name.setText(foodItem.getName());
         price.setText(foodItem.getPrice());
         desc.setText(foodItem.getDesc());
-
-
     }
 
     @Override
