@@ -78,8 +78,6 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
         restaurants.add(r);
         adapter.notifyDataSetChanged();
 
-        Log.d("Added child", snapshot.getRef().toString());
-
         // HACK: Save the restaurant's key so we can pass it to other activities
         restaurantKeys.add(snapshot.getRef().toString());
     }
