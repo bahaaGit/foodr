@@ -26,6 +26,9 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
     private RecyclerView recycler;
     private RestaurantAdapter adapter;
     private List<Restaurant> restaurants = new ArrayList<>();
+    private List<String> restaurantKeys  = new ArrayList<>();   // HACK: Storing the keys in a parallel array
+                                                                // so we can pass them by reference to
+                                                                // another activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -80,6 +83,9 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
         Restaurant r = snapshot.getValue(Restaurant.class);
         restaurants.add(r);
         adapter.notifyDataSetChanged();
+
+        // HACK: Save the restaurant's key so we can pass it to other activities
+        restaurantKeys.add(snapshot.getKey());
     }
 
     public void onChildChanged(DataSnapshot snapshot, String prevChildName)
@@ -101,6 +107,10 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
     {
         // View that restaurant's menu
         Intent menuIntent = new Intent(this, OwnerFoodMenu.class);
+
+        // HACK: Pass the restaurant's key to the next activity so it knows what food to get.
+        menuIntent.putExtra(OwnerFoodMenu.RESTAURANT_KEY, restaurantKeys.get(pos));
+
         startActivity(menuIntent);
     }
 }

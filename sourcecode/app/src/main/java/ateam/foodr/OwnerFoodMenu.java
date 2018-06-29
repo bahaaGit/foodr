@@ -11,6 +11,10 @@ import java.util.ArrayList;
 
 public class OwnerFoodMenu extends AppCompatActivity
 {
+    public static final String RESTAURANT_KEY = "restaurantKey";
+
+    private String restaurantKey;
+
     private RecyclerView recyclerView;
     private ArrayList<Food> foodList = new ArrayList<>();
 
@@ -19,6 +23,10 @@ public class OwnerFoodMenu extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_owner_food_menu);
+
+        // Get the restaurant key as a parameter
+        restaurantKey = getIntent().getStringExtra(RESTAURANT_KEY);
+        Utils.showToast(this, restaurantKey);
 
         // Set up the recycler view
         FoodAdapter adapter = new FoodAdapter(this,foodList);
@@ -29,6 +37,8 @@ public class OwnerFoodMenu extends AppCompatActivity
         recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(rvLinearLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        // TODO: Populate the food list from Firebase
     }
 
     public void onAddButtonClick(View view)
