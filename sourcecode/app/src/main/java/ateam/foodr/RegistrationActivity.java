@@ -113,71 +113,79 @@ public class RegistrationActivity extends AppCompatActivity {
                     mRegProgress.show();
 
                     //Finally register the user
-                    mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-
-                            /** From here the user info will be sent to the database **/
-                            //We need to get the id of the user to store the user private info on database accordingly.
-                            FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
-
-                            //We get the current userID to store unique user info on database
-                            final String uid = current_user.getUid();
-
-                            //To store the info to the database like a tree this is what you do, that's why you have child code
-                            //This code only creates the content like the header, the real values are stored in the hashmap.
-                            mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-
-                            //In database the values are stored like <key, value> consequently you have to send the values like that
-                            //That is why we are using a hashmap
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("email", email);
-                            hashMap.put("user_type", user_type);
-                            hashMap.put("image", "default");
-                            hashMap.put("password_hash", password);
-
-                            //This is what really sends the values to the database
-                            mDatabase.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>()
+                            {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful())
-                                    {
+                                public void onSuccess(AuthResult authResult) {
 
-                                        //Initialize the user object
-                                        SimplerLoginActivity.user.setId(uid);
-                                        SimplerLoginActivity.user.setEmail(email);
-                                        SimplerLoginActivity.user.setPassword_hash(password);
+                                    /** From here the user info will be sent to the database **/
+                                    //We need to get the id of the user to store the user private info on database accordingly.
+                                    FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
 
-                                        //This will dismiss the progress dialog
-                                        mRegProgress.dismiss();
+                                    //We get the current userID to store unique user info on database
+                                    final String uid = current_user.getUid();
 
-                                        //if the user is an admin switch to the admin page
-                                        if (user_type.equals("admin"))
-                                        {
-                                            //Check if the current user is marked as a admin
-                                            Intent ownerPageIntent = new Intent(RegistrationActivity.this, OwnerRestaurantListActivity.class);
+                                    //To store the info to the database like a tree this is what you do, that's why you have child code
+                                    //This code only creates the content like the header, the real values are stored in the hashmap.
+                                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 
-                                            //This line of code makes sure that the user can't go back to the registration page using the phone back button
-                                            ownerPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    //In database the values are stored like <key, value> consequently you have to send the values like that
+                                    //That is why we are using a hashmap
+                                    HashMap<String, String> hashMap = new HashMap<>();
+                                    hashMap.put("email", email);
+                                    hashMap.put("user_type", user_type);
+                                    hashMap.put("image", "default");
+                                    hashMap.put("password_hash", password);
 
-                                            //Actually switches the UI
-                                            startActivity(ownerPageIntent);
+                                    //This is what really sends the values to the database
+                                    mDatabase.setValue(hashMap)
+                                            .addOnCompleteListener((task) ->
+                                            {
+                                                if (task.isSuccessful())
+                                                {
 
-                                            finish();
-                                        }
-                                    }
-                                    else
-                                        {
-                                            //If there is a error than get rod of the progress dialog
-                                            mRegProgress.hide();
-                                            //Print the text to say that there is a error
-                                            Toast.makeText(RegistrationActivity.this, "There is a error",Toast.LENGTH_LONG).show();
-                                        }
+                                                    //Initialize the user object
+                                                    SimplerLoginActivity.user.setId(uid);
+                                                    SimplerLoginActivity.user.setEmail(email);
+                                                    SimplerLoginActivity.user.setPassword_hash(password);
+
+                                                    //This will dismiss the progress dialog
+                                                    mRegProgress.dismiss();
+
+                                                    //if the user is an admin switch to the admin page
+                                                    if (user_type.equals("admin"))
+                                                    {
+                                                        //Check if the current user is marked as a admin
+                                                        Intent ownerPageIntent = new Intent(RegistrationActivity.this, OwnerRestaurantListActivity.class);
+
+                                                        //This line of code makes sure that the user can't go back to the registration page using the phone back button
+                                                        ownerPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                                        //Actually switches the UI
+                                                        startActivity(ownerPageIntent);
+
+                                                        finish();
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    //If there is a error than get rod of the progress dialog
+                                                    mRegProgress.hide();
+                                                    //Print the text to say that there is a error
+                                                    Toast.makeText(RegistrationActivity.this, "There is a error",Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                            .addOnFailureListener((Exception e) ->
+                                            {
+                                                Utils.showToast(RegistrationActivity.this, e.getMessage());
+                                            });
+
+
                                 }
-                            });
+                            })
 
-                        }
-                    });
+                            .addOnFailureListener((Exception e) -> Utils.showToast(RegistrationActivity.this, e.getMessage()));
 
                 }
             }
