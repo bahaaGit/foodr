@@ -48,9 +48,10 @@ public class CreateFoodActivity extends AppCompatActivity
 
         // Send that object to firebase
         DatabaseReference restaurant = FirebaseDatabase.getInstance().getReferenceFromUrl(restaurantKey);
-        DatabaseReference foodRef = restaurant.push();
+        DatabaseReference foodList = restaurant.child("FoodMenu");
+        DatabaseReference newFood = foodList.push();
 
-        foodRef.setValue(f)
+        newFood.setValue(f)
                 // Show an error message on failure
                 .addOnFailureListener( (Exception e) -> Utils.showToast(this, e.getMessage()) )
 
