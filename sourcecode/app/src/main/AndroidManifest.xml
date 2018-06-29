@@ -39,7 +39,8 @@
             -->
         </activity>
         <activity android:name=".CreateRestaurantActivity" />
-        <activity android:name=".CreateFoodActivity"></activity>
+        <activity android:name=".CreateFoodActivity" />
+        <activity android:name=".OwnerFoodMenu"></activity>
     </application>
 
 </manifest>

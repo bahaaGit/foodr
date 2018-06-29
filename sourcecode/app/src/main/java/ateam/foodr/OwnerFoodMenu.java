@@ -9,22 +9,16 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-public class UserFoodMenu extends AppCompatActivity {
-
-    RecyclerView recyclerView;
-
-    ArrayList<Food> foodList;
+public class OwnerFoodMenu extends AppCompatActivity
+{
+    private RecyclerView recyclerView;
+    private ArrayList<Food> foodList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_food_menu);
-
-        // Populate the food list
-        foodList = new ArrayList<>();
-
-        foodList.add(new Food(R.drawable.topmenubar2,"Food1","23","The is good food"));
-        foodList.add(new Food(R.drawable.topmenubar2,"Food1","23","The is good food"));
+        setContentView(R.layout.activity_owner_food_menu);
 
         // Set up the recycler view
         FoodAdapter adapter = new FoodAdapter(this,foodList);
@@ -35,6 +29,11 @@ public class UserFoodMenu extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(rvLinearLayoutManager);
         recyclerView.setAdapter(adapter);
+    }
 
+    public void onAddButtonClick(View view)
+    {
+        Intent createFoodIntent = new Intent(this, CreateFoodActivity.class);
+        startActivity(createFoodIntent);
     }
 }

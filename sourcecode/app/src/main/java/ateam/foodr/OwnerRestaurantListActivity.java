@@ -100,7 +100,7 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
     public void onItemClick(View v, int pos)
     {
         // View that restaurant's menu
-        Intent menuIntent = new Intent(this, UserFoodMenu.class);
+        Intent menuIntent = new Intent(this, OwnerFoodMenu.class);
         startActivity(menuIntent);
     }
 }
