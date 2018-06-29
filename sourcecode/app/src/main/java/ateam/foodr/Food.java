@@ -1,15 +1,15 @@
 package ateam.foodr;
 
 public class Food {
-    private int image;
+    private int image,rate;
     private String name, price, desc;
 
 
 
-    public Food(int image, String name, String price, String desc) {
+    public Food(int image, String name, String desc,int rate) {
         this.image = image;
         this.name = name;
-        this.price = price;
+        this.rate =rate;
         this.desc = desc;
     }
 
@@ -29,12 +29,12 @@ public class Food {
         this.name = name;
     }
 
-    public String getPrice() {
-        return price;
+    public int getRate() {
+        return rate;
     }
 
     public void setPrice(String price) {
-        this.price = price;
+        this.rate = rate;
     }
 
     public String getDesc() {

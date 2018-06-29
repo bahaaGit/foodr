@@ -22,8 +22,8 @@ public class UserFoodMenu extends AppCompatActivity {
 
         foodList = new ArrayList<>();
 
-        foodList.add(new Food(R.drawable.topmenubar2,"Food1","23","The is good food"));
-        foodList.add(new Food(R.drawable.topmenubar2,"Food1","23","The is good food"));
+        foodList.add(new Food(R.drawable.topmenubar2,"Food1","The is good food",4));
+        foodList.add(new Food(R.drawable.topmenubar2,"Food1","The is good food",23));
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -37,3 +37,13 @@ public class UserFoodMenu extends AppCompatActivity {
 
     }
 }
+
+
+
+   /* LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
+            LinearLayoutManager.VERTICAL, false);
+
+    recyclerView.setLayoutManager(linearLayoutManager);
+
+        ResturantAdapter resturantAdapter = new ResturantAdapter(this,resturantList);
+        recyclerView.setAdapter(resturantAdapter);*/

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FoodViewActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:padding="10dp"
+        android:weightSum="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/idFoodImg"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/topmenubar2" />
+
+        <TextView
+            android:id="@+id/idFoodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/idFoodImg"
+            android:layout_marginBottom="0dp"
+            android:padding="5dp"
+            android:text="Name"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
+
+        <RatingBar
+            android:id="@+id/idFoodRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/idFoodName"
+            android:numStars="5"
+            tools:layout_editor_absoluteX="72dp"
+            tools:layout_editor_absoluteY="145dp" />
+
+        <TextView
+            android:id="@+id/idFoodDescTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/idFoodRatingBar"
+            android:layout_marginBottom="0dp"
+            android:padding="5dp"
+            android:text="Ingredients"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/idFoodDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/idFoodDescTitle"
+            android:layout_marginBottom="0dp"
+            android:padding="5dp"
+            android:text="Tomato tomato atoamma "
+            android:textSize="18sp"
+            android:textStyle="bold|italic" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="39dp"
+            android:layout_marginEnd="27dp"
+            android:src="@drawable/commentplus"
+            app:fabSize="normal" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
