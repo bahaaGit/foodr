@@ -21,6 +21,9 @@ public class Restaurant
 
     // TODO: Menu array
 
+    /** This constructor is required for Firebase to automatically serialize it */
+    public Restaurant() {}
+
     /** Standard boilerplate constructor. */
     public Restaurant(int image, String name, String description, String address, String phoneNumber, String businessNumber)
     {

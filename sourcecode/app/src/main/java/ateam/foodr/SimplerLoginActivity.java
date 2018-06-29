@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,15 +37,22 @@ public class SimplerLoginActivity extends AppCompatActivity
 
     //This is the link to the database
     private DatabaseReference mDatabase;
+    private DatabaseReference uDatabase;
 
     //Progress Dialog that will apper when something loads
     private ProgressDialog mLoginProgress;
+
+    //The variable to check if there is a error
+    private int error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simpler_login);
+
+        //Set the error to be 0
+        error = 0;
 
         //Initialize the registration button for the login page
         switchRegBtn = (Button) findViewById(R.id.log_regPgBtn);
@@ -63,6 +71,45 @@ public class SimplerLoginActivity extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
 
+        //Check if a user is logged in
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        //If a user exists
+        if (currentUser != null)
+        {
+
+            String uid = currentUser.getUid();
+
+            uDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+
+            uDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    String status = dataSnapshot.child("user_type").getValue().toString();
+                    if (status.equals("admin"))
+                    {
+                        Intent intent = new Intent(SimplerLoginActivity.this, OwnerRestaurantListActivity.class);
+
+                        //This line of code makes sure that the user can't go back to the registration page using the phone back button
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                        //Actually switches the UI
+                        startActivity(intent);
+
+                        finish();
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
         //When the user wants to switch to the registration view
         switchRegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,8 +123,7 @@ public class SimplerLoginActivity extends AppCompatActivity
 
     }
 
-    public void onLoginClick(View view)
-    {
+    public void onLoginClick(View view) {
 
         //Get the parameters for sign in
         String email = lUserEmail.getText().toString();
@@ -102,7 +148,14 @@ public class SimplerLoginActivity extends AppCompatActivity
 
             loginUser(email, password);
 
-            final String uid = mAuth.getUid();
+            //If there is a error
+            if (error == 1)
+                return;
+
+            String uid = mAuth.getUid();
+
+            if (uid == null)
+                return;
 
             //The database reference for the user
             mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
@@ -112,6 +165,7 @@ public class SimplerLoginActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
+                    String uid1 = mAuth.getUid();
                     //Check the user type
                     String user_type = dataSnapshot.child("user_type").getValue().toString();
 
@@ -123,7 +177,7 @@ public class SimplerLoginActivity extends AppCompatActivity
                     {
                         user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
                     }
-                    user.setId(uid);
+                    user.setId(uid1);
 
                     // If the user marked themselves as an owner, take them to the owner page
                     Switch ownerToggle = findViewById(R.id.login_ownerToggle);
@@ -188,6 +242,8 @@ public class SimplerLoginActivity extends AppCompatActivity
 
                             //Get rid of the progress dialog
                             mLoginProgress.hide();
+
+                            error = 1;
 
                             //Print the text to say that there is a error
                             Toast.makeText(SimplerLoginActivity.this, "We couldn't find your account!",Toast.LENGTH_LONG).show();

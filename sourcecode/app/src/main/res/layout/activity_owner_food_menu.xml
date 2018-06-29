@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".UserFoodMenu">
-    
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:background="@color/colorWhitish"
         android:theme="@style/AppTheme">
-        
+
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="250dp"
@@ -22,7 +22,7 @@
             app:expandedTitleTextAppearance="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            
+
             <ImageButton
                 android:background="@color/colorWhitish"
                 android:layout_width="match_parent"
@@ -53,5 +53,15 @@
         </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="onAddButtonClick"
+        app:layout_anchor="@+id/nestedScrollView"
+        app:layout_anchorGravity="right|bottom"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 </android.support.design.widget.CoordinatorLayout>

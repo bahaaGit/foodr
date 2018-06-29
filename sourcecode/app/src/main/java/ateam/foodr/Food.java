@@ -1,10 +1,14 @@
 package ateam.foodr;
 
 public class Food {
+
     private int image,rate;
     private String name, price, desc;
 
 
+
+    /** This constructor is necessary so Firebase will deserialize this class */
+    public Food() {}
 
     public Food(int image, String name, String desc,int rate) {
         this.image = image;
