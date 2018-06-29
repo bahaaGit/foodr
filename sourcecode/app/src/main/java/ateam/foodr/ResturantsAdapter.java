@@ -43,7 +43,8 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
         address = holder.resturantLoc;
 
 
-        image.setImageResource(resturantItem.getImage());
+        // TODO: Re-enable this after we fix it.
+        // image.setImageResource(resturantItem.getImage());
         name.setText(resturantItem.getName());
         address.setText(resturantItem.getAddress());
     }

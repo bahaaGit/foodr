@@ -123,7 +123,8 @@ public class SimplerLoginActivity extends AppCompatActivity
 
     }
 
-    public void onLoginClick(View view) {
+    public void onLoginClick(View view)
+    {
 
         //Get the parameters for sign in
         String email = lUserEmail.getText().toString();
@@ -197,15 +198,13 @@ public class SimplerLoginActivity extends AppCompatActivity
                     }
 
                     //If the current user is not the admin and tries to login as a admin
-                    if (ownerToggle.isChecked() && user_type.equals("normal"))
+                    if (!ownerToggle.isChecked() && user_type.equals("normal"))
                     {
-                        Toast.makeText(SimplerLoginActivity.this, "The user entered is not a admin!",Toast.LENGTH_LONG).show();
+                        Intent userPageIntent = new Intent(SimplerLoginActivity.this, ResturantsActivity.class);
+                        userPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                        //Sign out the current user
-                        mAuth.signOut();
-
-                        //Return the user object to its initial state
-                        userInit();
+                        startActivity(userPageIntent);
+                        finish();
                     }
 
                 }
