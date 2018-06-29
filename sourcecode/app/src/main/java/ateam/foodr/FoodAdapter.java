@@ -10,12 +10,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
 
     private Context mContext;
     private ArrayList<Food> mList;
+
+    //The storage reference so that the profile images can be stored on the FireBase
+    private StorageReference mImageStorage;
 
     FoodAdapter(Context context, ArrayList<Food> list){
         mContext = context;
@@ -47,6 +54,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
 
         // TODO: Re-enable this
         //image.setImageResource(foodItem.getImage());
+        String url = foodItem.getImageurl();
+
+        mImageStorage = FirebaseStorage.getInstance().getReference();
+        Picasso.with(image.getContext()).load(url).into(image);
+
 
         name.setText(foodItem.getName());
         //rate.setText(foodItem.getRate());

@@ -15,11 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SimplerLoginActivity">
-            <!--<intent-filter>
+            <intent-filter>
                <action android:name="android.intent.action.MAIN" />
 
                <category android:name="android.intent.category.LAUNCHER" />
-           </intent-filter>-->
+           </intent-filter>
        </activity>
        <activity
            android:name=".RegistrationActivity"
@@ -35,25 +35,6 @@
         </activity>
         <activity android:name=".FoodViewActivity">
 
-        </activity>
-        <activity android:name=".AddFoodToMenuActivity">
-
-        <activity
-            android:name=".RegistrationActivity"
-            android:parentActivityName=".SimplerLoginActivity" />
-        <activity
-            android:name=".OwnerRestaurantListActivity"
-            android:label="@string/title_activity_owner_restaurant_list"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".UserFoodMenu">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
         </activity>
         <activity android:name=".CreateRestaurantActivity" />
         <activity android:name=".CreateFoodActivity" />

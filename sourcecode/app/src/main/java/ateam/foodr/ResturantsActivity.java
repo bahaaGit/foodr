@@ -26,8 +26,8 @@ public class ResturantsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.resturantsrv);
         resturantList = new ArrayList<>();
 
-        resturantList.add(new Restaurant(R.drawable.topmenubar2,"abdul","lawson","uu","hh","b"));
-        resturantList.add(new Restaurant(R.drawable.topmenubar2,"abdul","lawson","hh","hh","cc"));
+        resturantList.add(new Restaurant("url",R.drawable.topmenubar2,"abdul","lawson","uu","hh","b"));
+        resturantList.add(new Restaurant("url",R.drawable.topmenubar2,"abdul","lawson","hh","hh","cc"));
 
 
 
