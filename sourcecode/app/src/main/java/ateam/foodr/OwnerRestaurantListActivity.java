@@ -2,24 +2,18 @@ package ateam.foodr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class OwnerRestaurantListActivity extends AppCompatActivity implements ChildEventListener
 {
@@ -84,8 +78,10 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
         restaurants.add(r);
         adapter.notifyDataSetChanged();
 
+        Log.d("Added child", snapshot.getRef().toString());
+
         // HACK: Save the restaurant's key so we can pass it to other activities
-        restaurantKeys.add(snapshot.getKey());
+        restaurantKeys.add(snapshot.getRef().toString());
     }
 
     public void onChildChanged(DataSnapshot snapshot, String prevChildName)
@@ -109,7 +105,7 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
         Intent menuIntent = new Intent(this, OwnerFoodMenu.class);
 
         // HACK: Pass the restaurant's key to the next activity so it knows what food to get.
-        menuIntent.putExtra(OwnerFoodMenu.RESTAURANT_KEY, restaurantKeys.get(pos));
+        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, restaurantKeys.get(pos));
 
         startActivity(menuIntent);
     }

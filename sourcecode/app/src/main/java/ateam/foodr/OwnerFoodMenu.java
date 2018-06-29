@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 public class OwnerFoodMenu extends AppCompatActivity
 {
-    public static final String RESTAURANT_KEY = "restaurantKey";
-
     private String restaurantKey;
 
     private RecyclerView recyclerView;
@@ -25,8 +23,7 @@ public class OwnerFoodMenu extends AppCompatActivity
         setContentView(R.layout.activity_owner_food_menu);
 
         // Get the restaurant key as a parameter
-        restaurantKey = getIntent().getStringExtra(RESTAURANT_KEY);
-        Utils.showToast(this, restaurantKey);
+        restaurantKey = getIntent().getStringExtra(ActivityParams.RESTAURANT_KEY);
 
         // Set up the recycler view
         FoodAdapter adapter = new FoodAdapter(this,foodList);
@@ -44,6 +41,8 @@ public class OwnerFoodMenu extends AppCompatActivity
     public void onAddButtonClick(View view)
     {
         Intent createFoodIntent = new Intent(this, CreateFoodActivity.class);
+        createFoodIntent.putExtra(ActivityParams.RESTAURANT_KEY, restaurantKey);
+
         startActivity(createFoodIntent);
     }
 }
