@@ -5,54 +5,80 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp">
 
-
-    <LinearLayout
-        android:padding="10dp"
-        android:weightSum="10"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:weightSum="10">
         <ImageView
-            android:id="@+id/item_image"
-            android:layout_width="0dp"
-            android:layout_weight="4"
-            android:layout_height="128dp"
+            android:id="@+id/idMFoodImg"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/topmenubar5"/>
+            android:layout_marginRight="3dp"
+            android:src="@drawable/topmenubar2"/>
 
-        <LinearLayout
-            android:paddingBottom="10dp"
-            android:layout_width="0dp"
-            android:layout_weight="4"
+        <TextView
+            android:id="@+id/idMFoodNameTitle"
+            android:layout_toRightOf="@+id/idMFoodImg"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:padding="5dp"
+            android:text="Name"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <TextView
+            android:paddingTop="5dp"
+            android:id="@+id/idMFoodName"
+            android:layout_toRightOf="@id/idMFoodImg"
+            android:layout_below="@+id/idMFoodNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Nammsmsm"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <RatingBar
+            android:paddingTop="5dp"
+            android:id="@+id/idMFoodratingBar"
+            android:layout_toRightOf="@id/idMFoodImg"
+            android:layout_below="@+id/idMFoodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
-            <TextView
-                android:id="@+id/item_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Food Name"
-                />
+        <TextView
+            android:paddingTop="5dp"
+            android:id="@+id/idMFoodDescTitle"
+            android:layout_below="@+id/idMFoodImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Description"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <TextView
+            android:paddingTop="5dp"
+            android:id="@+id/idMFoodDesc"
+            android:layout_below="@+id/idMFoodDescTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Tomatat tatoma tta atts stts sbdb  sbshshs bssb"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
 
-            <TextView
-                android:id="@+id/item_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Food title"
-                />
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/item_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Food title"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
 
 </android.support.v7.widget.CardView>

@@ -1,6 +1,7 @@
 package ateam.foodr;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,19 +39,39 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         Food foodItem = mList.get(position);
 
         ImageView image = holder.item_image;
-        TextView name,desc,price;
+        TextView name,desc,rate;
 
         name = holder.item_name;
-        price = holder.item_price;
+        //rate = holder.item_rate;
         desc = holder.item_desc;
 
         // TODO: Re-enable this
         //image.setImageResource(foodItem.getImage());
 
         name.setText(foodItem.getName());
-        price.setText(foodItem.getPrice());
+        //rate.setText(foodItem.getRate());
         desc.setText(foodItem.getDesc());
     }
+
+//    @Override
+//    public void onClick(View v) {
+//
+//        final Intent intent;
+//        switch (){
+//            case 0:
+//                intent =  new Intent(mContext, FirstActivity.class);
+//                break;
+//
+//            case 1:
+//                intent =  new Intent(context, SecondActivity.class);
+//                break;
+//
+//            default:
+//                intent =  new Intent(context, DefaultActivity.class);
+//                break;
+//        }
+//        mContext.startActivity(intent);
+//    }
 
     @Override
     public int getItemCount() {
@@ -60,15 +81,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView item_image;
-        TextView item_name, item_desc,item_price;
+        TextView item_name, item_desc,item_rate;
 
         public ViewHolder(View itemView){
             super(itemView);
 
-            item_image = itemView.findViewById(R.id.item_image);
-            item_name = itemView.findViewById(R.id.item_name);
-            item_desc = itemView.findViewById(R.id.item_desc);
-            item_price = itemView.findViewById(R.id.item_price);
+            item_image = itemView.findViewById(R.id.idMFoodImg);
+            item_name = itemView.findViewById(R.id.idMFoodName);
+            item_desc = itemView.findViewById(R.id.idMFoodDesc);
+            //item_rate = itemView.findViewById(R.id.idMFoodratingBar);
         }
     }
 }
