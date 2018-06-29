@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -42,15 +43,15 @@ public class ResturantsActivity extends AppCompatActivity {
 
         // For every admin, add all of their restaurants to the list
         // TODO: This is bad code clean it up
-        DatabaseReference users = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("Users");
         users.addChildEventListener(new ChildEventListener()
         {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
                 // Ignore this if it's not an admin
-                Map<String, Object> user = dataSnapshot.getValue(Map.class);
-                if (!user.get("user_type").equals("admin"))
+                Log.d("fuck", dataSnapshot.toString() + "\n");
+                if (!dataSnapshot.hasChild("Restaurants"))
                     return;
 
                 // Listen to all of its child restaurants
@@ -61,8 +62,17 @@ public class ResturantsActivity extends AppCompatActivity {
                     public void onChildAdded(DataSnapshot dataSnapshot, String s)
                     {
                         // Add this restaurant to the list
-                        Restaurant r = dataSnapshot.getValue(Restaurant.class);
-                        resturantList.add(r);
+                        try {
+                            Log.d("Restaurant snapshot: ", dataSnapshot.toString());
+                            Restaurant r = dataSnapshot.getValue(Restaurant.class);
+                            resturantList.add(r);
+                            adapter.notifyDataSetChanged();
+                        }
+                        catch (Exception e)
+                        {
+                            // TODO: This is a big no-no, but we're in a hurry.
+                        }
+
                     }
 
                     @Override
