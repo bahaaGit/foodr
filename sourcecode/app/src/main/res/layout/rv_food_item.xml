@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:weightSum="10">
+        <ImageView
+            android:id="@+id/idMFoodImg"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:scaleType="centerCrop"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/topmenubar2"/>
+
+        <TextView
+            android:id="@+id/idMFoodNameTitle"
+            android:layout_toRightOf="@+id/idMFoodImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Name"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <TextView
+            android:paddingTop="5dp"
+            android:id="@+id/idMFoodName"
+            android:layout_toRightOf="@id/idMFoodImg"
+            android:layout_below="@+id/idMFoodNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Nammsmsm"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <RatingBar
+            android:paddingTop="5dp"
+            android:id="@+id/idMFoodratingBar"
+            android:layout_toRightOf="@id/idMFoodImg"
+            android:layout_below="@+id/idMFoodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:paddingTop="5dp"
+            android:id="@+id/idMFoodDescTitle"
+            android:layout_below="@+id/idMFoodImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Description"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <TextView
+            android:paddingTop="5dp"
+            android:id="@+id/idMFoodDesc"
+            android:layout_below="@+id/idMFoodDescTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Tomatat tatoma tta atts stts sbdb  sbshshs bssb"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
