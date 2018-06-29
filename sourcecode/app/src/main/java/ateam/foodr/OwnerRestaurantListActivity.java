@@ -8,11 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
@@ -68,6 +73,38 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
         startActivity(createIntent);
     }
 
+    //This will get the menu for us
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        //This sticks the menu to the toolbar the name of the file is menu_log.xml so in the menu directory main_menu.xml
+        getMenuInflater().inflate(R.menu.menu_log,menu);
+        return true;
+
+    }
+
+    //When there is a click on the menu tab
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        //According to which item is clicked
+        if (item.getItemId() == R.id.main_logout_btn) {
+            FirebaseAuth.getInstance().signOut();
+
+            Intent intent = new Intent(OwnerRestaurantListActivity.this, SimplerLoginActivity.class);
+
+            //Redirect the user to the startActivity view
+
+            startActivity(intent);
+
+            //Make this so that the user can't access the main view through the back button
+            finish();
+        }
+
+        return true;
+    }
     public void onCancelled(DatabaseError error)
     {
         // TODO: Stuff
@@ -92,8 +129,8 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
 
     }
 
-    public void onChildRemoved(DataSnapshot snapshot)
-    {
+    public void onChildRemoved(DataSnapshot snapshot) {
 
     }
 }
+
