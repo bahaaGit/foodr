@@ -30,7 +30,6 @@ public class CreateFoodActivity extends AppCompatActivity
     @BindView(R.id.nameTextbox)  EditText nameTextbox;
     @BindView(R.id.priceTextbox) EditText priceTextbox;
     @BindView(R.id.descTextbox)  EditText descTextbox;
-
     @BindView(R.id.photoButton)  Button photoButton;
     @BindView(R.id.createButton) Button createButton;
 

@@ -1,13 +1,18 @@
 package ateam.foodr;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,10 +30,10 @@ public class ResturantsActivity extends AppCompatActivity {
     ArrayList<Restaurant> resturantList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resturants);
+
 
         // Set up the recycler view
         recyclerView = findViewById(R.id.resturantsrv);
@@ -38,17 +43,15 @@ public class ResturantsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(rvLinearLayoutManager);
 
         // Set up the adapter
-        adapter = new ResturantsAdapter(this,resturantList);
+        adapter = new ResturantsAdapter(this, resturantList);
         recyclerView.setAdapter(adapter);
 
         // For every admin, add all of their restaurants to the list
         // TODO: This is bad code clean it up
         DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("Users");
-        users.addChildEventListener(new ChildEventListener()
-        {
+        users.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // Ignore this if it's not an admin
                 Log.d("fuck", dataSnapshot.toString() + "\n");
                 if (!dataSnapshot.hasChild("Restaurants"))
@@ -56,21 +59,16 @@ public class ResturantsActivity extends AppCompatActivity {
 
                 // Listen to all of its child restaurants
                 DatabaseReference userRestaurants = dataSnapshot.getRef().child("Restaurants");
-                userRestaurants.addChildEventListener(new ChildEventListener()
-                {
+                userRestaurants.addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s)
-                    {
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         // Add this restaurant to the list
                         Restaurant r = null;
-                        try
-                        {
+                        try {
                             Log.d("Restaurant snapshot: ", dataSnapshot.toString());
                             r = dataSnapshot.getValue(Restaurant.class);
 
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             // TODO: This is a big no-no, but we're in a hurry.
                             return;
                         }
@@ -80,32 +78,39 @@ public class ResturantsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
 
                     @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
 
                     @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {}
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
                 });
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
-
 
 }
