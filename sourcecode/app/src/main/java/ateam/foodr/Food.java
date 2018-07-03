@@ -1,63 +1,77 @@
 package ateam.foodr;
 
+import java.util.ArrayList;
+
 public class Food {
 
-    private int image;
+
     // TODO: Make price an integer
 
     private int rate;
-    private String name, price, desc, Imageurl;
+    private String name,desc, Imageurl,uid;
+    private String comments;
 
 
-    /** This constructor is necessary so Firebase will deserialize this class */
-    public Food() {}
+    public Food() {
 
+    }
 
-    public Food(String Imageurl,int image, String name, String price, String desc) {
-        this.Imageurl = Imageurl;
-        this.image = image;
+    public Food(String uid, String name, String desc, int rate, String imageurl, String comments) {
+        this.rate = rate;
         this.name = name;
-        this.rate =rate;
         this.desc = desc;
+        Imageurl = imageurl;
+        this.uid = uid;
+        this.comments = comments;
     }
 
-    public int getImage() {
-        return image;
-    }
 
-    public void setImage(int image) {
-        this.image = image;
+    public int getRate() {
+        return rate;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getRate() {
-        return rate;
-    }
-
-    public void setPrice(String price) {
-        this.rate = rate;
-    }
-
     public String getDesc() {
         return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
     }
 
     public String getImageurl() {
         return Imageurl;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     public void setImageurl(String imageurl) {
         Imageurl = imageurl;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

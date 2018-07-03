@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -46,16 +48,17 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         Food foodItem = mList.get(position);
 
         ImageView image = holder.item_image;
-        TextView name,desc,rate;
+        TextView name,desc;
+        RatingBar  rate;
 
         name = holder.item_name;
-        //rate = holder.item_rate;
+        rate = holder.item_rate;
         desc = holder.item_desc;
 
         // TODO: Re-enable this
         //image.setImageResource(foodItem.getImage());
         String url = foodItem.getImageurl();
-
+        rate.setRating(foodItem.getRate());
         mImageStorage = FirebaseStorage.getInstance().getReference();
         Picasso.with(image.getContext()).load(url).into(image);
 
@@ -93,7 +96,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView item_image;
-        TextView item_name, item_desc,item_rate;
+        TextView item_name, item_desc;
+        RatingBar item_rate;
 
         public ViewHolder(View itemView){
             super(itemView);
@@ -101,7 +105,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
             item_image = itemView.findViewById(R.id.idMFoodImg);
             item_name = itemView.findViewById(R.id.idMFoodName);
             item_desc = itemView.findViewById(R.id.idMFoodDesc);
-            //item_rate = itemView.findViewById(R.id.idMFoodratingBar);
+            item_rate = itemView.findViewById(R.id.idMFoodratingBar);
         }
     }
 }

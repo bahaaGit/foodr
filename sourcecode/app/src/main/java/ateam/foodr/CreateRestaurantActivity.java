@@ -27,13 +27,12 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class CreateRestaurantActivity extends AppCompatActivity
-{
+public class CreateRestaurantActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private EditText nameTextbox;
     private EditText businessIDFirstTextbox;
-    private EditText businessIDSecondTextbox;   // TODO: Just make this a single textbox.
+    private EditText businessIDSecondTextbox; // TODO: Just make this a single textbox.
     private EditText addressTextbox;
     private EditText phoneTextbox;
     private Button chooseImageBtn;
@@ -44,12 +43,10 @@ public class CreateRestaurantActivity extends AppCompatActivity
     private String restaurantKey;
     private FirebaseUser mCurrentUser;
 
-
     // Event Handlers
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_restaurant);
 
@@ -59,12 +56,10 @@ public class CreateRestaurantActivity extends AppCompatActivity
         addressTextbox = findViewById(R.id.addressTextbox);
         phoneTextbox = findViewById(R.id.phoneTextbox);
         chooseImageBtn = findViewById(R.id.idCRChooseImage);
-        businessIDFirstTextbox  = findViewById(R.id.businessIDFirstTextbox);
+        businessIDFirstTextbox = findViewById(R.id.businessIDFirstTextbox);
         businessIDSecondTextbox = findViewById(R.id.businessIDSecondTextbox);
         choosenImageView = findViewById(R.id.idCRImageView);
-
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-
         //Get the storage reference so that the profile images can be saved to the FireBase
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
@@ -77,8 +72,7 @@ public class CreateRestaurantActivity extends AppCompatActivity
 
     }
 
-    public void onCreateClick(View view)
-    {
+    public void onCreateClick(View view) {
         // Get all of the information we need from the textboxes
         String name = nameTextbox.getText().toString();
         String businessID = businessIDFirstTextbox.getText().toString();
@@ -90,7 +84,7 @@ public class CreateRestaurantActivity extends AppCompatActivity
             url = "empty";
 
         // Put that information into a Restaurant object
-        Restaurant r = new Restaurant(url, 9, name, "blank description", address, phoneNumber, businessID);
+        Restaurant r = new Restaurant(url, name, "blank description", address, phoneNumber, businessID);
 
         // Get the user's restaurant list so we can add this restaurant to it.
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -121,41 +115,30 @@ public class CreateRestaurantActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri imageUri = data.getData();
-
             Picasso.with(this).load(imageUri).into(choosenImageView);
-
             //According to the id of the user save the user image inside the profile_images directory
             String uid = mCurrentUser.getUid();
-
             //Access the location where you are going to save the profile picture
             StorageReference storage = mImageStorage.child("food_images").child(uid);
 
             //Put the file onto the directory and do some tasks when the task is done
-            storage.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            storage.putFile(imageUri).addOnCompleteListener(new OnCompleteListener < UploadTask.TaskSnapshot > () {
                 @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful())
-                    {
+                public void onComplete(@NonNull Task < UploadTask.TaskSnapshot > task) {
+                    if (task.isSuccessful()) {
                         //We will need the download URL to get it later on so we need to store this
                         String download_url = task.getResult().getDownloadUrl().toString();
-
                         url = download_url;
-
                         //To tell the user that this is done
                         Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
                     }
                 }
             });
         }
     }
-
-    // Misc methods
 }

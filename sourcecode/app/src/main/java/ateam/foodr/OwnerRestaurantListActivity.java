@@ -26,7 +26,7 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
     private RestaurantAdapter adapter;
     private List<Restaurant> restaurants = new ArrayList<>();
     private List<String> restaurantKeys  = new ArrayList<>();   // HACK: Storing the keys in a parallel array
-                                                                // so we can pass them by reference to
+    private FirebaseUser user;                                                            // so we can pass them by reference to
                                                                 // another activity
 
     @Override
@@ -42,7 +42,7 @@ public class OwnerRestaurantListActivity extends AppCompatActivity implements Ch
         initRecyclerView();
 
         // Subscribe to data-changed events
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         DatabaseReference userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 

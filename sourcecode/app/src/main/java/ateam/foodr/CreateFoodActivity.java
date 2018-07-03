@@ -22,6 +22,8 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -119,14 +121,12 @@ public class CreateFoodActivity extends AppCompatActivity
         // Take all the information from the form and put it in an object
         if (url == null)
             url = "empty";
+
         Food f = new Food
         (
-                url,     // TODO: Fill this in
-                0,
+                FirebaseAuth.getInstance().getCurrentUser().getUid(),     // TODO: Fill this in
                 nameTextbox.getText().toString(),
-                priceTextbox.getText().toString(),     // TODO: Make this an int
-                descTextbox.getText().toString()
-        );
+                descTextbox.getText().toString(),0,url,"");
 
         // Send that object to firebase
         DatabaseReference restaurant = FirebaseDatabase.getInstance().getReferenceFromUrl(restaurantKey);
