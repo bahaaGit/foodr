@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,29 +17,31 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SimplerLoginActivity">
             <intent-filter>
-               <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-               <category android:name="android.intent.category.LAUNCHER" />
-           </intent-filter>
-       </activity>
-       <activity
-           android:name=".RegistrationActivity"
-           android:parentActivityName=".SimplerLoginActivity" />
-       <activity
-           android:name=".OwnerRestaurantListActivity"
-           android:label="@string/title_activity_owner_restaurant_list"
-           android:theme="@style/AppTheme.NoActionBar" />
-       <activity android:name=".UserFoodMenu"></activity>
-        <activity android:name=".CreateRestaurantActivity" />
-        <activity android:name=".SendReviewActivity" />
-        <activity android:name=".ResturantsActivity">
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".FoodViewActivity">
+        <activity
+            android:name=".RegistrationActivity"
+            android:parentActivityName=".SimplerLoginActivity" />
+        <activity
+            android:name=".OwnerRestaurantListActivity"
+            android:label="@string/title_activity_owner_restaurant_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UserFoodMenu" />
+        <activity android:name=".CreateRestaurantActivity" >
+        </activity>
+        <activity android:name=".SendReviewActivity">
 
         </activity>
-        <activity android:name=".CreateRestaurantActivity" />
+        <activity android:name=".ResturantsActivity"></activity>
+        <activity android:name=".FoodViewActivity"></activity>
         <activity android:name=".CreateFoodActivity" />
-        <activity android:name=".OwnerFoodMenu"></activity>
+        <activity android:name=".OwnerFoodMenu" />
+        <activity android:name=".AddFoodToMenuActivity">
+
+        </activity>
     </application>
 
 </manifest>
