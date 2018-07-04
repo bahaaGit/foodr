@@ -6,62 +6,158 @@
     android:layout_height="match_parent"
     tools:context=".CreateFoodActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/idAddFoodTitle2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:text="To Add Menu"
+        android:textColor="@android:color/black"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name" />
+    <TextView
+        android:id="@+id/idAddFoodNameTitle2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Food Name:"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idAddFoodTitle2" />
 
-        <EditText
-            android:id="@+id/nameTextbox"
-            android:layout_width="match_parent"
-            android:layout_height="32dp" />
+    <TextView
+        android:id="@+id/idAddFoodDescTitle2"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:text="Food Desc:"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameTextbox" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Price" />
+    <ImageView
+        android:id="@+id/idAddFoodcChoosenImageView2"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/idAddFoodSummitBtn2"
+        app:layout_constraintTop_toBottomOf="@+id/idAddFoodenterFileName2" />
 
-        <EditText
-            android:id="@+id/priceTextbox"
-            android:layout_width="match_parent"
-            android:layout_height="32dp" />
+    <Button
+        android:id="@+id/idAddFoodSummitBtn2"
+        android:layout_width="114dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/button_background"
+        android:text="Take a Photo"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/photoButton" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description" />
+    <EditText
+        android:id="@+id/idAddFoodenterFileName2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Filename"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/photoButton"
+        app:layout_constraintTop_toBottomOf="@+id/priceTextbox" />
 
-        <EditText
-            android:id="@+id/descTextbox"
-            android:layout_width="match_parent"
-            android:layout_height="32dp" />
+    <EditText
+        android:id="@+id/nameTextbox"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idAddFoodNameTitle2" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Photo" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:text="Price"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descTextbox" />
 
-        <Button
-            android:id="@+id/photoButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Take picture (TODO)"/>
+    <EditText
+        android:id="@+id/priceTextbox"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-        <Button
-            android:id="@+id/createButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create"
-            android:onClick="onCreateButtonClick"/>
+    <EditText
+        android:id="@+id/descTextbox"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idAddFoodDescTitle2" />
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/photoButton"
+        android:layout_width="112dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_background"
+        android:text="Select picture"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/priceTextbox" />
 
-
-
+    <Button
+        android:id="@+id/createButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/button_background"
+        android:onClick="onCreateButtonClick"
+        android:text="Submit"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idAddFoodcChoosenImageView2" />
 
 </android.support.constraint.ConstraintLayout>

@@ -74,7 +74,6 @@ public class SimplerLoginActivity extends AppCompatActivity
         //Check if a user is logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        mAuth.signOut();
         //If a user exists
         if (currentUser != null)
         {
