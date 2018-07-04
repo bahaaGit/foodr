@@ -28,10 +28,6 @@
         <activity
             android:name=".RegistrationActivity"
             android:parentActivityName=".SimplerLoginActivity" />
-        <activity
-            android:name=".OwnerRestaurantListActivity"
-            android:label="@string/title_activity_owner_restaurant_list"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".UserFoodMenu" />
         <activity android:name=".CreateRestaurantActivity"></activity>
         <activity android:name=".SendReviewActivity"></activity>
