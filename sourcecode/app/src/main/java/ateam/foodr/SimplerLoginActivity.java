@@ -119,8 +119,6 @@ public class SimplerLoginActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-
     }
 
     public void onLoginClick(View view)
