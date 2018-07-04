@@ -13,6 +13,7 @@ public class Restaurant
     private String address;
     private String businessNumber;
     private String phoneNumber;
+    private String restID;
 
     // TODO: Menu array
 
@@ -20,7 +21,7 @@ public class Restaurant
     public Restaurant() {}
 
     /** Standard boilerplate constructor. */
-    public Restaurant(String Imageurl, String name, String description, String address, String phoneNumber, String businessNumber)
+    public Restaurant(String Imageurl, String name, String description, String address, String phoneNumber, String businessNumber, String restID)
     {
         this.name = name;
         this.imageurl = Imageurl;
@@ -28,6 +29,7 @@ public class Restaurant
         this.address = address;
         this.businessNumber = businessNumber;
         this.phoneNumber = phoneNumber;
+        this.restID = restID;
     }
     public String getName() { return name; }
     public String getDescription() { return description; }
@@ -35,6 +37,16 @@ public class Restaurant
     public String getBusinessNumber() {return businessNumber; }
     public String getPhoneNumber() { return phoneNumber; }
     public String getImageurl() { return imageurl; }
+
+    public String getRestID() {
+        return restID;
+    }
+
+    public void setRestID(String restID) {
+        this.restID = restID;
+    }
+
+
     // TODO: addFood method
     // TODO: removeFood method
     // TODO: Some way to access the food items

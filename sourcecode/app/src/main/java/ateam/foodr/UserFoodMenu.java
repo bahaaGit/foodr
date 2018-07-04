@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class UserFoodMenu extends AppCompatActivity implements FoodAdapter.OnItemClickListener{
+public class UserFoodMenu extends AppCompatActivity{ //implements FoodAdapter.OnItemClickListener{
 
     RecyclerView recyclerView;
     ArrayList<Food> foodList;
@@ -36,7 +40,7 @@ public class UserFoodMenu extends AppCompatActivity implements FoodAdapter.OnIte
 
     }
 
-    @Override
+    /*@Override
     public void onItemClick(int position) {
 
     }
@@ -49,10 +53,14 @@ public class UserFoodMenu extends AppCompatActivity implements FoodAdapter.OnIte
     @Override
     public void onDeleteClick(int position) {
 
+
     }
 
     @Override
     public void onEditClick(int position) {
-
-    }
+        // Show the create restaurant page
+        Intent createIntent = new Intent(UserFoodMenu.this, CreateFoodActivity.class);
+        createIntent.putExtra("Database Reference",foodList.get(position).getUid());
+        startActivity(createIntent);
+    }*/
 }

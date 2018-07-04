@@ -1,6 +1,7 @@
 package ateam.foodr;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListener
+public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListener,FoodAdapter.OnItemClickListener
 {
     private String restaurantKey;
 
@@ -27,6 +29,7 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
     private RecyclerView recyclerView;
     private FoodAdapter adapter;
     private ImageView restImage;
+    private FloatingActionButton addFoodBtn;
 
 
     @Override
@@ -48,7 +51,16 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
         recyclerView.setLayoutManager(rvLinearLayoutManager);
         recyclerView.setAdapter(adapter);
 
+        //adapter.setClickListener(this::onItemClick);
+        adapter.setOnItemClickListener(OwnerFoodMenu.this);
+
         restImage = findViewById(R.id.restImage);
+        addFoodBtn = findViewById(R.id.addButton);
+
+        if (!SimplerLoginActivity.user.getUser_type().equals("admin"))
+        {
+            addFoodBtn.setVisibility(View.INVISIBLE);
+        }
 
         // Subscribe to events so the recycler view gets populated with food items
         DatabaseReference restaurantDB = FirebaseDatabase.getInstance().getReferenceFromUrl(restaurantKey);
@@ -116,5 +128,31 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
         createFoodIntent.putExtra(ActivityParams.RESTAURANT_KEY, restaurantKey);
 
         startActivity(createFoodIntent);
+    }
+
+
+
+    @Override
+    public void onItemClick(int position) {
+    }
+
+    @Override
+    public void onWhatEverClick(int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodList.get(position).getUid());
+        mDatabase.removeValue();
+    }
+
+    @Override
+    public void onEditClick(int position) {
+
+        // Show the create restaurant page
+        Intent createIntent = new Intent(OwnerFoodMenu.this, CreateFoodActivity.class);
+        createIntent.putExtra("Database Reference",foodList.get(position).getUid());
+        startActivity(createIntent);
     }
 }
