@@ -25,6 +25,8 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
     private ArrayList<Restaurant> data;
     private ArrayList<Restaurant> orList;
     private ItemClickListener clickListener;
+    private OnItemClickListener mListener;
+
 
     //The storage reference so that the profile images can be stored on the FireBase
     public StorageReference mmImageStorage;
@@ -76,7 +78,8 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
         return orList.size();
     }
 
-    public class OwnerResturantsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class OwnerResturantsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+    View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener{
 
         ImageView oResturantImg;
         TextView oResturantName,oResturantLoc;
@@ -88,7 +91,7 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
             oResturantLoc = itemView.findViewById(R.id.idOResturantLocation);
 
             itemView.setOnClickListener(this);
-            //itemView.setOnCreateContextMenuListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -96,8 +99,48 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
         {
             if (clickListener != null)
                 clickListener.onItemClick(view, getAdapterPosition());
+
+            if (mListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    mListener.onItemClick(position);
+                }
+            }
         }
 
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.setHeaderTitle("Select Action");
+            MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Do whatever");
+            MenuItem delete = menu.add(Menu.NONE, 2, 2, "Delete");
+            MenuItem edit = menu.add(Menu.NONE, 3, 3, "Edit");
+
+            doWhatever.setOnMenuItemClickListener(this);
+            delete.setOnMenuItemClickListener(this);
+            edit.setOnMenuItemClickListener(this);
+        }
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            if (mListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+
+                    switch (item.getItemId()) {
+                        case 1:
+                            mListener.onWhatEverClick(position);
+                            return true;
+                        case 2:
+                            mListener.onDeleteClick(position);
+                            return true;
+                        case 3:
+                            mListener.onEditClick(position);
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
 
     }
     // convenience method for getting data at click position
@@ -116,6 +159,23 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
     public interface ItemClickListener
     {
         void onItemClick(View view, int position);
+    }
+
+
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+
+        void onWhatEverClick(int position);
+
+        void onDeleteClick(int position);
+
+        void onEditClick(int position);
+
+    }
+
+    public void setOnItemClickListener(OwnerResturantsAdapter.OnItemClickListener listener) {
+        mListener = listener;
     }
 }
 

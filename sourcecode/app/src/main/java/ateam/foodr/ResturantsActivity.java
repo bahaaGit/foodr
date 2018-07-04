@@ -28,7 +28,6 @@ public class ResturantsActivity extends AppCompatActivity implements ResturantsA
 
     RecyclerView recyclerView;
     ResturantsAdapter adapter;
-
     ArrayList<Restaurant> resturantList = new ArrayList<>();
 
     @Override

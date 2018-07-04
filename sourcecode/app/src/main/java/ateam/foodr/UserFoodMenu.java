@@ -9,7 +9,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-public class UserFoodMenu extends AppCompatActivity {
+public class UserFoodMenu extends AppCompatActivity implements FoodAdapter.OnItemClickListener{
 
     RecyclerView recyclerView;
     ArrayList<Food> foodList;
@@ -33,6 +33,26 @@ public class UserFoodMenu extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(rvLinearLayoutManager);
         recyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
+    @Override
+    public void onWhatEverClick(int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+
+    }
+
+    @Override
+    public void onEditClick(int position) {
 
     }
 }
