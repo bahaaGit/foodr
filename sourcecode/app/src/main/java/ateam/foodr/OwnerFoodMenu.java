@@ -7,12 +7,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -23,6 +26,7 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
     private ArrayList<Food> foodList = new ArrayList<>();
     private RecyclerView recyclerView;
     private FoodAdapter adapter;
+    private ImageView restImage;
 
 
     @Override
@@ -44,8 +48,28 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
         recyclerView.setLayoutManager(rvLinearLayoutManager);
         recyclerView.setAdapter(adapter);
 
+        restImage = findViewById(R.id.restImage);
+
         // Subscribe to events so the recycler view gets populated with food items
         DatabaseReference restaurantDB = FirebaseDatabase.getInstance().getReferenceFromUrl(restaurantKey);
+
+
+        restaurantDB.child("imageurl").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String image_URL = dataSnapshot.getValue().toString();
+                if (!image_URL.equals("empty"))
+                {
+                    Picasso.with(restImage.getContext()).load(image_URL).into(restImage);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         DatabaseReference foodDB = restaurantDB.child("FoodMenu");
 
         foodDB.addChildEventListener(this);
