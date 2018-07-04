@@ -3,9 +3,13 @@ package ateam.foodr;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +23,7 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
 
     private Context rContext;
     private ArrayList<Restaurant> rList;
+    private OnItemClickListener mListener;
 
     //The storage reference so that the profile images can be stored on the FireBase
     private StorageReference mImageStorage;
@@ -60,8 +65,6 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
         Picasso.with(image.getContext()).load(url).into(image);
-
-
     }
 
     @Override
@@ -69,7 +72,8 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
         return rList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener{
 
         ImageView resturantImg;
         TextView resturantName,resturantLoc;
@@ -82,6 +86,69 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
             resturantName = itemView.findViewById(R.id.idResturantName);
             resturantLoc = itemView.findViewById(R.id.idResturantLocation);
 
+            itemView.setOnClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
+
         }
+        @Override
+        public void onClick(View v) {
+            if (mListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    mListener.onItemClick(position);
+                }
+            }
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.setHeaderTitle("Select Action");
+            MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Do whatever");
+            MenuItem delete = menu.add(Menu.NONE, 2, 2, "Delete");
+            MenuItem edit = menu.add(Menu.NONE, 3, 3, "Edit");
+
+            doWhatever.setOnMenuItemClickListener(this);
+            delete.setOnMenuItemClickListener(this);
+            edit.setOnMenuItemClickListener(this);
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            if (mListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+
+                    switch (item.getItemId()) {
+                        case 1:
+                            mListener.onWhatEverClick(position);
+                            return true;
+                        case 2:
+                            mListener.onDeleteClick(position);
+                            return true;
+                        case 3:
+                            mListener.onEditClick(position);
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+
+        void onWhatEverClick(int position);
+
+        void onDeleteClick(int position);
+
+        void onEditClick(int position);
+
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
     }
 }

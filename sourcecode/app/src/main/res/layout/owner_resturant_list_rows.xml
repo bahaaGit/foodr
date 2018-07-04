@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:weightSum="10">
+        <ImageView
+            android:id="@+id/idOResturantImg"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/topmenubar2"/>
+
+        <TextView
+            android:id="@+id/idOResturantNameTitle"
+            android:layout_below="@+id/idOResturantImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Name"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <TextView
+            android:id="@+id/idOResturantName"
+            android:layout_below="@+id/idOResturantNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Nammsmsm"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <TextView
+            android:id="@+id/idOResturantLocationTitle"
+            android:layout_below="@+id/idOResturantName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Lacation"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+        <TextView
+            android:id="@+id/idOResturantLocation"
+            android:layout_below="@+id/idOResturantLocationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Westlafayette"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:layout_marginBottom="0dp"
+            />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

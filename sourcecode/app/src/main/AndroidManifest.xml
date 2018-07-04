@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -34,18 +33,14 @@
             android:label="@string/title_activity_owner_restaurant_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".UserFoodMenu" />
-        <activity android:name=".CreateRestaurantActivity" >
-        </activity>
-        <activity android:name=".SendReviewActivity">
-
-        </activity>
-        <activity android:name=".ResturantsActivity"></activity>
-        <activity android:name=".FoodViewActivity"></activity>
+        <activity android:name=".CreateRestaurantActivity"></activity>
+        <activity android:name=".SendReviewActivity"></activity>
+        <activity android:name=".ResturantsActivity" />
+        <activity android:name=".FoodViewActivity" />
         <activity android:name=".CreateFoodActivity" />
         <activity android:name=".OwnerFoodMenu" />
-        <activity android:name=".AddFoodToMenuActivity">
-
-        </activity>
+        <activity android:name=".AddFoodToMenuActivity"></activity>
+        <activity android:name=".OwnersResturantsActivity"></activity>
     </application>
 
 </manifest>

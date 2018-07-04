@@ -17,6 +17,9 @@ public class Food {
     }
 
     public Food(String uid, String name, String desc, int rate, String imageurl, String comments) {
+        if(name.trim().equals("")){
+            name = "NO Name";
+        }
         this.rate = rate;
         this.name = name;
         this.desc = desc;

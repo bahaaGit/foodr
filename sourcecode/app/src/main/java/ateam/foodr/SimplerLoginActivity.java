@@ -91,7 +91,7 @@ public class SimplerLoginActivity extends AppCompatActivity
                     user.setUser_type(status);
                     if (status.equals("admin"))
                     {
-                        Intent intent = new Intent(SimplerLoginActivity.this, OwnerRestaurantListActivity.class);
+                        Intent intent = new Intent(SimplerLoginActivity.this,OwnersResturantsActivity.class);
 
                         //This line of code makes sure that the user can't go back to the registration page using the phone back button
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -187,7 +187,7 @@ public class SimplerLoginActivity extends AppCompatActivity
                     if (ownerToggle.isChecked() && user_type.equals("admin")) {
 
                         //Check if the current user is marked as a admin
-                        Intent ownerPageIntent = new Intent(SimplerLoginActivity.this, OwnerRestaurantListActivity.class);
+                        Intent ownerPageIntent = new Intent(SimplerLoginActivity.this, OwnersResturantsActivity.class);
 
                         //This line of code makes sure that the user can't go back to the registration page using the phone back button
                         ownerPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
