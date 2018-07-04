@@ -149,6 +149,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                                     SimplerLoginActivity.user.setId(uid);
                                                     SimplerLoginActivity.user.setEmail(email);
                                                     SimplerLoginActivity.user.setPassword_hash(password);
+                                                    SimplerLoginActivity.user.setUser_type(user_type);
 
                                                     //This will dismiss the progress dialog
                                                     mRegProgress.dismiss();

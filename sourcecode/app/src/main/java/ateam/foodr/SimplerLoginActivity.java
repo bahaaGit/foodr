@@ -87,6 +87,8 @@ public class SimplerLoginActivity extends AppCompatActivity
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     String status = dataSnapshot.child("user_type").getValue().toString();
+                    userInit();
+                    user.setUser_type(status);
                     if (status.equals("admin"))
                     {
                         Intent intent = new Intent(SimplerLoginActivity.this, OwnerRestaurantListActivity.class);
@@ -167,6 +169,8 @@ public class SimplerLoginActivity extends AppCompatActivity
                     String uid1 = mAuth.getUid();
                     //Check the user type
                     String user_type = dataSnapshot.child("user_type").getValue().toString();
+
+                    user.setUser_type(user_type);
 
                     //Initialize the user object
                     user.setEmail(dataSnapshot.child("email").getValue().toString());
