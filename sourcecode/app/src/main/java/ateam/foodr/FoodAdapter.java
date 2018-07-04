@@ -68,26 +68,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         desc.setText(foodItem.getDesc());
     }
 
-//    @Override
-//    public void onClick(View v) {
-//
-//        final Intent intent;
-//        switch (){
-//            case 0:
-//                intent =  new Intent(mContext, FirstActivity.class);
-//                break;
-//
-//            case 1:
-//                intent =  new Intent(context, SecondActivity.class);
-//                break;
-//
-//            default:
-//                intent =  new Intent(context, DefaultActivity.class);
-//                break;
-//        }
-//        mContext.startActivity(intent);
-//    }
-
     @Override
     public int getItemCount() {
         return mList.size();

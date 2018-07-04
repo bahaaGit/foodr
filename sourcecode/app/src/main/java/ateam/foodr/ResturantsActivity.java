@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -22,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class ResturantsActivity extends AppCompatActivity {
+public class ResturantsActivity extends AppCompatActivity implements ResturantsAdapter.OnItemClickListener {
 
     RecyclerView recyclerView;
     ResturantsAdapter adapter;
@@ -45,6 +47,7 @@ public class ResturantsActivity extends AppCompatActivity {
         // Set up the adapter
         adapter = new ResturantsAdapter(this, resturantList);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(ResturantsActivity.this);
 
         // For every admin, add all of their restaurants to the list
         // TODO: This is bad code clean it up
@@ -112,4 +115,24 @@ public class ResturantsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onItemClick(int position) {
+        Toast.makeText(this,"Normal Click at position: " + position, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onWhatEverClick(int position) {
+        Toast.makeText(this,"What click at postion: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        Toast.makeText(this,"Delete Click at position: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onEditClick(int position) {
+        Toast.makeText(this,"Eit Click at position: " + position, Toast.LENGTH_SHORT).show();
+    }
 }
