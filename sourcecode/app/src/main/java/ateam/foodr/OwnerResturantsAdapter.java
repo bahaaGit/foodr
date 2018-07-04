@@ -29,7 +29,7 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
     //The storage reference so that the profile images can be stored on the FireBase
     public StorageReference mmImageStorage;
 
-    OwnerResturantsAdapter(Context context, ArrayList<Restaurant> list){
+    public OwnerResturantsAdapter(Context context, ArrayList<Restaurant> list){
         this.orContext = context;
         orContext = context;
         orList = list;
