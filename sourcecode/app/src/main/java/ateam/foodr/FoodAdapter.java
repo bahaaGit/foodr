@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -65,6 +66,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
 
         name.setText(foodItem.getName());
         //rate.setText(foodItem.getRate());
+
+        if (SimplerLoginActivity.user.getUser_type().equals("admin"))
+        {
+            holder.item_rate.setVisibility(View.INVISIBLE);
+        }
         desc.setText(foodItem.getDesc());
     }
 
