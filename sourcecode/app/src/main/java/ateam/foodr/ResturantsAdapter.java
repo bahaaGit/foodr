@@ -54,7 +54,6 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
         name = holder.resturantName;
         address = holder.resturantLoc;
 
-
         // TODO: Re-enable this after we fix it.
         name.setText(resturantItem.getName());
         address.setText(resturantItem.getAddress());
@@ -65,8 +64,6 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
         Picasso.with(image.getContext()).load(url).into(image);
-
-
     }
 
     @Override
@@ -135,8 +132,6 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
             }
             return false;
         }
-
-
     }
 
     public interface OnItemClickListener {

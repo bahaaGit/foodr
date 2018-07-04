@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OwnersResturantsActivity extends AppCompatActivity  implements ChildEventListener {
+public class OwnersResturantsActivity extends AppCompatActivity  implements ChildEventListener,OwnerResturantsAdapter.OnItemClickListener {
 
     private FirebaseUser user;
     private RecyclerView recyclerView;
@@ -101,7 +102,7 @@ public class OwnersResturantsActivity extends AppCompatActivity  implements Chil
         adapter = new OwnerResturantsAdapter(this,resturantList);
         recyclerView.setAdapter(adapter);
         adapter.setClickListener(this::onItemClick);
-        //adapter.setOnItemClickListener(ResturantsActivity.this);
+        adapter.setOnItemClickListener(OwnersResturantsActivity.this);
     }
 
     public void onChildAdded(DataSnapshot snapshot, String prevChildName)
@@ -144,4 +145,24 @@ public class OwnersResturantsActivity extends AppCompatActivity  implements Chil
         startActivity(menuIntent);
     }
 
+    @Override
+    public void onItemClick(int position) {
+        Toast.makeText(this,"Normal Click at position: " + position, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onWhatEverClick(int position) {
+        Toast.makeText(this,"What click at postion: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        Toast.makeText(this,"Delete Click at position: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onEditClick(int position) {
+        Toast.makeText(this,"Eit Click at position: " + position, Toast.LENGTH_SHORT).show();
+    }
 }
