@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +20,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -48,6 +52,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     private String url;
     private String restaurantKey;
     private FirebaseUser mCurrentUser;
+    public String reference;
 
     // Event Handlers
 
@@ -55,6 +60,8 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_restaurant);
+
+        reference  =  getIntent().getStringExtra("Database Reference");
 
         // Get the textboxes
         // Holy boilerplate, batman!
@@ -69,6 +76,33 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         //Get the storage reference so that the profile images can be saved to the FireBase
         mImageStorage = FirebaseStorage.getInstance().getReference();
+
+        if (reference != null)
+        {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    nameTextbox.setText(dataSnapshot.child("name").getValue().toString());
+                    addressTextbox.setText(dataSnapshot.child("address").getValue().toString());
+                    phoneTextbox.setText(dataSnapshot.child("phoneNumber").getValue().toString());
+                    businessIDFirstTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(0,1));
+                    businessIDSecondTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(1));
+                    url = dataSnapshot.child("imageurl").getValue().toString();
+                    if (!url.equals("empty"))
+                    {
+                        Picasso.with(chooseImageBtn.getContext()).load(dataSnapshot.child("imageurl").getValue().toString()).into(choosenImageView);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
 
         uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,9 +132,6 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         if (url == null)
             url = "empty";
 
-        // Put that information into a Restaurant object
-        Restaurant r = new Restaurant(url, name, "blank description", address, phoneNumber, businessID);
-
         // Get the user's restaurant list so we can add this restaurant to it.
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
@@ -109,7 +140,20 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         DatabaseReference restaurantList = userDB.child("Restaurants");
 
         // Send it to the database
-        DatabaseReference newRestaurant = restaurantList.push();
+        DatabaseReference newRestaurant;
+        if (reference != null)
+        {
+            newRestaurant = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
+        }
+        else
+            {
+            newRestaurant= restaurantList.push();
+        }
+        String foodID = newRestaurant.getRef().toString();
+
+        // Put that information into a Restaurant object
+        Restaurant r = new Restaurant(url, name, "blank description", address, phoneNumber, businessID, foodID);
+
         newRestaurant.setValue(r)
 
                 // If it failed, show an error message
