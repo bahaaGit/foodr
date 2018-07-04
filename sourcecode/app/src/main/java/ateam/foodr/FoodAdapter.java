@@ -69,7 +69,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
 
         if (SimplerLoginActivity.user.getUser_type().equals("admin"))
         {
-            holder.item_rate.setVisibility(View.INVISIBLE);
+            holder.item_rate.setEnabled(false);
         }
         desc.setText(foodItem.getDesc());
     }

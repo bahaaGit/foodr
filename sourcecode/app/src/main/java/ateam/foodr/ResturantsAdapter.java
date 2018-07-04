@@ -65,8 +65,6 @@ public class ResturantsAdapter extends RecyclerView.Adapter<ResturantsAdapter.Vi
 
         mImageStorage = FirebaseStorage.getInstance().getReference();
         Picasso.with(image.getContext()).load(url).into(image);
-
-
     }
 
     @Override
