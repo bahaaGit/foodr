@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.ArrayList;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +43,6 @@ import butterknife.ButterKnife;
 public class CreateFoodActivity extends AppCompatActivity
 {
     @BindView(R.id.nameTextbox)  EditText nameTextbox;
-    @BindView(R.id.priceTextbox) EditText priceTextbox;
     @BindView(R.id.descTextbox)  EditText descTextbox;
     @BindView(R.id.photoButton)  Button photoButton;
     @BindView(R.id.idAddFoodSummitBtn2) Button takePhoto;
@@ -188,14 +188,12 @@ public class CreateFoodActivity extends AppCompatActivity
         // Take all the information from the form and put it in an object
         if (url == null)
             url = "empty";
+
         Food f = new Food
         (
-                url,     // TODO: Fill this in
-                0,
+                FirebaseAuth.getInstance().getCurrentUser().getUid(),     // TODO: Fill this in
                 nameTextbox.getText().toString(),
-                priceTextbox.getText().toString(),     // TODO: Make this an int
-                descTextbox.getText().toString()
-        );
+                descTextbox.getText().toString(),0,url,"");
 
         // Send that object to firebase
         DatabaseReference restaurant = FirebaseDatabase.getInstance().getReferenceFromUrl(restaurantKey);

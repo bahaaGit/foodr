@@ -26,10 +26,10 @@
     <TextView
         android:id="@+id/idAddFoodNameTitle2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="27dp"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="48dp"
         android:text="Food Name:"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,13 +79,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="28dp"
         android:text="Filename"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toEndOf="@+id/photoButton"
-        app:layout_constraintTop_toBottomOf="@+id/priceTextbox" />
+        app:layout_constraintTop_toBottomOf="@+id/descTextbox" />
 
     <EditText
         android:id="@+id/nameTextbox"
@@ -97,29 +97,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idAddFoodNameTitle2" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="0dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:text="Price"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descTextbox" />
-
-    <EditText
-        android:id="@+id/priceTextbox"
-        android:layout_width="match_parent"
-        android:layout_height="39dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <EditText
         android:id="@+id/descTextbox"
@@ -142,7 +119,7 @@
         android:text="Select picture"
         android:textColor="@android:color/background_light"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/priceTextbox" />
+        app:layout_constraintTop_toBottomOf="@+id/descTextbox" />
 
     <Button
         android:id="@+id/createButton"
@@ -150,7 +127,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/button_background"
         android:onClick="onCreateButtonClick"
         android:text="Submit"

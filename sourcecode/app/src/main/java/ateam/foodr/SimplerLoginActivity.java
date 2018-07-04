@@ -74,7 +74,6 @@ public class SimplerLoginActivity extends AppCompatActivity
         //Check if a user is logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-
         //If a user exists
         if (currentUser != null)
         {
@@ -120,8 +119,6 @@ public class SimplerLoginActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-
     }
 
     public void onLoginClick(View view)

@@ -74,7 +74,6 @@ public class ResturantsActivity extends AppCompatActivity {
                         }
                         resturantList.add(r);
                         adapter.notifyDataSetChanged();
-
                     }
 
                     @Override

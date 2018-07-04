@@ -55,12 +55,11 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
     public void onChildAdded(DataSnapshot snapshot, String s)
     {
         // Add it to the list
-
-        Food f = snapshot.getValue(Food.class); // Deserialize it into a Food object
-        foodList.add(f);                        // Add it to the list so the recycler can show it
+        Food allFoods = snapshot.getValue(Food.class); // Deserialize it into a Food object
+        foodList.add(allFoods);                        // Add it to the list so the recycler can show it
         adapter.notifyDataSetChanged();         // Let the recycler know to update the list
 
-        Log.d("Adding food child", f.getName());
+        Log.d("Adding food child", allFoods.getName());
     }
 
     @Override
