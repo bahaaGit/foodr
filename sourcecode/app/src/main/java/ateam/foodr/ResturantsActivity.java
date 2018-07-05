@@ -33,7 +33,8 @@ public class ResturantsActivity extends AppCompatActivity implements ResturantsA
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resturants);
 
@@ -53,69 +54,32 @@ public class ResturantsActivity extends AppCompatActivity implements ResturantsA
         // For every admin, add all of their restaurants to the list
         // TODO: This is bad code clean it up
         DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("Users");
-        users.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                // Ignore this if it's not an admin
-                Log.d("fuck", dataSnapshot.toString() + "\n");
-                if (!dataSnapshot.hasChild("Restaurants"))
-                    return;
+        users.addChildEventListener(new ChildEventListenerBuilder().whenChildIsAdded((dataSnapshot, s) ->
+        {
+            // Ignore this if it's not an admin
+            if (!dataSnapshot.hasChild("Restaurants"))
+                return;
 
-                // Listen to all of its child restaurants
-                DatabaseReference userRestaurants = dataSnapshot.getRef().child("Restaurants");
-                userRestaurants.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        // Add this restaurant to the list
-                        Restaurant r = null;
-                        try {
-                            Log.d("Restaurant snapshot: ", dataSnapshot.toString());
-                            r = dataSnapshot.getValue(Restaurant.class);
+            // Listen to all of its child restaurants
+            DatabaseReference userRestaurants = dataSnapshot.getRef().child("Restaurants");
+            userRestaurants.addChildEventListener(new ChildEventListenerBuilder().whenChildIsAdded((snapshot, str) ->
+            {
 
-                        } catch (Exception e) {
-                            // TODO: This is a big no-no, but we're in a hurry.
-                            return;
-                        }
-                        resturantList.add(r);
-                        adapter.notifyDataSetChanged();
-                        // HACK: Save the restaurant's key so we can pass it to other activities
-                        resturantKeysNorUsr.add(dataSnapshot.getRef().toString());
-                    }
+                // Add this restaurant to the list
+                Restaurant r = null;
+                try {
+                    r = snapshot.getValue(Restaurant.class);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);  // Let the exception bubble up
+                }
+                resturantList.add(r);
+                adapter.notifyDataSetChanged();
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    }
+                // HACK: Save the restaurant's key so we can pass it to other activities
+                resturantKeysNorUsr.add(snapshot.getRef().toString());
+            }));
+        }));
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
     }
 
     @Override

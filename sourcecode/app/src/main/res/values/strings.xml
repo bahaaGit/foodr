@@ -15,4 +15,5 @@
     </string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_owner_restaurant_list">OwnerRestaurantListActivity</string>
+    <string name="title_activity_user_map_view">Map</string>
 </resources>
