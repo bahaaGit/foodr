@@ -175,7 +175,7 @@ public class SimplerLoginActivity extends AppCompatActivity
                     //Initialize the user object
                     user.setEmail(dataSnapshot.child("email").getValue().toString());
 
-                    //Check if the child exists
+                    // Set the password hash (if it exists)
                     if (dataSnapshot.hasChild("password_hash"))
                     {
                         user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
@@ -196,19 +196,15 @@ public class SimplerLoginActivity extends AppCompatActivity
                         startActivity(ownerPageIntent);
 
                         finish();
-
+                        return;
                     }
 
-                    //If the current user is not the admin and tries to login as a admin
-                    if (!ownerToggle.isChecked() && user_type.equals("normal"))
-                    {
-                        Intent userPageIntent = new Intent(SimplerLoginActivity.this, ResturantsActivity.class);
-                        userPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    // They did not mark themselves as an admin, so go to the map view
+                    Intent userPageIntent = new Intent(SimplerLoginActivity.this, UserMapViewActivity.class);
+                    userPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                        startActivity(userPageIntent);
-                        finish();
-                    }
-
+                    startActivity(userPageIntent);
+                    finish();
                 }
 
                 @Override
