@@ -11,6 +11,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_map_view);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -43,45 +47,62 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // TODO: Get the *real* restaurant list.
+        getAllRestaurants().continueWith((restaurants) -> {
+
+            // Add every restaurant to the map
+            Geocoder geocoder = new Geocoder(this);
+            for (Restaurant r : restaurants.getResult()){
+
+                // Get the coordinates from the address.
+                List<Address> addresses;
+                try {
+                    addresses = geocoder.getFromLocationName(r.getAddress(), 1);
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);      // Let the exception bubble up
+                }
+
+                // Skip this restaurant if the address doesn't map to any coordinates
+                if (addresses.size() == 0)
+                    continue;
+
+                Address addr = addresses.get(0);
+                LatLng coordinates = new LatLng(addr.getLatitude(), addr.getLongitude());
+
+                // Add a marker at that position
+                MarkerOptions opts = new MarkerOptions()
+                        .position(coordinates)
+                        .title(r.getName())
+                        .snippet(r.getDescription());
+
+                googleMap.addMarker(opts);
+            }
+
+            return null;
+        });
+
+
+    }
+
+
+    // Misc metods
+
+    /** Gets all restaurants currently in the database */
+    private Task<Restaurant[]> getAllRestaurants()
+    {
+        // TEMPORARY: return a placeholder list
         Restaurant[] restaurants = new Restaurant[]{
-            new Restaurant(
-                "",
-                "Alex's Restaurant",
-                "noobs",
-                "220 Lansdowne, Noblesville, IN, 46060",
-                "317-773-4098",
-                "100"
-            )
+                new Restaurant(
+                        "",
+                        "Alex's Restaurant",
+                        "noobs",
+                        "220 Lansdowne, Noblesville, IN, 46060",
+                        "317-773-4098",
+                        "100",
+                        "foo"
+                )
         };
 
-        // Add every restaurant to the map
-        Geocoder geocoder = new Geocoder(this);
-        for (Restaurant r : restaurants){
-
-            // Get the coordinates from the address.
-            List<Address> addresses;
-            try {
-               addresses = geocoder.getFromLocationName(r.getAddress(), 1);
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);      // Let the exception bubble up
-            }
-
-            // Skip this restaurant if the address doesn't map to any coordinates
-            if (addresses.size() == 0)
-                continue;
-
-            Address addr = addresses.get(0);
-            LatLng coordinates = new LatLng(addr.getLatitude(), addr.getLongitude());
-
-            // Add a marker at that position
-            MarkerOptions opts = new MarkerOptions()
-                    .position(coordinates)
-                    .title(r.getName())
-                    .snippet(r.getDescription());
-
-            googleMap.addMarker(opts);
-        }
+        return Tasks.call(() -> restaurants);
     }
 }
