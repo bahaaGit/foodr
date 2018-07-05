@@ -13,18 +13,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserMapViewActivity extends FragmentActivity implements OnMapReadyCallback {
+public class UserMapViewActivity extends FragmentActivity implements OnMapReadyCallback
+{
 
     private GoogleMap mMap;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_map_view);
 
@@ -44,65 +48,59 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap)
+    {
         mMap = googleMap;
 
-        getAllRestaurants().continueWith((restaurants) -> {
+        DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("Users");
+        users.addChildEventListener(new ChildEventListenerBuilder().whenChildIsAdded((dataSnapshot, s) ->
+        {
+            // Ignore this if it's not an admin
+            if (!dataSnapshot.hasChild("Restaurants"))
+                return;
 
-            // Add every restaurant to the map
-            Geocoder geocoder = new Geocoder(this);
-            for (Restaurant r : restaurants.getResult()){
-
-                // Get the coordinates from the address.
-                List<Address> addresses;
+            // Listen to all of its child restaurants
+            DatabaseReference userRestaurants = dataSnapshot.getRef().child("Restaurants");
+            userRestaurants.addChildEventListener(new ChildEventListenerBuilder().whenChildIsAdded((snapshot, str) ->
+            {
+                // Add this restaurant to the list
+                Restaurant r = null;
                 try {
-                    addresses = geocoder.getFromLocationName(r.getAddress(), 1);
+                    r = snapshot.getValue(Restaurant.class);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);  // Let the exception bubble up
                 }
-                catch (IOException e) {
-                    throw new RuntimeException(e);      // Let the exception bubble up
-                }
 
-                // Skip this restaurant if the address doesn't map to any coordinates
-                if (addresses.size() == 0)
-                    continue;
-
-                Address addr = addresses.get(0);
-                LatLng coordinates = new LatLng(addr.getLatitude(), addr.getLongitude());
-
-                // Add a marker at that position
-                MarkerOptions opts = new MarkerOptions()
-                        .position(coordinates)
-                        .title(r.getName())
-                        .snippet(r.getDescription());
-
-                googleMap.addMarker(opts);
-            }
-
-            return null;
-        });
-
-
+                addRestaurantToMap(r);
+            }));
+        }));
     }
 
-
-    // Misc metods
-
-    /** Gets all restaurants currently in the database */
-    private Task<Restaurant[]> getAllRestaurants()
+    private void addRestaurantToMap(Restaurant r)
     {
-        // TEMPORARY: return a placeholder list
-        Restaurant[] restaurants = new Restaurant[]{
-                new Restaurant(
-                        "",
-                        "Alex's Restaurant",
-                        "noobs",
-                        "220 Lansdowne, Noblesville, IN, 46060",
-                        "317-773-4098",
-                        "100",
-                        "foo"
-                )
-        };
+        // Get the coordinates from the address.
+        Geocoder geocoder = new Geocoder(this);
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocationName(r.getAddress(), 1);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);      // Let the exception bubble up
+        }
 
-        return Tasks.call(() -> restaurants);
+        // Skip this restaurant if the address doesn't map to any coordinates
+        if (addresses.size() == 0)
+            return;
+
+        Address addr = addresses.get(0);
+        LatLng coordinates = new LatLng(addr.getLatitude(), addr.getLongitude());
+
+        // Add a marker at that position
+        MarkerOptions opts = new MarkerOptions()
+                .position(coordinates)
+                .title(r.getName())
+                .snippet(r.getDescription());
+
+        mMap.addMarker(opts);
     }
 }
