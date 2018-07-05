@@ -68,15 +68,15 @@
             android:textStyle="bold|italic" />
 
         <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/idFoodAddReview"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-
             android:layout_gravity="bottom|right"
             android:layout_marginBottom="39dp"
             android:layout_marginEnd="27dp"
-            android:src="@drawable/commentplus"
+            app:backgroundTint="@color/colorPupple"
             app:fabSize="normal" />
 
     </RelativeLayout>

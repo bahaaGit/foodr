@@ -134,6 +134,7 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
 
     @Override
     public void onItemClick(int position) {
+        Toast.makeText(this,"What click at Ower postion: " + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
