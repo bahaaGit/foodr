@@ -10,20 +10,34 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
 public class SendReviewActivity extends AppCompatActivity {
-
-    //RatingBar mRatingBar = (RatingBar) findViewById(R.id.idReviewRatingBar);
-
+    private String reference;
+    private RatingBar reviewRatingBar;
+    private TextView reviewRatingScale;
+    private  EditText feedback;
+    private Button mSendFeedback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_review);
 
-        RatingBar reviewRatingBar = (RatingBar)findViewById(R.id.idReviewRatingBar);
-        TextView reviewRatingScale = (TextView) findViewById(R.id.idReviewRatingScale);
-        EditText feedback = (EditText) findViewById(R.id.idReviewDesc);
-        Button mSendFeedback = (Button) findViewById(R.id.idReviewfeedBackBtn);
+
+
+        reference  =  getIntent().getStringExtra("Database Reference");
+        reviewRatingBar = (RatingBar)findViewById(R.id.idReviewRatingBar);
+        reviewRatingScale = (TextView) findViewById(R.id.idReviewRatingScale);
+        feedback = (EditText) findViewById(R.id.idReviewDesc);
+        mSendFeedback = (Button) findViewById(R.id.idReviewfeedBackBtn);
 
         reviewRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -56,12 +70,35 @@ public class SendReviewActivity extends AppCompatActivity {
                 if (feedback.getText().toString().isEmpty()) {
                     Toast.makeText(SendReviewActivity.this, "Please fill in feedback text box", Toast.LENGTH_LONG).show();
                 } else {
-                    feedback.setText("");
+                    feedback.getText();
                     reviewRatingBar.setRating(0);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        mSendFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!reference.isEmpty()){
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
+
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Food foodItem = dataSnapshot.getValue(Food.class) ;
+                            foodItem.addComments(feedback.toString());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 }

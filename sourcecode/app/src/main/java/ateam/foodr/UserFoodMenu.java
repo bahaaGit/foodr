@@ -36,11 +36,7 @@ public class UserFoodMenu extends AppCompatActivity implements ChildEventListene
         setContentView(R.layout.activity_user_food_menu);
 
         // Populate the food list
-
         restaurantKey = getIntent().getStringExtra(ActivityParams.RESTAURANT_KEY);
-
-        /*foodList.add(new Food("url","Food1","The is good food",0,"hjj", ""));
-        foodList.add(new Food("url","Food1","The is good food",0,"ghh", ""));*/
 
         // Set up the recycler view
         adapter = new UserFoodMenuAdapter(this,foodList);
@@ -81,7 +77,6 @@ public class UserFoodMenu extends AppCompatActivity implements ChildEventListene
 
     @Override
     public void onItemClick(int position) {
-        //Toast.makeText(this,"What click Hhhhat postion: " + position, Toast.LENGTH_SHORT).show();
         // Show the create restaurant page
         Intent createIntent = new Intent(UserFoodMenu.this, FoodViewActivity.class);
         createIntent.putExtra("Database Reference",foodList.get(position).getUid());
