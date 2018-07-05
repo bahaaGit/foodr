@@ -1,16 +1,20 @@
 package ateam.foodr;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -114,6 +118,7 @@ public class OwnersResturantsActivity extends AppCompatActivity  implements Chil
 
         // HACK: Save the restaurant's key so we can pass it to other activities
         restaurantKeys.add(snapshot.getRef().toString());
+
     }
     public void onChildChanged(DataSnapshot snapshot, String prevChildName)
     {
@@ -147,22 +152,29 @@ public class OwnersResturantsActivity extends AppCompatActivity  implements Chil
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(this,"Normal Click at position: " + position, Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onWhatEverClick(int position) {
-        Toast.makeText(this,"What click at postion: " + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDeleteClick(int position) {
-        Toast.makeText(this,"Delete Click at position: " + position, Toast.LENGTH_SHORT).show();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(resturantList.get(position).getRestID());
+        mDatabase.removeValue();
+
     }
 
     @Override
     public void onEditClick(int position) {
-        Toast.makeText(this,"Eit Click at position: " + position, Toast.LENGTH_SHORT).show();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(resturantList.get(position).getRestID());
+        // Show the create restaurant page
+        Intent createIntent = new Intent(OwnersResturantsActivity.this, CreateRestaurantActivity.class);
+        createIntent.putExtra("Database Reference",resturantList.get(position).getRestID());
+        startActivity(createIntent);
+
     }
+
+
 }

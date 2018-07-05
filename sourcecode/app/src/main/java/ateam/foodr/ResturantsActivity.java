@@ -29,6 +29,8 @@ public class ResturantsActivity extends AppCompatActivity implements ResturantsA
     RecyclerView recyclerView;
     ResturantsAdapter adapter;
     ArrayList<Restaurant> resturantList = new ArrayList<>();
+    ArrayList<String> resturantKeysNorUsr = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,8 @@ public class ResturantsActivity extends AppCompatActivity implements ResturantsA
                         }
                         resturantList.add(r);
                         adapter.notifyDataSetChanged();
+                        // HACK: Save the restaurant's key so we can pass it to other activities
+                        resturantKeysNorUsr.add(dataSnapshot.getRef().toString());
                     }
 
                     @Override
@@ -116,7 +120,13 @@ public class ResturantsActivity extends AppCompatActivity implements ResturantsA
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(this,"Normal Click at position: " + position, Toast.LENGTH_SHORT).show();
+        // View that restaurant's menu
+        Intent menuIntent = new Intent(this, OwnerFoodMenu.class);
+
+        // HACK: Pass the restaurant's key to the next activity so it knows what food to get.
+        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, resturantKeysNorUsr.get(position));
+
+        startActivity(menuIntent);
 
     }
 
