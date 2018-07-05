@@ -235,7 +235,7 @@ public class CreateFoodActivity extends AppCompatActivity
                 (
                         newFood.getRef().toString(),     // TODO: Fill this in
                         nameTextbox.getText().toString(),
-                        descTextbox.getText().toString(),0,url,"");
+                        descTextbox.getText().toString(),0,0.1,0.1,url,"");
 
         newFood.setValue(f)
                 // Show an error message on failure

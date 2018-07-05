@@ -57,6 +57,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                 name.setText(foodItem.getName());
                 desc.setText(foodItem.getDesc());
                 rate.setRating(foodItem.getRate());
+                rate.setEnabled(false);
             }
 
             @Override

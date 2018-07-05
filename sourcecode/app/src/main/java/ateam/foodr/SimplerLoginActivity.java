@@ -74,6 +74,16 @@ public class SimplerLoginActivity extends AppCompatActivity
         //Check if a user is logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        //When the user wants to switch to the registration view
+        switchRegBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Switch to the registration Intent
+                Intent intent = new Intent(SimplerLoginActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //If a user exists
         if (currentUser != null)
         {
@@ -85,6 +95,9 @@ public class SimplerLoginActivity extends AppCompatActivity
             uDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if (!dataSnapshot.hasChild("user_type"))
+                        return;
 
                     String status = dataSnapshot.child("user_type").getValue().toString();
                     userInit();
@@ -112,15 +125,6 @@ public class SimplerLoginActivity extends AppCompatActivity
 
         }
 
-        //When the user wants to switch to the registration view
-        switchRegBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Switch to the registration Intent
-                Intent intent = new Intent(SimplerLoginActivity.this, RegistrationActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public void onLoginClick(View view)
@@ -189,6 +193,9 @@ public class SimplerLoginActivity extends AppCompatActivity
                         //Check if the current user is marked as a admin
                         Intent ownerPageIntent = new Intent(SimplerLoginActivity.this, OwnersResturantsActivity.class);
 
+                        //Reverse the toggle back to its state
+                        ownerToggle.setChecked(false);
+
                         //This line of code makes sure that the user can't go back to the registration page using the phone back button
                         ownerPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
@@ -199,12 +206,15 @@ public class SimplerLoginActivity extends AppCompatActivity
                         return;
                     }
 
-                    // They did not mark themselves as an admin, so go to the map view
-                    Intent userPageIntent = new Intent(SimplerLoginActivity.this, UserMapViewActivity.class);
-                    userPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    if (!ownerToggle.isChecked() && user_type.equals("normal"))
+                    {
+                        // They did not mark themselves as an admin, so go to the map view
+                        Intent userPageIntent = new Intent(SimplerLoginActivity.this, UserMapViewActivity.class);
+                        userPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                    startActivity(userPageIntent);
-                    finish();
+                        startActivity(userPageIntent);
+                        finish();
+                    }
                 }
 
                 @Override
