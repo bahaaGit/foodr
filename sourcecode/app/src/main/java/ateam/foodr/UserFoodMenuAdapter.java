@@ -1,7 +1,6 @@
 package ateam.foodr;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -11,27 +10,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
+public class UserFoodMenuAdapter extends RecyclerView.Adapter<UserFoodMenuAdapter.ViewHolder> {
 
     private Context mContext;
     private ArrayList<Food> mList;
-    private FoodAdapter.OnItemClickListener mListener;
+    private UserFoodMenuAdapter.OnItemClickListener mListener;
 
     //The storage reference so that the profile images can be stored on the FireBase
     private StorageReference mImageStorage;
 
-    FoodAdapter(Context context, ArrayList<Food> list){
+    UserFoodMenuAdapter(Context context, ArrayList<Food> list){
         mContext = context;
         mList = list;
     }
@@ -47,6 +44,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         return viewHolder;
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -54,7 +52,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
 
         ImageView image = holder.item_image;
         TextView name,desc;
-        RatingBar  rate;
+        RatingBar rate;
 
         name = holder.item_name;
         rate = holder.item_rate;
@@ -84,7 +82,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-    View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener{
+            MenuItem.OnMenuItemClickListener{
 
         ImageView item_image;
         TextView item_name, item_desc;
@@ -99,7 +97,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
             item_rate = itemView.findViewById(R.id.idMFoodratingBar);
 
             itemView.setOnClickListener(this);
-            itemView.setOnCreateContextMenuListener(this);
+            //itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -112,7 +110,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
             }
         }
 
-        @Override
+       /* @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle("Select Action");
             MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Do whatever");
@@ -122,26 +120,13 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
             doWhatever.setOnMenuItemClickListener(this);
             delete.setOnMenuItemClickListener(this);
             edit.setOnMenuItemClickListener(this);
-        }
+        }*/
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             if (mListener != null) {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
 
-                    switch (item.getItemId()) {
-                        case 1:
-                            mListener.onWhatEverClick(position);
-                            return true;
-                        case 2:
-                            mListener.onDeleteClick(position);
-                            return true;
-                        case 3:
-                            mListener.onEditClick(position);
-                            return true;
-                    }
-                }
             }
             return false;
         }
@@ -154,16 +139,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     }
     public interface OnItemClickListener {
         void onItemClick(int position);
-
-        void onWhatEverClick(int position);
-
-        void onDeleteClick(int position);
-
-        void onEditClick(int position);
-
     }
 
-    public void setOnItemClickListener(FoodAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(UserFoodMenuAdapter.OnItemClickListener listener) {
         mListener = listener;
     }
 }

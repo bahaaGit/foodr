@@ -121,11 +121,10 @@ public class ResturantsActivity extends AppCompatActivity implements ResturantsA
     @Override
     public void onItemClick(int position) {
         // View that restaurant's menu
-        Intent menuIntent = new Intent(this, OwnerFoodMenu.class);
+        Intent menuIntent = new Intent(this, UserFoodMenu.class);
 
         // HACK: Pass the restaurant's key to the next activity so it knows what food to get.
         menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, resturantKeysNorUsr.get(position));
-
         startActivity(menuIntent);
 
     }
@@ -142,6 +141,6 @@ public class ResturantsActivity extends AppCompatActivity implements ResturantsA
 
     @Override
     public void onEditClick(int position) {
-        Toast.makeText(this,"Eit Click at position: " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"Eit Click at Resturant at position: " + position, Toast.LENGTH_SHORT).show();
     }
 }
