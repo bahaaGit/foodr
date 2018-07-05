@@ -1,5 +1,6 @@
 package ateam.foodr;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +11,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -52,6 +54,10 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
     {
         mMap = googleMap;
 
+        // Subscribe to the marker click event
+        googleMap.setOnMarkerClickListener(this::onMarkerClick);
+
+        // Add all restaurants to the map
         DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("Users");
         users.addChildEventListener(new ChildEventListenerBuilder().whenChildIsAdded((dataSnapshot, s) ->
         {
@@ -68,7 +74,9 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
                 try {
                     r = snapshot.getValue(Restaurant.class);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);  // Let the exception bubble up
+                    // Let the exception bubble up
+                    // TODO: Fix this exception by properly deserializing restaurants with menus
+                    throw new RuntimeException(e);
                 }
 
                 addRestaurantToMap(r);
@@ -101,6 +109,27 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
                 .title(r.getName())
                 .snippet(r.getDescription());
 
-        mMap.addMarker(opts);
+        Marker marker = mMap.addMarker(opts);
+
+        // Associate the marker with the restaurant object.
+        // This way we can know which restaurant page to visit
+        // when the user clicks it.
+        marker.setTag(r);
+    }
+
+    private boolean onMarkerClick(Marker marker)
+    {
+        // Get the restaurant from the marker
+        Restaurant r = (Restaurant)(marker.getTag());
+
+        // Go to the restaurant's menu.
+        Intent menuIntent = new Intent(this, OwnerFoodMenu.class);
+        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, r.getRestID());
+
+        startActivity(menuIntent);
+
+        // Returning false tells Google Maps to run the default behavior
+        // in addition to our logic
+        return false;
     }
 }
