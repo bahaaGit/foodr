@@ -39,7 +39,6 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         rate = findViewById(R.id.idFoodRatingBar);
         addReviewBtn = findViewById(R.id.idFoodAddReview);
 
-
         // Subscribe to events so the recycler view gets populated with food items
         DatabaseReference foodDB = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
 

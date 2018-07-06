@@ -20,6 +20,10 @@ public class SendReviewActivity extends AppCompatActivity {
 
     private String foodKey;
     public double rating;
+    public double ratingTotal;
+    public double numberOfRating;
+    public double rate;
+    public int go;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,9 @@ public class SendReviewActivity extends AppCompatActivity {
         Button mSendFeedback = (Button) findViewById(R.id.idReviewfeedBackBtn);
 
         rating = 0.1;
+        go = 0;
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
 
         reviewRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -63,24 +70,32 @@ public class SendReviewActivity extends AppCompatActivity {
                         rating = 0.1;
                         reviewRatingScale.setText("");
                 }
-            }
-        });
-
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
-        mDatabase.addValueEventListener(new ValueEventListener() {
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
+                mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                double ratingTotal = Double.parseDouble(dataSnapshot.child("totalOfRating").getValue().toString());
-                double numberOfRating = Double.parseDouble(dataSnapshot.child("numOfRating").getValue().toString());
+                ratingTotal = Double.parseDouble(dataSnapshot.child("totalOfRating").getValue().toString());
+                numberOfRating = Double.parseDouble(dataSnapshot.child("numOfRating").getValue().toString());
+                go = 1;
 
-                double rate = (ratingTotal + rating) / (numberOfRating + 1.0);
-                mDatabase.child("rate").setValue(rate);
-                mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
-                mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+                if (go == 1)
+            {
+
+                rate = (ratingTotal + rating) / (numberOfRating + 1.0);
+                mDatabase.child("rate").setValue(rate);
+                mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
+                mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
+                go = 0;
+            }
 
             }
         });
@@ -93,7 +108,11 @@ public class SendReviewActivity extends AppCompatActivity {
                     Toast.makeText(SendReviewActivity.this, "Please fill in feedback text box", Toast.LENGTH_LONG).show();
                 } else {
                     feedback.setText("");
-                    reviewRatingBar.setRating(0);
+                    rate = (ratingTotal + rating) / (numberOfRating + 1.0);
+                    mDatabase.child("rate").setValue(rate);
+                    mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
+                    mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
+                    reviewRatingBar.setRating((float) rate);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
                 }
             }

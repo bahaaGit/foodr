@@ -64,8 +64,10 @@ public class UserFoodMenuAdapter extends RecyclerView.Adapter<UserFoodMenuAdapte
         rate.setRating(foodItem.getRate());
         rate.setEnabled(false);
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        Picasso.with(image.getContext()).load(url).into(image);
-
+        if (!url.equals("empty"))
+        {
+            Picasso.with(image.getContext()).load(url).into(image);
+        }
 
         name.setText(foodItem.getName());
         //rate.setText(foodItem.getRate());
