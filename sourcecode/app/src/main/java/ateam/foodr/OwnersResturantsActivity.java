@@ -44,6 +44,7 @@ public class OwnersResturantsActivity extends AppCompatActivity  implements Chil
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         // Subscribe to data-changed events
         user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();

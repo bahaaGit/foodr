@@ -5,6 +5,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('../../debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "ateam.foodr"
@@ -18,6 +26,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {

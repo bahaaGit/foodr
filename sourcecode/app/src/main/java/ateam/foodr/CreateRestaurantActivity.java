@@ -86,8 +86,8 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                     nameTextbox.setText(dataSnapshot.child("name").getValue().toString());
                     addressTextbox.setText(dataSnapshot.child("address").getValue().toString());
                     phoneTextbox.setText(dataSnapshot.child("phoneNumber").getValue().toString());
-                    businessIDFirstTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(0,1));
-                    businessIDSecondTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(1));
+                    businessIDFirstTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(0,2));
+                    businessIDSecondTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(2));
                     url = dataSnapshot.child("imageurl").getValue().toString();
                     if (!url.equals("empty"))
                     {
