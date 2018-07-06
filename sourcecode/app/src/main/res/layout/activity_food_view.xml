@@ -67,6 +67,12 @@
             android:text="Tomato tomato atoamma "
             android:textSize="18sp"
             android:textStyle="bold|italic" />
+        <ListView
+            android:id="@+id/idFoodCommentsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/idFoodDesc"
+            ></ListView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/idFoodAddReview"

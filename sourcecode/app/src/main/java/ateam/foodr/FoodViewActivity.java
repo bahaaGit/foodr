@@ -5,8 +5,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -18,12 +21,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class FoodViewActivity extends AppCompatActivity implements ChildEventListener{
     private String foodKey;
     private ImageView restImage;
     private TextView name, desc;
     private RatingBar rate;
+    private ListView foodCommentsList;
     private FloatingActionButton addReviewBtn;
+    private ArrayList<String> comments;
 
 
     @Override
@@ -31,13 +38,25 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_view);
 
+
+        comments.add("hello");
+        comments.add("hello");
+        comments.add("hello");
+        comments.add("hello");
+        comments.add("hello");
+
         foodKey = getIntent().getStringExtra("Database Reference");
 
         restImage = findViewById(R.id.idFoodImg);
         name = findViewById(R.id.idFoodName);
         desc = findViewById(R.id.idFoodDesc);
         rate = findViewById(R.id.idFoodRatingBar);
+        foodCommentsList = findViewById(R.id.idFoodCommentsList);
         addReviewBtn = findViewById(R.id.idFoodAddReview);
+
+        ListAdapter listAdapter = new ListAdapter();
+
+        foodCommentsList.setAdapter(listAdapter);
 
         // Subscribe to events so the recycler view gets populated with food items
         DatabaseReference foodDB = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
@@ -57,6 +76,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                 desc.setText(foodItem.getDesc());
                 rate.setRating(foodItem.getRate());
                 rate.setEnabled(false);
+                //comments = foodItem.getComments();
             }
 
             @Override
@@ -74,8 +94,6 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                 startActivity(createIntent);
             }
         });
-        //DatabaseReference foodDB = restaurantDB.child("FoodMenu");
-        //foodDB.addChildEventListener(this);
     }
 
     @Override
@@ -101,5 +119,37 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
     @Override
     public void onCancelled(DatabaseError databaseError) {
 
+    }
+
+    class ListAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return comments.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            convertView = getLayoutInflater().inflate(R.layout.rl_comments_item,null);
+            TextView commenterName, commenterDesc;
+
+            commenterDesc = convertView.findViewById(R.id.idCommenterDesc);
+            commenterName = convertView.findViewById(R.id.idCommenterName);
+
+            commenterName.setText(comments.get(position));
+            commenterDesc.setText(comments.get(position));
+            return convertView;
+        }
     }
 }
