@@ -74,6 +74,7 @@ public class SimplerLoginActivity extends AppCompatActivity
         //Check if a user is logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        //mAuth.signOut();
         //When the user wants to switch to the registration view
         switchRegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,11 +256,11 @@ public class SimplerLoginActivity extends AppCompatActivity
                 });
 
     }
-
     //Initialize the user object
     public static void userInit()
     {
         user.setId("0");
+        user.user_type = "null";
         user.setPassword_hash("0");
         String[] restArray = {"null"};
         user.setRestaurant(restArray);
