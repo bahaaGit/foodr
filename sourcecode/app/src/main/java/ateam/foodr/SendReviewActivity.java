@@ -25,6 +25,12 @@ public class SendReviewActivity extends AppCompatActivity {
     private TextView reviewRatingScale;
     private  EditText feedback;
     private Button mSendFeedback;
+    private String foodKey;
+    public double rating;
+    public double ratingTotal;
+    public double numberOfRating;
+    public double rate;
+    public int go;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,36 +39,75 @@ public class SendReviewActivity extends AppCompatActivity {
 
 
 
-        reference  =  getIntent().getStringExtra("Database Reference");
+        foodKey  =  getIntent().getStringExtra("Database Reference");
         reviewRatingBar = (RatingBar)findViewById(R.id.idReviewRatingBar);
         reviewRatingScale = (TextView) findViewById(R.id.idReviewRatingScale);
         feedback = (EditText) findViewById(R.id.idReviewDesc);
         mSendFeedback = (Button) findViewById(R.id.idReviewfeedBackBtn);
+
+        rating = 0.1;
+        go = 0;
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
 
         reviewRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                 switch ((int) ratingBar.getRating()) {
                     case 1:
+                        rating = 1;
                         reviewRatingScale.setText("Very bad");
                         break;
                     case 2:
+                        rating = 2;
                         reviewRatingScale.setText("Need some improvement");
                         break;
                     case 3:
+                        rating = 3;
                         reviewRatingScale.setText("Good");
                         break;
                     case 4:
+                        rating = 4;
                         reviewRatingScale.setText("Great");
                         break;
                     case 5:
+                        rating = 5;
                         reviewRatingScale.setText("Awesome. I love it");
                         break;
                     default:
+                        rating = 0.1;
                         reviewRatingScale.setText("");
                 }
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
+                mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ratingTotal = Double.parseDouble(dataSnapshot.child("totalOfRating").getValue().toString());
+                numberOfRating = Double.parseDouble(dataSnapshot.child("numOfRating").getValue().toString());
+                go = 1;
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+
+                if (go == 1)
+            {
+
+                rate = (ratingTotal + rating) / (numberOfRating + 1.0);
+                mDatabase.child("rate").setValue(rate);
+                mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
+                mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
+                go = 0;
+            }
+
+            }
+        });
+
 
         mSendFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,8 +115,14 @@ public class SendReviewActivity extends AppCompatActivity {
                 if (feedback.getText().toString().isEmpty()) {
                     Toast.makeText(SendReviewActivity.this, "Please fill in feedback text box", Toast.LENGTH_LONG).show();
                 } else {
-                    feedback.getText();
-                    reviewRatingBar.setRating(0);
+                    //feedback.getText();
+                    //reviewRatingBar.setRating(0);
+                    feedback.setText("");
+                    rate = (ratingTotal + rating) / (numberOfRating + 1.0);
+                    mDatabase.child("rate").setValue(rate);
+                    mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
+                    mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
+                    reviewRatingBar.setRating((float) rate);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
                 }
             }

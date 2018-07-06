@@ -168,6 +168,20 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                                         finish();
                                                     }
+
+                                                    if (user_type.equals("normal"))
+                                                    {
+                                                        //Check if the current user is marked as a admin
+                                                        Intent ownerPageIntent = new Intent(RegistrationActivity.this, UserMapViewActivity.class);
+
+                                                        //This line of code makes sure that the user can't go back to the registration page using the phone back button
+                                                        ownerPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                                        //Actually switches the UI
+                                                        startActivity(ownerPageIntent);
+
+                                                        finish();
+                                                    }
                                                 }
                                                 else
                                                 {

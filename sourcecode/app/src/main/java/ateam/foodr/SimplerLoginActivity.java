@@ -43,7 +43,7 @@ public class SimplerLoginActivity extends AppCompatActivity
     private ProgressDialog mLoginProgress;
 
     //The variable to check if there is a error
-    private int error;
+    public int error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -75,6 +75,16 @@ public class SimplerLoginActivity extends AppCompatActivity
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         //mAuth.signOut();
+        //When the user wants to switch to the registration view
+        switchRegBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Switch to the registration Intent
+                Intent intent = new Intent(SimplerLoginActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //If a user exists
         if (currentUser != null)
         {
@@ -86,6 +96,9 @@ public class SimplerLoginActivity extends AppCompatActivity
             uDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if (!dataSnapshot.hasChild("user_type"))
+                        return;
 
                     String status = dataSnapshot.child("user_type").getValue().toString();
                     userInit();
@@ -113,15 +126,6 @@ public class SimplerLoginActivity extends AppCompatActivity
 
         }
 
-        //When the user wants to switch to the registration view
-        switchRegBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Switch to the registration Intent
-                Intent intent = new Intent(SimplerLoginActivity.this, RegistrationActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public void onLoginClick(View view)
@@ -150,71 +154,6 @@ public class SimplerLoginActivity extends AppCompatActivity
 
             loginUser(email, password);
 
-            //If there is a error
-            if (error == 1)
-                return;
-
-            String uid = mAuth.getUid();
-
-            if (uid == null)
-                return;
-
-            //The database reference for the user
-            mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-
-            //Check if the current user is marked as a admin
-            mDatabase.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String uid1 = mAuth.getUid();
-                    //Check the user type
-                    String user_type = dataSnapshot.child("user_type").getValue().toString();
-
-                    user.setUser_type(user_type);
-
-                    //Initialize the user object
-                    user.setEmail(dataSnapshot.child("email").getValue().toString());
-
-                    // Set the password hash (if it exists)
-                    if (dataSnapshot.hasChild("password_hash"))
-                    {
-                        user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
-                    }
-                    user.setId(uid1);
-
-                    // If the user marked themselves as an owner, take them to the owner page
-                    Switch ownerToggle = findViewById(R.id.login_ownerToggle);
-                    if (ownerToggle.isChecked() && user_type.equals("admin")) {
-
-                        //Check if the current user is marked as a admin
-                        Intent ownerPageIntent = new Intent(SimplerLoginActivity.this, OwnersResturantsActivity.class);
-
-                        //This line of code makes sure that the user can't go back to the registration page using the phone back button
-                        ownerPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                        //Actually switches the UI
-                        startActivity(ownerPageIntent);
-
-                        finish();
-                        return;
-                    }
-
-                    // They did not mark themselves as an admin, so go to the map view
-                    Intent userPageIntent = new Intent(SimplerLoginActivity.this, UserMapViewActivity.class);
-                    userPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                    startActivity(userPageIntent);
-                    finish();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-
         }
 
         // TODO: Do something different if the user isn't
@@ -235,6 +174,73 @@ public class SimplerLoginActivity extends AppCompatActivity
 
                             //Get rid of the progress dialog
                             mLoginProgress.dismiss();
+
+                            String uid = mAuth.getUid();
+
+                            if (uid == null)
+                                return;
+
+                            //The database reference for the user
+                            mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+
+                            //Check if the current user is marked as a admin
+                            mDatabase.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    String uid1 = mAuth.getUid();
+                                    //Check the user type
+                                    String user_type = dataSnapshot.child("user_type").getValue().toString();
+
+                                    user.setUser_type(user_type);
+
+                                    //Initialize the user object
+                                    user.setEmail(dataSnapshot.child("email").getValue().toString());
+
+                                    // Set the password hash (if it exists)
+                                    if (dataSnapshot.hasChild("password_hash"))
+                                    {
+                                        user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
+                                    }
+                                    user.setId(uid1);
+
+                                    // If the user marked themselves as an owner, take them to the owner page
+                                    Switch ownerToggle = findViewById(R.id.login_ownerToggle);
+                                    if (ownerToggle.isChecked() && user_type.equals("admin")) {
+
+                                        //Check if the current user is marked as a admin
+                                        Intent ownerPageIntent = new Intent(SimplerLoginActivity.this, OwnersResturantsActivity.class);
+
+                                        //Reverse the toggle back to its state
+                                        ownerToggle.setChecked(false);
+
+                                        //This line of code makes sure that the user can't go back to the registration page using the phone back button
+                                        ownerPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                        //Actually switches the UI
+                                        startActivity(ownerPageIntent);
+
+                                        finish();
+                                        return;
+                                    }
+
+                                    if (!ownerToggle.isChecked() && user_type.equals("normal") && (mAuth.getCurrentUser() != null))
+                                    {
+                                        // They did not mark themselves as an admin, so go to the map view
+                                        Intent userPageIntent = new Intent(SimplerLoginActivity.this, UserMapViewActivity.class);
+                                        userPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                        startActivity(userPageIntent);
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
 
                         } else {
 

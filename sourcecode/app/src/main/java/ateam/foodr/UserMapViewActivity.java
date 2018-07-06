@@ -5,6 +5,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,9 +17,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
 {
 
     private GoogleMap mMap;
+    private Button button;
 
 
     @Override
@@ -38,6 +41,25 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+//        button = findViewById(R.id.MapViewLogOutBtn);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth.getInstance().signOut();
+//
+//                Intent intent = new Intent(UserMapViewActivity.this, SimplerLoginActivity.class);
+//
+//                //Redirect the user to the startActivity view
+//
+//                startActivity(intent);
+//
+//                //Make this so that the user can't access the main view through the back button
+//                finish();
+//            }
+//        });
+
+
     }
 
 
@@ -123,7 +145,7 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
         Restaurant r = (Restaurant)(marker.getTag());
 
         // Go to the restaurant's menu.
-        Intent menuIntent = new Intent(this, OwnerFoodMenu.class);
+        Intent menuIntent = new Intent(this, UserFoodMenu.class);
         menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, r.getRestID());
 
         startActivity(menuIntent);

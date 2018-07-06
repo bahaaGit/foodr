@@ -10,13 +10,14 @@ public class Food {
     private int rate;
     private String name,desc, Imageurl,uid;
     private ArrayList<String> comments;
+    private double numOfRating, totalOfRating;
 
 
     public Food() {
 
     }
 
-    public Food(String uid, String name, String desc, int rate, String imageurl, ArrayList<String> comments) {
+    public Food(String uid, String name, String desc, int rate, double numOfRating, double totalOfRating , String imageurl, ArrayList<String> comments) {
         if(name.trim().equals("")){
             name = "NO Name";
         }
@@ -26,6 +27,8 @@ public class Food {
         Imageurl = imageurl;
         this.uid = uid;
         this.comments = comments;
+        this.numOfRating = numOfRating;
+        this.totalOfRating = totalOfRating;
     }
 
 
@@ -80,5 +83,20 @@ public class Food {
 
     public Boolean addComments(String comments){
         return this.comments.add(comments);
+    }
+    public double getNumOfRating() {
+        return numOfRating;
+    }
+
+    public void setNumOfRating(double numOfRating) {
+        this.numOfRating = numOfRating;
+    }
+
+    public double getTotalOfRating() {
+        return totalOfRating;
+    }
+
+    public void setTotalOfRating(double totalOfRating) {
+        this.totalOfRating = totalOfRating;
     }
 }
