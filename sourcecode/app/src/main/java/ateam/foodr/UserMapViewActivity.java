@@ -5,6 +5,10 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -25,12 +29,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserMapViewActivity extends FragmentActivity implements OnMapReadyCallback
+import butterknife.BindView;
+
+public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback
 {
 
     private GoogleMap mMap;
     private Button button;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,40 +43,56 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_map_view);
 
+        // Set up the menu in the top right corner
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-        /*CameraUpdate center=
-                CameraUpdateFactory.newLatLng(new LatLng(40.76793169992044,
-                        -73.98180484771729));
-        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
-
-        mMap.moveCamera(center);
-        mMap.animateCamera(zoom);*/
-
-//        button = findViewById(R.id.MapViewLogOutBtn);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//
-//                Intent intent = new Intent(UserMapViewActivity.this, SimplerLoginActivity.class);
-//
-//                //Redirect the user to the startActivity view
-//
-//                startActivity(intent);
-//
-//                //Make this so that the user can't access the main view through the back button
-//                finish();
-//            }
-//        });
-
-
     }
 
+
+    /* Toolbar stuff */
+
+    //This will get the menu for us
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        super.onCreateOptionsMenu(menu);
+
+        //This sticks the menu to the toolbar the name of the file is menu_log.xml so in the menu directory main_menu.xml
+        getMenuInflater().inflate(R.menu.menu_log,menu);
+        return true;
+    }
+
+    //When there is a click on the menu tab
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        super.onOptionsItemSelected(item);
+
+        //According to which item is clicked
+        if (item.getItemId() == R.id.main_logout_btn)
+        {
+            FirebaseAuth.getInstance().signOut();
+
+            Intent intent = new Intent(UserMapViewActivity.this, SimplerLoginActivity.class);
+
+            //Redirect the user to the startActivity view
+
+            startActivity(intent);
+
+            //Make this so that the user can't access the main view through the back button
+            finish();
+        }
+
+        return true;
+    }
+
+
+    /* Map stuff */
 
     /**
      * Manipulates the map once available.
@@ -114,6 +135,32 @@ public class UserMapViewActivity extends FragmentActivity implements OnMapReadyC
                 addRestaurantToMap(r);
             }));
         }));
+
+        // Recenter the map on the user's location
+                /*CameraUpdate center=
+                CameraUpdateFactory.newLatLng(new LatLng(40.76793169992044,
+                        -73.98180484771729));
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);*/
+
+//        button = findViewById(R.id.MapViewLogOutBtn);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth.getInstance().signOut();
+//
+//                Intent intent = new Intent(UserMapViewActivity.this, SimplerLoginActivity.class);
+//
+//                //Redirect the user to the startActivity view
+//
+//                startActivity(intent);
+//
+//                //Make this so that the user can't access the main view through the back button
+//                finish();
+//            }
+//        });
     }
 
     private void addRestaurantToMap(Restaurant r)
