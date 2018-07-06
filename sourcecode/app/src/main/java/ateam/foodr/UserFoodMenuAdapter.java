@@ -71,6 +71,8 @@ public class UserFoodMenuAdapter extends RecyclerView.Adapter<UserFoodMenuAdapte
 
         name.setText(foodItem.getName());
         //rate.setText(foodItem.getRate());
+        if (SimplerLoginActivity.user == null)
+            return;
 
         if (SimplerLoginActivity.user.getUser_type().equals("admin"))
         {
