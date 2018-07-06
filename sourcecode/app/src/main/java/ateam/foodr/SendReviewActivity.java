@@ -40,6 +40,7 @@ public class SendReviewActivity extends AppCompatActivity {
 
 
         foodKey  =  getIntent().getStringExtra("Database Reference");
+        reference = foodKey;
         reviewRatingBar = (RatingBar)findViewById(R.id.idReviewRatingBar);
         reviewRatingScale = (TextView) findViewById(R.id.idReviewRatingScale);
         feedback = (EditText) findViewById(R.id.idReviewDesc);
@@ -137,7 +138,8 @@ public class SendReviewActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Food foodItem = dataSnapshot.getValue(Food.class) ;
-                            foodItem.addComments(feedback.toString());
+                            String commnt = feedback.getText().toString();
+                            foodItem.addComments(commnt);
                         }
 
                         @Override

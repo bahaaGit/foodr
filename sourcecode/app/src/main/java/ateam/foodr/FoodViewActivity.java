@@ -38,6 +38,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_view);
 
+        comments = new ArrayList<String>();
 
         comments.add("hello");
         comments.add("hello");
