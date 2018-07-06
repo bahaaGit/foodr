@@ -230,6 +230,10 @@ public class CreateFoodActivity extends AppCompatActivity
                 newFood = foodList.push();
             }
         ArrayList<String> newcommt = new ArrayList<>();
+
+        newcommt.add("");
+
+
         Food f = new Food
                 (
                         newFood.getRef().toString(),     // TODO: Fill this in

@@ -31,7 +31,8 @@ public class SendReviewActivity extends AppCompatActivity {
     public double numberOfRating;
     public double rate;
     public int go;
-
+    DatabaseReference mDatabase;
+    Food foodItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +47,12 @@ public class SendReviewActivity extends AppCompatActivity {
         feedback = (EditText) findViewById(R.id.idReviewDesc);
         mSendFeedback = (Button) findViewById(R.id.idReviewfeedBackBtn);
 
+
+        if (foodKey != null)
+        {
+            mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
+
+        }
         rating = 0.1;
         go = 0;
 
@@ -79,12 +86,12 @@ public class SendReviewActivity extends AppCompatActivity {
                         rating = 0.1;
                         reviewRatingScale.setText("");
                 }
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
                 mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ratingTotal = Double.parseDouble(dataSnapshot.child("totalOfRating").getValue().toString());
                 numberOfRating = Double.parseDouble(dataSnapshot.child("numOfRating").getValue().toString());
+                foodItem = dataSnapshot.getValue(Food.class);
                 go = 1;
 
 
@@ -116,42 +123,19 @@ public class SendReviewActivity extends AppCompatActivity {
                 if (feedback.getText().toString().isEmpty()) {
                     Toast.makeText(SendReviewActivity.this, "Please fill in feedback text box", Toast.LENGTH_LONG).show();
                 } else {
-                    //feedback.getText();
-                    //reviewRatingBar.setRating(0);
-                    feedback.setText("");
+
                     rate = (ratingTotal + rating) / (numberOfRating + 1.0);
                     mDatabase.child("rate").setValue(rate);
                     mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
                     mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
                     reviewRatingBar.setRating((float) rate);
+                    String commnt = feedback.getText().toString();
+                    foodItem.comments.add(commnt);
+                    mDatabase.child("comments").setValue(foodItem.comments);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        mSendFeedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!reference.isEmpty()){
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
-
-                    ref.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Food foodItem = dataSnapshot.getValue(Food.class) ;
-                            String commnt = feedback.getText().toString();
-                            foodItem.addComments(commnt);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-                Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
 }
