@@ -9,7 +9,7 @@ public class Food {
 
     private int rate;
     private String name,desc, Imageurl,uid;
-    private ArrayList<String> comments;
+    public ArrayList<String> comments;
     private double numOfRating, totalOfRating;
 
 

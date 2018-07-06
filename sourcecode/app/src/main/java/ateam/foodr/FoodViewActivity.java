@@ -40,11 +40,6 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
 
         comments = new ArrayList<String>();
 
-        comments.add("hello");
-        comments.add("hello");
-        comments.add("hello");
-        comments.add("hello");
-        comments.add("hello");
 
         foodKey = getIntent().getStringExtra("Database Reference");
 
@@ -72,12 +67,12 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                 }
                 //dataSnapshot.child("name").getValue().toString();
                 Food foodItem = dataSnapshot.getValue(Food.class) ;
-
+                
                 name.setText(foodItem.getName());
                 desc.setText(foodItem.getDesc());
                 rate.setRating(foodItem.getRate());
                 rate.setEnabled(false);
-                //comments = foodItem.getComments();
+                comments = foodItem.getComments();
             }
 
             @Override
@@ -126,6 +121,8 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
 
         @Override
         public int getCount() {
+            if (comments == null)
+                return 0;
             return comments.size();
         }
 
@@ -147,8 +144,10 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
 
             commenterDesc = convertView.findViewById(R.id.idCommenterDesc);
             commenterName = convertView.findViewById(R.id.idCommenterName);
-
-            commenterName.setText(comments.get(position));
+            if(position == 0){
+                return convertView;
+            }
+            commenterName.setText(SimplerLoginActivity.user.email);
             commenterDesc.setText(comments.get(position));
             return convertView;
         }
