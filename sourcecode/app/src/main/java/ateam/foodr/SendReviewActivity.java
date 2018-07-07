@@ -135,11 +135,7 @@ public class SendReviewActivity extends AppCompatActivity {
                     mDatabase.child("comments").setValue(foodItem.comments);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
 
-//                    Intent intent = new Intent(SendReviewActivity.this,UserMapViewActivity.class);
-//
-//                    //Actually switches the UI
-//                    startActivity(intent);
-
+                    //Programmatically press the back button
                     onBackPressed();
 
                     finish();
