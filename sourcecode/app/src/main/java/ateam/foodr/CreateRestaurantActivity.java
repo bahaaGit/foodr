@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Random;
 
 public class CreateRestaurantActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -181,7 +182,10 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             //According to the id of the user save the user image inside the profile_images directory
             String uid = mCurrentUser.getUid();
             //Access the location where you are going to save the profile picture
-            StorageReference storage = mImageStorage.child("restaurant_images").child(imageUri.getLastPathSegment());
+            Random rand = new Random();
+
+            int  n = rand.nextInt(1000000000);
+            StorageReference storage = mImageStorage.child("restaurant_images").child(Integer.toString(n));
 
             //Put the file onto the directory and do some tasks when the task is done
             storage.putFile(imageUri).addOnCompleteListener(new OnCompleteListener < UploadTask.TaskSnapshot > () {

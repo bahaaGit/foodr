@@ -54,6 +54,9 @@ public class SimplerLoginActivity extends AppCompatActivity
         //Set the error to be 0
         error = 0;
 
+        //Request Permissions
+        PermissionsUtils.checkAndRequestPermissions(SimplerLoginActivity.this);
+
         //Initialize the registration button for the login page
         switchRegBtn = (Button) findViewById(R.id.log_regPgBtn);
         lUserEmail = (EditText) findViewById(R.id.login_email);
@@ -106,6 +109,19 @@ public class SimplerLoginActivity extends AppCompatActivity
                     if (status.equals("admin"))
                     {
                         Intent intent = new Intent(SimplerLoginActivity.this,OwnersResturantsActivity.class);
+
+                        //This line of code makes sure that the user can't go back to the registration page using the phone back button
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                        //Actually switches the UI
+                        startActivity(intent);
+
+                        finish();
+                    }
+
+                    if (status.equals("normal"))
+                    {
+                        Intent intent = new Intent(SimplerLoginActivity.this,UserMapViewActivity.class);
 
                         //This line of code makes sure that the user can't go back to the registration page using the phone back button
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

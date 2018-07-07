@@ -142,8 +142,9 @@ public class CreateFoodActivity extends AppCompatActivity
                 //According to the id of the user save the user image inside the profile_images directory
                 String uid = mCurrentUser.getUid();
 
-                //Access the location where you are going to save the picture
-                StorageReference storage = mImageStorage.child("food_images").child(imageUri.getLastPathSegment());
+                Random rand = new Random();
+                int  n = rand.nextInt(1000000000);
+                StorageReference storage = mImageStorage.child("restaurant_images").child(Integer.toString(n));
 
                 //Put the picture selected to the display
                 Picasso.with(this).load(imageUri).into(photoView);

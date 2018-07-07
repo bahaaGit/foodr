@@ -134,7 +134,9 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(this,"What click at Ower postion: " + position, Toast.LENGTH_SHORT).show();
+        Intent createIntent = new Intent(OwnerFoodMenu.this, FoodViewActivity.class);
+        createIntent.putExtra("Database Reference",foodList.get(position).getUid());
+        startActivity(createIntent);
     }
 
     @Override

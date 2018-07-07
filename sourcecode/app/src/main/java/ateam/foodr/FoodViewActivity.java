@@ -50,6 +50,12 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         foodCommentsList = findViewById(R.id.idFoodCommentsList);
         addReviewBtn = findViewById(R.id.idFoodAddReview);
 
+        if (SimplerLoginActivity.user != null && SimplerLoginActivity.user.getUser_type() != null
+                && SimplerLoginActivity.user.getUser_type().equals("admin"))
+        {
+            addReviewBtn.setVisibility(View.INVISIBLE);
+        }
+
         ListAdapter listAdapter = new ListAdapter();
 
         foodCommentsList.setAdapter(listAdapter);
