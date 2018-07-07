@@ -1,5 +1,6 @@
 package ateam.foodr;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -133,6 +134,15 @@ public class SendReviewActivity extends AppCompatActivity {
                     foodItem.comments.add(commnt);
                     mDatabase.child("comments").setValue(foodItem.comments);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
+
+//                    Intent intent = new Intent(SendReviewActivity.this,UserMapViewActivity.class);
+//
+//                    //Actually switches the UI
+//                    startActivity(intent);
+
+                    onBackPressed();
+
+                    finish();
                 }
             }
         });

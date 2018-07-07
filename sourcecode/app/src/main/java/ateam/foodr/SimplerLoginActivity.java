@@ -116,6 +116,19 @@ public class SimplerLoginActivity extends AppCompatActivity
                         finish();
                     }
 
+                    if (status.equals("normal"))
+                    {
+                        Intent intent = new Intent(SimplerLoginActivity.this,UserMapViewActivity.class);
+
+                        //This line of code makes sure that the user can't go back to the registration page using the phone back button
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                        //Actually switches the UI
+                        startActivity(intent);
+
+                        finish();
+                    }
+
                 }
 
                 @Override

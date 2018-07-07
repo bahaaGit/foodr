@@ -57,12 +57,16 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
         android:clickable="true"
         android:onClick="onAddButtonClick"
+        app:backgroundTint="@color/colorPupple"
         app:layout_anchor="@+id/nestedScrollView"
         app:layout_anchorGravity="right|bottom"
+        app:rippleColor="@color/cardview_light_background"
         app:srcCompat="@android:drawable/ic_input_add" />
 
 </android.support.design.widget.CoordinatorLayout>
