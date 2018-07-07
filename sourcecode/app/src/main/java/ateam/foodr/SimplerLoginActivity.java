@@ -54,6 +54,9 @@ public class SimplerLoginActivity extends AppCompatActivity
         //Set the error to be 0
         error = 0;
 
+        //Request Permissions
+        PermissionsUtils.checkAndRequestPermissions(SimplerLoginActivity.this);
+
         //Initialize the registration button for the login page
         switchRegBtn = (Button) findViewById(R.id.log_regPgBtn);
         lUserEmail = (EditText) findViewById(R.id.login_email);
