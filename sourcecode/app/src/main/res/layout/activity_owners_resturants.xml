@@ -11,11 +11,11 @@
         android:id="@+id/appBarLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -32,8 +32,8 @@
         android:layout_height="80dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:layout_marginBottom="55dp"
-        android:layout_marginEnd="31dp"
+        android:layout_marginBottom="28dp"
+        android:layout_marginEnd="32dp"
         android:onClick="onAddButtonClick"
         app:backgroundTint="@color/colorPupple"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,13 +43,14 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ownerresturantsrv"
-        android:layout_width="363dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="206dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/addButton"
+        android:layout_width="377dp"
+        android:layout_height="500dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"></android.support.v7.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"
+        app:layout_constraintVertical_bias="0.578"></android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>

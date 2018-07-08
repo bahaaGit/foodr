@@ -153,6 +153,8 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             newRestaurant.child("imageurl").setValue(url);
             newRestaurant.child("name").setValue(name);
             newRestaurant.child("phoneNumber").setValue(phoneNumber);
+            onBackPressed();
+            finish();
         }
         else
             {
