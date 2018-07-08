@@ -1,8 +1,13 @@
 package ateam.foodr;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,21 +31,20 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback
-{
+public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback,LocationListener {
 
     private GoogleMap mMap;
     private Button button;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_map_view);
 
@@ -58,24 +63,21 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
     //This will get the menu for us
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
         //This sticks the menu to the toolbar the name of the file is menu_log.xml so in the menu directory main_menu.xml
-        getMenuInflater().inflate(R.menu.menu_log,menu);
+        getMenuInflater().inflate(R.menu.menu_log, menu);
         return true;
     }
 
     //When there is a click on the menu tab
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
 
         //According to which item is clicked
-        if (item.getItemId() == R.id.main_logout_btn)
-        {
+        if (item.getItemId() == R.id.main_logout_btn) {
             FirebaseAuth.getInstance().signOut();
 
             Intent intent = new Intent(UserMapViewActivity.this, SimplerLoginActivity.class);
@@ -103,9 +105,21 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap)
-    {
+    public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        // Recenter the map on the user's location
+        CameraUpdate center = CameraUpdateFactory.newLatLngZoom(new LatLng(40.425869, -86.908066), 13);
+        mMap.moveCamera(center);
+
+        if (!(ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+
+            mMap.setMyLocationEnabled(true);
+        }
+
 
         // Subscribe to the marker click event
         googleMap.setOnMarkerClickListener(this::onMarkerClick);
@@ -135,32 +149,6 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
                 addRestaurantToMap(r);
             }));
         }));
-
-        // Recenter the map on the user's location
-                /*CameraUpdate center=
-                CameraUpdateFactory.newLatLng(new LatLng(40.76793169992044,
-                        -73.98180484771729));
-        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
-
-        mMap.moveCamera(center);
-        mMap.animateCamera(zoom);*/
-
-//        button = findViewById(R.id.MapViewLogOutBtn);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//
-//                Intent intent = new Intent(UserMapViewActivity.this, SimplerLoginActivity.class);
-//
-//                //Redirect the user to the startActivity view
-//
-//                startActivity(intent);
-//
-//                //Make this so that the user can't access the main view through the back button
-//                finish();
-//            }
-//        });
     }
 
     private void addRestaurantToMap(Restaurant r)
@@ -211,4 +199,37 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         // in addition to our logic
         return false;
     }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+    /* if (!(ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+
+            mMap.setMyLocationEnabled(true);
+
+        }*/
 }
