@@ -223,13 +223,20 @@ public class CreateFoodActivity extends AppCompatActivity
         if (reference != null)
         {
            newFood = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
+           newFood.child("name").setValue(nameTextbox.getText().toString());
+           newFood.child("imageurl").setValue(url);
+           newFood.child("desc").setValue(descTextbox.getText().toString());
+           onBackPressed();
+           onBackPressed();
+           finish();
+
         }
         else
             {
                 DatabaseReference restaurant = FirebaseDatabase.getInstance().getReferenceFromUrl(restaurantKey);
                 DatabaseReference foodList = restaurant.child("FoodMenu");
                 newFood = foodList.push();
-            }
+
         ArrayList<String> newcommt = new ArrayList<>();
 
         newcommt.add("");
@@ -247,6 +254,7 @@ public class CreateFoodActivity extends AppCompatActivity
 
                 // Finish the activity on success
                 .addOnSuccessListener( (task) -> finish() );
+            }
     }
 
 }

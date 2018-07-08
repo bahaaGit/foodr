@@ -153,7 +153,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
             if(position == 0){
                 return convertView;
             }
-            commenterName.setText(SimplerLoginActivity.user.email);
+            commenterName.setText("Commenter");
             commenterDesc.setText(comments.get(position));
             return convertView;
         }

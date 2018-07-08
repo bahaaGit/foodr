@@ -45,6 +45,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     private EditText businessIDSecondTextbox; // TODO: Just make this a single textbox.
     private EditText addressTextbox;
     private EditText phoneTextbox;
+    public TextView title;
     private Button chooseImageBtn;
     private Button uploadImageButton;
     private Uri imageUri;
@@ -75,6 +76,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         choosenImageView = findViewById(R.id.idCRImageView);
         uploadImageButton = findViewById(R.id.idAddRestPhotoSummitBtn);
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        title = findViewById(R.id.idAddFoodTitle3);
         //Get the storage reference so that the profile images can be saved to the FireBase
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
@@ -89,6 +91,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                     phoneTextbox.setText(dataSnapshot.child("phoneNumber").getValue().toString());
                     businessIDFirstTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(0,2));
                     businessIDSecondTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(2));
+                    title.setText("Edit Restaurant");
                     url = dataSnapshot.child("imageurl").getValue().toString();
                     if (!url.equals("empty"))
                     {
@@ -145,11 +148,18 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         if (reference != null)
         {
             newRestaurant = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
+            newRestaurant.child("address").setValue(address);
+            newRestaurant.child("businessNumber").setValue(businessID);
+            newRestaurant.child("imageurl").setValue(url);
+            newRestaurant.child("name").setValue(name);
+            newRestaurant.child("phoneNumber").setValue(phoneNumber);
+            onBackPressed();
+            finish();
         }
         else
             {
             newRestaurant= restaurantList.push();
-        }
+
         String foodID = newRestaurant.getRef().toString();
 
         // Put that information into a Restaurant object
@@ -162,6 +172,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
 
                 // If it succeeded, return to the previous Activity
                 .addOnSuccessListener((task) -> finish());
+            }
     }
 
     private void openFileChooser() {
