@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -41,7 +42,7 @@ import butterknife.BindView;
 public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback,LocationListener {
 
     private GoogleMap mMap;
-    private Button button;
+    private List<Restaurant> allRestaurants = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,8 +152,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         }));
     }
 
-    private void addRestaurantToMap(Restaurant r)
-    {
+    private void addRestaurantToMap(Restaurant r) {
         // Get the coordinates from the address.
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
@@ -182,10 +182,14 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         // This way we can know which restaurant page to visit
         // when the user clicks it.
         marker.setTag(r);
+
+        // Add the restaurant to the list so we can
+        // easily find the closest one whenever the
+        // user moves.
+        allRestaurants.add(r);
     }
 
-    private boolean onMarkerClick(Marker marker)
-    {
+    private boolean onMarkerClick(Marker marker) {
         // Get the restaurant from the marker
         Restaurant r = (Restaurant)(marker.getTag());
 
@@ -201,13 +205,36 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
+    public void onLocationChanged(Location location) {
+        // TODO: Recenter the map's camera to the current location
 
+        // Find the closest restaurant
+        Restaurant closest = null;
+        double closestDist = Double.MAX_VALUE;
+
+        for (Restaurant r : allRestaurants) {
+            double dist = getDistance(r);
+
+            if (dist < closestDist){
+                closest = r;
+                closestDist = dist;
+            }
+        }
+
+        // Don't do anything if it's not in the maximum range
+        final double RANGE = 0.01;
+        if (closestDist > RANGE)
+            return;
+
+        // It was within range, so open that restaurant's menu
+        Intent menuIntent = new Intent(this, UserFoodMenu.class);
+        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, closest.getRestID());
+
+        startActivity(menuIntent);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-
+    private double getDistance(Restaurant r) {
+        // TODO:
     }
 
     @Override
@@ -224,12 +251,4 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     public void onProviderDisabled(String provider) {
 
     }
-    /* if (!(ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-
-            mMap.setMyLocationEnabled(true);
-
-        }*/
 }
