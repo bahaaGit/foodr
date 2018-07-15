@@ -41,8 +41,12 @@ import butterknife.BindView;
 
 public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback,LocationListener {
 
+    // How close you need to be to a restaurant(in meters) for the menu to auto-open
+    // It's twice the size of an average restaurant.
+    private final float MAX_RESTAURANT_RANGE = 640;
+
     private GoogleMap mMap;
-    private List<Restaurant> allRestaurants = new ArrayList<>();
+    private List<Marker> allMakerers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,7 +190,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         // Add the restaurant to the list so we can
         // easily find the closest one whenever the
         // user moves.
-        allRestaurants.add(r);
+        allMakerers.add(marker);
     }
 
     private boolean onMarkerClick(Marker marker) {
@@ -205,25 +209,45 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location userLoc) {
         // TODO: Recenter the map's camera to the current location
+
+        // Don't do anything if there are no restaurants
+        if (allMakerers.isEmpty())
+            return;
 
         // Find the closest restaurant
         Restaurant closest = null;
-        double closestDist = Double.MAX_VALUE;
+        float closestDist = Float.MAX_VALUE;
 
-        for (Restaurant r : allRestaurants) {
-            double dist = getDistance(r);
+        for (Marker m : allMakerers) {
 
+            // Find the distance to this restaurant
+            // We can't just use the pythagorean theorm because
+            // Earth is a globe.  This function take into
+            // account Earth's curvature
+            float[] distResults = new float[1];
+
+            Location.distanceBetween(
+                    userLoc.getLatitude(),
+                    userLoc.getLongitude(),
+                    m.getPosition().latitude,
+                    m.getPosition().longitude,
+                    distResults
+            );
+
+            float dist = distResults[0];
+
+            // If this restaurant is closer, that the current
+            // winner, it becomes the new winner.
             if (dist < closestDist){
-                closest = r;
+                closest = (Restaurant)(m.getTag());
                 closestDist = dist;
             }
         }
 
         // Don't do anything if it's not in the maximum range
-        final double RANGE = 0.01;
-        if (closestDist > RANGE)
+        if (closestDist > MAX_RESTAURANT_RANGE)
             return;
 
         // It was within range, so open that restaurant's menu
@@ -231,10 +255,6 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, closest.getRestID());
 
         startActivity(menuIntent);
-    }
-
-    private double getDistance(Restaurant r) {
-        // TODO:
     }
 
     @Override
