@@ -1,17 +1,20 @@
 package ateam.foodr;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,6 +64,15 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // Subscribe to location updates
+        try {
+            LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
+        }
+        catch (SecurityException e){
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -212,6 +224,8 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     public void onLocationChanged(Location userLoc) {
         // TODO: Recenter the map's camera to the current location
 
+        Log.d("location changed", userLoc.toString());
+
         // Don't do anything if there are no restaurants
         if (allMakerers.isEmpty())
             return;
@@ -245,6 +259,8 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
                 closestDist = dist;
             }
         }
+
+        Log.d("closest dist", "" + closestDist);
 
         // Don't do anything if it's not in the maximum range
         if (closestDist > MAX_RESTAURANT_RANGE)
