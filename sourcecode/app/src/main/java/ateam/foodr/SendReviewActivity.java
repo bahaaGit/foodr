@@ -130,7 +130,8 @@ public class SendReviewActivity extends AppCompatActivity {
                     mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
                     mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
                     reviewRatingBar.setRating((float) rate);
-                    String commnt = feedback.getText().toString();
+                    Comment commnt = new Comment("23:34","mesm","");
+                    commnt.setCommentTxt(feedback.getText().toString());
                     foodItem.comments.add(commnt);
                     mDatabase.child("comments").setValue(foodItem.comments);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();

@@ -9,7 +9,7 @@ public class Food {
 
     private int rate;
     private String name,desc, Imageurl,uid;
-    public ArrayList<String> comments;
+    public ArrayList<Comment> comments;
     private double numOfRating, totalOfRating;
 
 
@@ -17,7 +17,7 @@ public class Food {
 
     }
 
-    public Food(String uid, String name, String desc, int rate, double numOfRating, double totalOfRating , String imageurl, ArrayList<String> comments) {
+    public Food(String uid, String name, String desc, int rate, double numOfRating, double totalOfRating , String imageurl, ArrayList<Comment> comments) {
         if(name.trim().equals("")){
             name = "NO Name";
         }
@@ -52,7 +52,7 @@ public class Food {
         return uid;
     }
 
-    public ArrayList<String> getComments() {
+    public ArrayList<Comment> getComments() {
         return comments;
     }
 
@@ -77,11 +77,11 @@ public class Food {
         this.uid = uid;
     }
 
-    public void setComments(ArrayList<String> comments) {
+    public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
     }
 
-    public Boolean addComments(String comments){
+    public Boolean addComments(Comment comments){
         return this.comments.add(comments);
     }
     public double getNumOfRating() {

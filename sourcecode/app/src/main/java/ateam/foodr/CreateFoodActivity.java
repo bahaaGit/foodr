@@ -229,7 +229,6 @@ public class CreateFoodActivity extends AppCompatActivity
            onBackPressed();
            onBackPressed();
            finish();
-
         }
         else
             {
@@ -237,16 +236,14 @@ public class CreateFoodActivity extends AppCompatActivity
                 DatabaseReference foodList = restaurant.child("FoodMenu");
                 newFood = foodList.push();
 
-        ArrayList<String> newcommt = new ArrayList<>();
-
-        newcommt.add("");
-
-
+        ArrayList<Comment> newComment = new ArrayList<>();
+        Comment initCommt = new Comment("","","");
+                newComment.add(initCommt);
         Food f = new Food
                 (
                         newFood.getRef().toString(),     // TODO: Fill this in
                         nameTextbox.getText().toString(),
-                        descTextbox.getText().toString(),0,0,0,url,newcommt);
+                        descTextbox.getText().toString(),0,0,0,url,newComment);
 
         newFood.setValue(f)
                 // Show an error message on failure

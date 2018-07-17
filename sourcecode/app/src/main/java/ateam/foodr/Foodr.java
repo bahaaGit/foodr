@@ -58,7 +58,6 @@ public class Foodr extends Application{
     // Adds/updates user's entry in the Firebase database
     public void updateFood(String uid, Food FoodData){
         Log.d(TAG, "updateFood: ");
-        //System.out.println("USER UPDATE ERROR: \(error?.localizedDescription)");
     }
 
     public void addFood(String uid, Food FoodData){

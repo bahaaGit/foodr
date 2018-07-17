@@ -30,7 +30,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
     private RatingBar rate;
     private ListView foodCommentsList;
     private FloatingActionButton addReviewBtn;
-    private ArrayList<String> comments;
+    private ArrayList<Comment> comments;
 
 
     @Override
@@ -38,7 +38,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_view);
 
-        comments = new ArrayList<String>();
+        comments = new ArrayList<Comment>();
 
 
         foodKey = getIntent().getStringExtra("Database Reference");
@@ -154,7 +154,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                 return convertView;
             }
             commenterName.setText("Commenter");
-            commenterDesc.setText(comments.get(position));
+            commenterDesc.setText(comments.get(position).getCommentTxt());
             return convertView;
         }
     }
