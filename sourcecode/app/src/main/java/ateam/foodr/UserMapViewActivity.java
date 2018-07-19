@@ -51,6 +51,8 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap mMap;
     private List<Marker> allMakerers = new ArrayList<>();
 
+    private LocationManager locMan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +67,15 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // Subscribe to location updates
+        locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Start getting location updates
         try {
-            LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
         }
         catch (SecurityException e){
@@ -75,6 +83,14 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        // Stop getting location updates
+        // This way we don't continue polling the GPS unnecessarily
+        locMan.removeUpdates(this);
+    }
 
     /* Toolbar stuff */
 
