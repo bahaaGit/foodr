@@ -36,18 +36,22 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class CreateRestaurantActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int TAKE_IMAGE_REQUEST = 2;
 
-    private EditText nameTextbox;
-    private EditText addressTextbox;
-    private EditText phoneTextbox;
-    public TextView title;
-    private Button chooseImageBtn;
-    private Button uploadImageButton;
+    @BindView(R.id.nameTextbox)     EditText nameTextbox;
+    @BindView(R.id.addressTextbox)  EditText addressTextbox;
+    @BindView(R.id.phoneTextbox)    EditText phoneTextbox;
+    @BindView(R.id.idAddFoodTitle3) TextView title;
+    @BindView(R.id.idCRChooseImage) Button chooseImageBtn;
+    @BindView(R.id.idCRImageView)   ImageView choosenImageView;
+    @BindView(R.id.idAddRestPhotoSummitBtn) Button uploadImageButton;
+
     private Uri imageUri;
-    private ImageView choosenImageView;
     private StorageReference mImageStorage;
     private String url;
     private String restaurantKey;
@@ -60,24 +64,14 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_restaurant);
+        ButterKnife.bind(this);
 
         reference  =  getIntent().getStringExtra("Database Reference");
-
-        // Get the textboxes
-        // Holy boilerplate, batman!
-        nameTextbox = findViewById(R.id.nameTextbox);
-        addressTextbox = findViewById(R.id.addressTextbox);
-        phoneTextbox = findViewById(R.id.phoneTextbox);
-        chooseImageBtn = findViewById(R.id.idCRChooseImage);
-        choosenImageView = findViewById(R.id.idCRImageView);
-        uploadImageButton = findViewById(R.id.idAddRestPhotoSummitBtn);
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        title = findViewById(R.id.idAddFoodTitle3);
         //Get the storage reference so that the profile images can be saved to the FireBase
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
-        if (reference != null)
-        {
+        if (reference != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -89,35 +83,33 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                     phoneTextbox.setText(dataSnapshot.child("phoneNumber").getValue().toString());
                     title.setText("Edit Restaurant");
                     url = dataSnapshot.child("imageurl").getValue().toString();
-                    if (!url.equals("empty"))
-                    {
-                        Picasso.with(chooseImageBtn.getContext()).load(dataSnapshot.child("imageurl").getValue().toString()).into(choosenImageView);
+
+                    if (!url.equals("empty")) {
+
+                        Picasso.with(chooseImageBtn.getContext())
+                                .load(dataSnapshot.child("imageurl")
+                                        .getValue()
+                                        .toString())
+                                .into(choosenImageView);
                     }
 
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
+                public void onCancelled(DatabaseError databaseError) { }
             });
 
         }
 
-        uploadImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, TAKE_IMAGE_REQUEST);
-            }
+        // Open the upload activity when the user clicks the upload button
+        uploadImageButton.setOnClickListener(v -> {
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, TAKE_IMAGE_REQUEST);
         });
 
-        chooseImageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser();
-            }
-        });
+        // Open the file chooser when the user clicks the choose image button
+        chooseImageBtn.setOnClickListener(v -> openFileChooser());
 
     }
 
@@ -152,22 +144,22 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             finish();
         }
         else
-            {
+        {
             newRestaurant= restaurantList.push();
 
-        String foodID = newRestaurant.getRef().toString();
+            String foodID = newRestaurant.getRef().toString();
 
-        // Put that information into a Restaurant object
-        Restaurant r = new Restaurant(url, name, "blank description", address, phoneNumber, businessID, foodID);
+            // Put that information into a Restaurant object
+            Restaurant r = new Restaurant(url, name, "blank description", address, phoneNumber, businessID, foodID);
 
-        newRestaurant.setValue(r)
+            newRestaurant.setValue(r)
 
                 // If it failed, show an error message
                 .addOnFailureListener((Exception e) -> Utils.showToast(this, e.getMessage()))
 
                 // If it succeeded, return to the previous Activity
                 .addOnSuccessListener((task) -> finish());
-            }
+        }
     }
 
     private void openFileChooser() {
@@ -190,30 +182,25 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             //Access the location where you are going to save the profile picture
             Random rand = new Random();
 
-            int  n = rand.nextInt(1000000000);
+            int n = rand.nextInt(1000000000);
             StorageReference storage = mImageStorage.child("restaurant_images").child(Integer.toString(n));
 
             //Put the file onto the directory and do some tasks when the task is done
-            storage.putFile(imageUri).addOnCompleteListener(new OnCompleteListener < UploadTask.TaskSnapshot > () {
-                @Override
-                public void onComplete(@NonNull Task < UploadTask.TaskSnapshot > task) {
-                    if (task.isSuccessful()) {
-                        //We will need the download URL to get it later on so we need to store this
-                        String download_url = task.getResult().getDownloadUrl().toString();
-                        url = download_url;
-                        //To tell the user that this is done
-                        Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
-                    }
+            storage.putFile(imageUri).addOnCompleteListener(task -> {
+
+                if (task.isSuccessful()) {
+                    //We will need the download URL to get it later on so we need to store this
+                    String download_url = task.getResult().getDownloadUrl().toString();
+                    url = download_url;
+                    //To tell the user that this is done
+                    Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
                 }
             });
-
-
         }
 
-        if (requestCode == TAKE_IMAGE_REQUEST && resultCode == RESULT_OK)
-        {
+        if (requestCode == TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -227,23 +214,19 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             choosenImageView.setImageBitmap(bitmap);
 
             //Put the file onto the directory and do some tasks when the task is done
-            storage.putBytes(dataBAOS).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful())
-                    {
-                        //We will need the download URL to get it later on so we need to store this
-                        String download_url = task.getResult().getDownloadUrl().toString();
+            storage.putBytes(dataBAOS).addOnCompleteListener(task -> {
 
-                        url = download_url;
+                if (task.isSuccessful()) {
+                    //We will need the download URL to get it later on so we need to store this
+                    String download_url = task.getResult().getDownloadUrl().toString();
 
-                        //To tell the user that this is done
-                        Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
-                    }
+                    url = download_url;
+
+                    //To tell the user that this is done
+                    Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
                 }
             });
         }
