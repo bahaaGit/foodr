@@ -52,7 +52,7 @@ import butterknife.ButterKnife;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
-public class CreateRestaurantActivity extends AppCompatActivity implements LocationListener {
+public class CreateRestaurantActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int TAKE_IMAGE_REQUEST = 2;
 
@@ -189,18 +189,14 @@ public class CreateRestaurantActivity extends AppCompatActivity implements Locat
     }
 
     private void onGpsClick(View v) {
-        // Subscribe to a single location update
-        try {
-            LocationRequest req = new LocationRequest()
-                    .setNumUpdates(1)
-                    .setMaxWaitTime(5000);
 
-            fusedLoc.requestLocationUpdates(req, new LocationCallback(){
-                @Override
-                public void onLocationResult(LocationResult result) {
-                    onLocationChanged(result.getLastLocation());
-                }
-            }, null);
+        // Subscribe to a single location update
+        LocationRequest req = new LocationRequest()
+            .setNumUpdates(1)
+            .setMaxWaitTime(5000);
+        
+        try {
+            fusedLoc.requestLocationUpdates(req, new LocationCallbackBuilder(this::onLocationChanged), null);
         }
         catch (SecurityException e) {
             throw new RuntimeException(e);
@@ -276,8 +272,9 @@ public class CreateRestaurantActivity extends AppCompatActivity implements Locat
     }
 
     /** Gets called once after the user clicks the GPS button. */
-    @Override
-    public void onLocationChanged(Location loc) {
+    private void onLocationChanged(LocationResult result) {
+
+        Location loc = result.getLastLocation();
 
         // Re-enable the textbox and button
         gpsButton.setEnabled(true);
@@ -313,14 +310,4 @@ public class CreateRestaurantActivity extends AppCompatActivity implements Locat
         // Put it in the textbox
         addressTextbox.setText(builder.toString());
     }
-
-    // These methods are part of location listener.  They don't matter.
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) { }
-
-    @Override
-    public void onProviderEnabled(String provider) { }
-
-    @Override
-    public void onProviderDisabled(String provider) { }
 }
