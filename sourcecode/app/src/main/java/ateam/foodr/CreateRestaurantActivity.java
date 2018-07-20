@@ -21,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +50,8 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+
 public class CreateRestaurantActivity extends AppCompatActivity implements LocationListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int TAKE_IMAGE_REQUEST = 2;
@@ -64,7 +70,7 @@ public class CreateRestaurantActivity extends AppCompatActivity implements Locat
     private String url;
     private String restaurantKey;
     private FirebaseUser mCurrentUser;
-    private LocationManager locMan;
+    private FusedLocationProviderClient fusedLoc;
 
     public String reference;
 
@@ -77,7 +83,7 @@ public class CreateRestaurantActivity extends AppCompatActivity implements Locat
         setContentView(R.layout.activity_create_restaurant);
         ButterKnife.bind(this);
 
-        locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        fusedLoc = getFusedLocationProviderClient(this);
 
         reference  =  getIntent().getStringExtra("Database Reference");
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -185,7 +191,16 @@ public class CreateRestaurantActivity extends AppCompatActivity implements Locat
     private void onGpsClick(View v) {
         // Subscribe to a single location update
         try {
-            locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+            LocationRequest req = new LocationRequest()
+                    .setNumUpdates(1)
+                    .setMaxWaitTime(5000);
+
+            fusedLoc.requestLocationUpdates(req, new LocationCallback(){
+                @Override
+                public void onLocationResult(LocationResult result) {
+                    onLocationChanged(result.getLastLocation());
+                }
+            }, null);
         }
         catch (SecurityException e) {
             throw new RuntimeException(e);
@@ -269,8 +284,6 @@ public class CreateRestaurantActivity extends AppCompatActivity implements Locat
         gpsButton.setText("Choose from GPS");
         addressTextbox.setEnabled(true);
 
-        // Unsubscribe from location updates
-        locMan.removeUpdates(this);
         // Get the address from the location
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses= null;
