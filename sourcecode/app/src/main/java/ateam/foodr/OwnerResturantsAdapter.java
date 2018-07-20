@@ -81,7 +81,7 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
     public class OwnerResturantsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
     View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener{
 
-        ImageView oResturantImg;
+        ImageView oResturantImg, editButton, RemoveButton;
         TextView oResturantName,oResturantLoc;
         public OwnerResturantsViewHolder(View itemView){
             super(itemView);
@@ -89,6 +89,7 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
             oResturantImg = itemView.findViewById(R.id.idOResturantImg);
             oResturantName = itemView.findViewById(R.id.idOResturantName);
             oResturantLoc = itemView.findViewById(R.id.idOResturantLocation);
+
 
             itemView.setOnClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
