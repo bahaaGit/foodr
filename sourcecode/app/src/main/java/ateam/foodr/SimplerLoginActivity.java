@@ -106,6 +106,22 @@ public class SimplerLoginActivity extends AppCompatActivity
                     String status = dataSnapshot.child("user_type").getValue().toString();
                     userInit();
                     user.setUser_type(status);
+
+                    //Initialize the user object
+                    user.setEmail(dataSnapshot.child("email").getValue().toString());
+
+                    // Set the password hash (if it exists)
+                    if (dataSnapshot.hasChild("password_hash"))
+                    {
+                        user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
+                    }
+                    user.setId(mAuth.getUid());
+
+                    if (dataSnapshot.hasChild("user_name"))
+                    {
+                        user.setUser_name(dataSnapshot.child("user_name").getValue().toString());
+                    }
+
                     if (status.equals("admin"))
                     {
                         Intent intent = new Intent(SimplerLoginActivity.this,OwnersResturantsActivity.class);
@@ -219,6 +235,11 @@ public class SimplerLoginActivity extends AppCompatActivity
                                         user.setPassword_hash(dataSnapshot.child("password_hash").getValue().toString());
                                     }
                                     user.setId(uid1);
+
+                                    if (dataSnapshot.hasChild("user_name"))
+                                    {
+                                        user.setUser_name(dataSnapshot.child("user_name").getValue().toString());
+                                    }
 
                                     // If the user marked themselves as an owner, take them to the owner page
                                     Switch ownerToggle = findViewById(R.id.login_ownerToggle);

@@ -138,6 +138,12 @@ public class RegistrationActivity extends AppCompatActivity {
                                     hashMap.put("image", "default");
                                     hashMap.put("password_hash", password);
 
+                                    //Get the username
+
+                                    int index = email.indexOf("@");
+                                    String username =  email.substring(0,index);
+                                    hashMap.put("user_name",username);
+
                                     //This is what really sends the values to the database
                                     mDatabase.setValue(hashMap)
                                             .addOnCompleteListener((task) ->
@@ -150,6 +156,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                                     SimplerLoginActivity.user.setEmail(email);
                                                     SimplerLoginActivity.user.setPassword_hash(password);
                                                     SimplerLoginActivity.user.setUser_type(user_type);
+                                                    SimplerLoginActivity.user.setUser_type(username);
 
                                                     //This will dismiss the progress dialog
                                                     mRegProgress.dismiss();
