@@ -132,8 +132,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
 
         // Send it to the database
         DatabaseReference newRestaurant;
-        if (reference != null)
-        {
+        if (reference != null) {
             newRestaurant = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
             newRestaurant.child("address").setValue(address);
             newRestaurant.child("businessNumber").setValue(businessID);
@@ -143,8 +142,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             onBackPressed();
             finish();
         }
-        else
-        {
+        else {
             newRestaurant= restaurantList.push();
 
             String foodID = newRestaurant.getRef().toString();
