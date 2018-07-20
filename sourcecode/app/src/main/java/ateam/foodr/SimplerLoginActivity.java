@@ -54,8 +54,16 @@ public class SimplerLoginActivity extends AppCompatActivity
         //Set the error to be 0
         error = 0;
 
-        //Request Permissions
-        PermissionsUtils.checkAndRequestPermissions(SimplerLoginActivity.this);
+
+        if (!PermissionsUtils.checkAndRequestPermissions(SimplerLoginActivity.this))
+        {
+            Intent userPageIntent = new Intent(SimplerLoginActivity.this, PermissionsNotGiven.class);
+            userPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            startActivity(userPageIntent);
+            finish();
+        }
+
 
         //Initialize the registration button for the login page
         switchRegBtn = (Button) findViewById(R.id.log_regPgBtn);
