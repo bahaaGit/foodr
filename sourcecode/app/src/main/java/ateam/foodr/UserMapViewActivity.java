@@ -1,17 +1,20 @@
 package ateam.foodr;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -40,8 +44,14 @@ import butterknife.BindView;
 
 public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback,LocationListener {
 
+    // How close you need to be to a restaurant(in meters) for the menu to auto-open
+    // It's twice the size of an average restaurant.
+    private final float MAX_RESTAURANT_RANGE = 640;
+
     private GoogleMap mMap;
-    private Button button;
+    private List<Marker> allMakerers = new ArrayList<>();
+
+    private LocationManager locMan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +66,31 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Start getting location updates
+        try {
+            locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
+        }
+        catch (SecurityException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        // Stop getting location updates
+        // This way we don't continue polling the GPS unnecessarily
+        locMan.removeUpdates(this);
+    }
 
     /* Toolbar stuff */
 
@@ -151,8 +184,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         }));
     }
 
-    private void addRestaurantToMap(Restaurant r)
-    {
+    private void addRestaurantToMap(Restaurant r) {
         // Get the coordinates from the address.
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
@@ -182,10 +214,14 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         // This way we can know which restaurant page to visit
         // when the user clicks it.
         marker.setTag(r);
+
+        // Add the restaurant to the list so we can
+        // easily find the closest one whenever the
+        // user moves.
+        allMakerers.add(marker);
     }
 
-    private boolean onMarkerClick(Marker marker)
-    {
+    private boolean onMarkerClick(Marker marker) {
         // Get the restaurant from the marker
         Restaurant r = (Restaurant)(marker.getTag());
 
@@ -201,13 +237,56 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
+    public void onLocationChanged(Location userLoc) {
+        // TODO: Recenter the map's camera to the current location
 
-    }
+        Log.d("location changed", userLoc.toString());
 
-    @Override
-    public void onLocationChanged(Location location) {
+        // Don't do anything if there are no restaurants
+        if (allMakerers.isEmpty())
+            return;
 
+        // Find the closest restaurant
+        Restaurant closest = null;
+        float closestDist = Float.MAX_VALUE;
+
+        for (Marker m : allMakerers) {
+
+            // Find the distance to this restaurant
+            // We can't just use the pythagorean theorm because
+            // Earth is a globe.  This function take into
+            // account Earth's curvature
+            float[] distResults = new float[1];
+
+            Location.distanceBetween(
+                    userLoc.getLatitude(),
+                    userLoc.getLongitude(),
+                    m.getPosition().latitude,
+                    m.getPosition().longitude,
+                    distResults
+            );
+
+            float dist = distResults[0];
+
+            // If this restaurant is closer, that the current
+            // winner, it becomes the new winner.
+            if (dist < closestDist){
+                closest = (Restaurant)(m.getTag());
+                closestDist = dist;
+            }
+        }
+
+        Log.d("closest dist", "" + closestDist);
+
+        // Don't do anything if it's not in the maximum range
+        if (closestDist > MAX_RESTAURANT_RANGE)
+            return;
+
+        // It was within range, so open that restaurant's menu
+        Intent menuIntent = new Intent(this, UserFoodMenu.class);
+        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, closest.getRestID());
+
+        startActivity(menuIntent);
     }
 
     @Override
@@ -224,12 +303,4 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     public void onProviderDisabled(String provider) {
 
     }
-    /* if (!(ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-
-            mMap.setMyLocationEnabled(true);
-
-        }*/
 }
