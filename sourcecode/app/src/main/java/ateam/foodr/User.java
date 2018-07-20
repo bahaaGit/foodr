@@ -8,6 +8,15 @@ public class User {
     public String password_hash;
     public String[] Restaurant;
     public String user_type;
+    public String user_name;
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
 
     public String getUser_type() {
         return user_type;

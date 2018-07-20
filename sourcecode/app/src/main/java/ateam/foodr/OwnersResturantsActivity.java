@@ -163,7 +163,12 @@ public class OwnersResturantsActivity extends AppCompatActivity  implements Chil
     @Override
     public void onDeleteClick(int position) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(resturantList.get(position).getRestID());
+
         mDatabase.removeValue();
+        Intent intent = new Intent(this, OwnersResturantsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // call this to finish the current activity
 
     }
 

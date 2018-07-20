@@ -41,8 +41,6 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     private static final int TAKE_IMAGE_REQUEST = 2;
 
     private EditText nameTextbox;
-    private EditText businessIDFirstTextbox;
-    private EditText businessIDSecondTextbox; // TODO: Just make this a single textbox.
     private EditText addressTextbox;
     private EditText phoneTextbox;
     public TextView title;
@@ -71,8 +69,6 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         addressTextbox = findViewById(R.id.addressTextbox);
         phoneTextbox = findViewById(R.id.phoneTextbox);
         chooseImageBtn = findViewById(R.id.idCRChooseImage);
-        businessIDFirstTextbox = findViewById(R.id.businessIDFirstTextbox);
-        businessIDSecondTextbox = findViewById(R.id.businessIDSecondTextbox);
         choosenImageView = findViewById(R.id.idCRImageView);
         uploadImageButton = findViewById(R.id.idAddRestPhotoSummitBtn);
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -86,11 +82,11 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.hasChild("name"))
+                        return;
                     nameTextbox.setText(dataSnapshot.child("name").getValue().toString());
                     addressTextbox.setText(dataSnapshot.child("address").getValue().toString());
                     phoneTextbox.setText(dataSnapshot.child("phoneNumber").getValue().toString());
-                    businessIDFirstTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(0,2));
-                    businessIDSecondTextbox.setText(dataSnapshot.child("businessNumber").getValue().toString().substring(2));
                     title.setText("Edit Restaurant");
                     url = dataSnapshot.child("imageurl").getValue().toString();
                     if (!url.equals("empty"))
@@ -128,8 +124,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     public void onCreateClick(View view) {
         // Get all of the information we need from the textboxes
         String name = nameTextbox.getText().toString();
-        String businessID = businessIDFirstTextbox.getText().toString();
-        businessID += businessIDSecondTextbox.getText().toString();
+        String businessID = "0";
         String address = addressTextbox.getText().toString();
         String phoneNumber = phoneTextbox.getText().toString();
 

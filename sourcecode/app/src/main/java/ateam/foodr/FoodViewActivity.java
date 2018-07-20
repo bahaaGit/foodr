@@ -66,6 +66,8 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         foodDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChild("imageurl"))
+                    return;
                 String image_URL = dataSnapshot.child("imageurl").getValue().toString();
                 if (!image_URL.equals("empty"))
                 {
