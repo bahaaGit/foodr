@@ -1,5 +1,6 @@
 package ateam.foodr;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -86,7 +87,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
     View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener{
 
-        ImageView item_image;
+        ImageView item_image, editButton, RemoveButton;
         TextView item_name, item_desc;
         RatingBar item_rate;
 
@@ -99,7 +100,31 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
             item_rate = itemView.findViewById(R.id.idMFoodratingBar);
 
             itemView.setOnClickListener(this);
-            itemView.setOnCreateContextMenuListener(this);
+            //itemView.setOnCreateContextMenuListener(this);
+
+            editButton = itemView.findViewById(R.id.foodEditBtn);
+            RemoveButton = itemView.findViewById(R.id.rmvFoodBtn);
+
+            itemView.setOnClickListener(this);
+            //itemView.setOnCreateContextMenuListener(this);
+            editButton.setOnClickListener((View v) ->  mListener.onEditClick(getAdapterPosition()));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+
+            builder.setTitle("Confirm");
+            builder.setMessage("Are you sure you want to Delete?");
+
+            builder.setPositiveButton("YES", (dialog, which) -> {
+                dialog.dismiss();
+                mListener.onDeleteClick(getAdapterPosition());
+            });
+
+            builder.setNegativeButton("NO", (dialog, which) -> dialog.dismiss());
+
+            AlertDialog alert = builder.create();
+
+            RemoveButton.setOnClickListener((View v) -> alert.show());
+
         }
 
         @Override

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,7 +44,6 @@ public class OwnersResturantsActivity extends AppCompatActivity  implements Chil
         initRecyclerView();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         // Subscribe to data-changed events
         user = FirebaseAuth.getInstance().getCurrentUser();
