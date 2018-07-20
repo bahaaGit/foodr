@@ -1,8 +1,13 @@
 package ateam.foodr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -31,20 +36,23 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CreateRestaurantActivity extends AppCompatActivity {
+public class CreateRestaurantActivity extends AppCompatActivity implements LocationListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int TAKE_IMAGE_REQUEST = 2;
 
     @BindView(R.id.nameTextbox)     EditText nameTextbox;
     @BindView(R.id.addressTextbox)  EditText addressTextbox;
+    @BindView(R.id.gpsButton)       Button gpsButton;
     @BindView(R.id.phoneTextbox)    EditText phoneTextbox;
     @BindView(R.id.idAddFoodTitle3) TextView title;
     @BindView(R.id.idCRChooseImage) Button chooseImageBtn;
@@ -56,7 +64,10 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     private String url;
     private String restaurantKey;
     private FirebaseUser mCurrentUser;
+    private LocationManager locMan;
+
     public String reference;
+
 
     // Event Handlers
 
@@ -65,6 +76,8 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_restaurant);
         ButterKnife.bind(this);
+
+        locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         reference  =  getIntent().getStringExtra("Database Reference");
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -111,6 +124,8 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         // Open the file chooser when the user clicks the choose image button
         chooseImageBtn.setOnClickListener(v -> openFileChooser());
 
+        // Automatically fill in the address when the user clicks the GPS button
+        gpsButton.setOnClickListener(this::onGpsClick);
     }
 
     public void onCreateClick(View view) {
@@ -165,6 +180,21 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    private void onGpsClick(View v) {
+        // Subscribe to a single location update
+        try {
+            locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        }
+        catch (SecurityException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Disable the button and textbox until the location has arrived
+        gpsButton.setEnabled(false);
+        gpsButton.setText("Getting location...");
+        addressTextbox.setEnabled(false);
     }
 
     @Override
@@ -229,4 +259,55 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             });
         }
     }
+
+    /** Gets called once after the user clicks the GPS button. */
+    @Override
+    public void onLocationChanged(Location loc) {
+
+        // Re-enable the textbox and button
+        gpsButton.setEnabled(true);
+        gpsButton.setText("Choose from GPS");
+        addressTextbox.setEnabled(true);
+
+        // Unsubscribe from location updates
+        locMan.removeUpdates(this);
+        // Get the address from the location
+        Geocoder geocoder = new Geocoder(this);
+        List<Address> addresses= null;
+
+        try {
+            geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 100);
+        }
+        catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        // Tell the user if the address is not found
+        if (addresses == null) {
+            Utils.showToast(this, "Could not find address for location (" + loc.getLatitude() + ", " + loc.getLongitude());
+            return;
+        }
+
+        Address addr = addresses.get(0);
+
+        // Combine all of the address lines into one string
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; addr.getAddressLine(i) != null; i++) {
+
+            builder.append(addr.getAddressLine(i));
+        }
+
+        // Put it in the textbox
+        addressTextbox.setText(builder.toString());
+    }
+
+    // These methods are part of location listener.  They don't matter.
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) { }
+
+    @Override
+    public void onProviderEnabled(String provider) { }
+
+    @Override
+    public void onProviderDisabled(String provider) { }
 }
