@@ -7,6 +7,9 @@ public class Comment {
     private String commentTxt;
     public  String comentId;
 
+    public Comment() {
+
+    }
     public Comment(String time, String commenter, String commentTxt) {
         this.time = time;
         this.commenter = commenter;

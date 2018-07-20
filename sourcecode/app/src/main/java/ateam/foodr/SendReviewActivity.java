@@ -137,9 +137,8 @@ public class SendReviewActivity extends AppCompatActivity {
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
 
                     //Programmatically press the back button
-                    onBackPressed();
-
-                    finish();
+                    //onBackPressed();
+                    //finish();
                 }
             }
         });
