@@ -27,13 +27,13 @@ public class SimplerLoginActivity extends AppCompatActivity
     private Button switchRegBtn;
     private EditText lUserEmail;
     private EditText lUserPassword;
-    private Switch lAdmnBtn;
 
     //The User Object
     public static User user;
 
     //FireBase Authentication Linker
     private FirebaseAuth mAuth;
+
 
     //This is the link to the database
     private DatabaseReference mDatabase;
@@ -61,7 +61,6 @@ public class SimplerLoginActivity extends AppCompatActivity
         switchRegBtn = (Button) findViewById(R.id.log_regPgBtn);
         lUserEmail = (EditText) findViewById(R.id.login_email);
         lUserPassword = (EditText) findViewById(R.id.login_password);
-        lAdmnBtn = (Switch) findViewById(R.id.login_ownerToggle);
 
         //Initialize the progress dialog
         mLoginProgress = new ProgressDialog(this);
@@ -241,15 +240,10 @@ public class SimplerLoginActivity extends AppCompatActivity
                                         user.setUser_name(dataSnapshot.child("user_name").getValue().toString());
                                     }
 
-                                    // If the user marked themselves as an owner, take them to the owner page
-                                    Switch ownerToggle = findViewById(R.id.login_ownerToggle);
-                                    if (ownerToggle.isChecked() && user_type.equals("admin")) {
+                                    if (user_type.equals("admin")) {
 
                                         //Check if the current user is marked as a admin
                                         Intent ownerPageIntent = new Intent(SimplerLoginActivity.this, OwnersResturantsActivity.class);
-
-                                        //Reverse the toggle back to its state
-                                        ownerToggle.setChecked(false);
 
                                         //This line of code makes sure that the user can't go back to the registration page using the phone back button
                                         ownerPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -261,7 +255,7 @@ public class SimplerLoginActivity extends AppCompatActivity
                                         return;
                                     }
 
-                                    if (!ownerToggle.isChecked() && user_type.equals("normal") && (mAuth.getCurrentUser() != null))
+                                    if (user_type.equals("normal") && (mAuth.getCurrentUser() != null))
                                     {
                                         // They did not mark themselves as an admin, so go to the map view
                                         Intent userPageIntent = new Intent(SimplerLoginActivity.this, UserMapViewActivity.class);

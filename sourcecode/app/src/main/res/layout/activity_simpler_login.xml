@@ -7,19 +7,6 @@
     tools:context=".SimplerLoginActivity">
 
 
-<Switch
-        android:id="@+id/login_ownerToggle"
-        android:layout_width="364dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:text="Log in as restaurant owner?"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_loginButton" />
-
     <Button
         android:id="@+id/login_loginButton"
         android:layout_width="match_parent"
@@ -103,15 +90,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_background"
+        android:text="Don't Have An Account?"
         android:textColor="@android:color/white"
         android:textSize="24sp"
-        android:text="Don't Have An Account?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.944"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_ownerToggle"
-        app:layout_constraintVertical_bias="0.904" />
+        app:layout_constraintTop_toBottomOf="@+id/login_loginButton"
+        app:layout_constraintVertical_bias="0.764" />
 
     <TextView
         android:id="@+id/textView2"

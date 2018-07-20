@@ -65,10 +65,11 @@ public class OwnerFoodMenu extends AppCompatActivity implements ChildEventListen
         // Subscribe to events so the recycler view gets populated with food items
         DatabaseReference restaurantDB = FirebaseDatabase.getInstance().getReferenceFromUrl(restaurantKey);
 
-
         restaurantDB.child("imageurl").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null)
+                    return;
                 String image_URL = dataSnapshot.getValue().toString();
                 if (!image_URL.equals("empty"))
                 {
