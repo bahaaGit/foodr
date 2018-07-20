@@ -75,6 +75,8 @@ public class CreateFoodActivity extends AppCompatActivity
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.hasChild("name"))
+                        return;
                     nameTextbox.setText(dataSnapshot.child("name").getValue().toString());
                     descTextbox.setText(dataSnapshot.child("desc").getValue().toString());
                     url = dataSnapshot.child("imageurl").getValue().toString();

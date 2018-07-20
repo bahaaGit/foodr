@@ -89,7 +89,7 @@ public class UserFoodMenuAdapter extends RecyclerView.Adapter<UserFoodMenuAdapte
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             MenuItem.OnMenuItemClickListener{
 
-        ImageView item_image;
+        ImageView item_image, editButton, RemoveButton;
         TextView item_name, item_desc;
         RatingBar item_rate;
 
@@ -100,6 +100,12 @@ public class UserFoodMenuAdapter extends RecyclerView.Adapter<UserFoodMenuAdapte
             item_name = itemView.findViewById(R.id.idMFoodName);
             item_desc = itemView.findViewById(R.id.idMFoodDesc);
             item_rate = itemView.findViewById(R.id.idMFoodratingBar);
+
+            editButton = itemView.findViewById(R.id.foodEditBtn);
+            RemoveButton = itemView.findViewById(R.id.rmvFoodBtn);
+
+            editButton.setVisibility(View.INVISIBLE);
+            RemoveButton.setVisibility(View.INVISIBLE);
 
             itemView.setOnClickListener(this);
             //itemView.setOnCreateContextMenuListener(this);
