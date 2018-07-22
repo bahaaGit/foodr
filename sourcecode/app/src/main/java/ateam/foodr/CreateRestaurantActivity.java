@@ -286,7 +286,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         List<Address> addresses= null;
 
         try {
-            geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 100);
+            addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 100);
         }
         catch (IOException e){
             throw new RuntimeException(e);

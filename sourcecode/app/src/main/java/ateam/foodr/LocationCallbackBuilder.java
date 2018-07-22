@@ -22,6 +22,7 @@ public class LocationCallbackBuilder extends LocationCallback
     public LocationCallbackBuilder(LocationResultHandler onResult)
     {
         this.onResult = onResult;
+        onAvailability = a -> {};
     }
 
     public LocationCallbackBuilder()
