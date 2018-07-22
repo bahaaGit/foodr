@@ -158,7 +158,7 @@ public class SendReviewActivity extends AppCompatActivity {
 
                     // display time and date
                     String sTimeNow = String.format("%tc", date);
-                    Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow);
+                    Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow, rating);
 
                     foodItem.comments.add(commnt);
                     mDatabase.child("comments").setValue(foodItem.comments);
@@ -171,7 +171,9 @@ public class SendReviewActivity extends AppCompatActivity {
                     finish();
                     } else
                         {
-                            rate = (ratingTotal + rating) / (numberOfRating + 0.0);
+
+                            rate = (ratingTotal + rating - foodItem.comments.get(FoodViewActivity.position + 1).getRating())
+                                    / (numberOfRating + 0.0);
                             mDatabase.child("rate").setValue(rate);
                             mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
                             mDatabase.child("numOfRating").setValue(numberOfRating);
@@ -180,7 +182,7 @@ public class SendReviewActivity extends AppCompatActivity {
 
                             // display time and date
                             String sTimeNow = String.format("%tc", date);
-                            Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow);
+                            Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow, rating);
 
                            // foodItem.comments.remove(position);
                             foodItem.comments.set(FoodViewActivity.position + 1, commnt);
