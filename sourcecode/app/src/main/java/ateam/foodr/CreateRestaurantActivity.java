@@ -1,8 +1,13 @@
 package ateam.foodr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -16,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,28 +40,40 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class CreateRestaurantActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int TAKE_IMAGE_REQUEST = 2;
 
-    private EditText nameTextbox;
-    private EditText addressTextbox;
-    private EditText phoneTextbox;
-    public TextView title;
-    private Button chooseImageBtn;
-    private Button uploadImageButton;
+    @BindView(R.id.nameTextbox)     EditText nameTextbox;
+    @BindView(R.id.addressTextbox)  EditText addressTextbox;
+    @BindView(R.id.gpsButton)       Button gpsButton;
+    @BindView(R.id.phoneTextbox)    EditText phoneTextbox;
+    @BindView(R.id.idAddFoodTitle3) TextView title;
+    @BindView(R.id.idCRChooseImage) Button chooseImageBtn;
+    @BindView(R.id.idCRImageView)   ImageView choosenImageView;
+    @BindView(R.id.idAddRestPhotoSummitBtn) Button uploadImageButton;
+
     private Uri imageUri;
-    private ImageView choosenImageView;
     private StorageReference mImageStorage;
     private String url;
     private String restaurantKey;
     private FirebaseUser mCurrentUser;
+    private FusedLocationProviderClient fusedLoc;
+
     public String reference;
+
 
     // Event Handlers
 
@@ -60,24 +81,16 @@ public class CreateRestaurantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_restaurant);
+        ButterKnife.bind(this);
+
+        fusedLoc = getFusedLocationProviderClient(this);
 
         reference  =  getIntent().getStringExtra("Database Reference");
-
-        // Get the textboxes
-        // Holy boilerplate, batman!
-        nameTextbox = findViewById(R.id.nameTextbox);
-        addressTextbox = findViewById(R.id.addressTextbox);
-        phoneTextbox = findViewById(R.id.phoneTextbox);
-        chooseImageBtn = findViewById(R.id.idCRChooseImage);
-        choosenImageView = findViewById(R.id.idCRImageView);
-        uploadImageButton = findViewById(R.id.idAddRestPhotoSummitBtn);
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        title = findViewById(R.id.idAddFoodTitle3);
         //Get the storage reference so that the profile images can be saved to the FireBase
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
-        if (reference != null)
-        {
+        if (reference != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -89,36 +102,36 @@ public class CreateRestaurantActivity extends AppCompatActivity {
                     phoneTextbox.setText(dataSnapshot.child("phoneNumber").getValue().toString());
                     title.setText("Edit Restaurant");
                     url = dataSnapshot.child("imageurl").getValue().toString();
-                    if (!url.equals("empty"))
-                    {
-                        Picasso.with(chooseImageBtn.getContext()).load(dataSnapshot.child("imageurl").getValue().toString()).into(choosenImageView);
+
+                    if (!url.equals("empty")) {
+
+                        Picasso.with(chooseImageBtn.getContext())
+                                .load(dataSnapshot.child("imageurl")
+                                        .getValue()
+                                        .toString())
+                                .into(choosenImageView);
                     }
 
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
+                public void onCancelled(DatabaseError databaseError) { }
             });
 
         }
 
-        uploadImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, TAKE_IMAGE_REQUEST);
-            }
+        // Open the upload activity when the user clicks the upload button
+        uploadImageButton.setOnClickListener(v -> {
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, TAKE_IMAGE_REQUEST);
         });
 
-        chooseImageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser();
-            }
-        });
+        // Open the file chooser when the user clicks the choose image button
+        chooseImageBtn.setOnClickListener(v -> openFileChooser());
 
+        // Automatically fill in the address when the user clicks the GPS button
+        gpsButton.setOnClickListener(this::onGpsClick);
     }
 
     public void onCreateClick(View view) {
@@ -140,8 +153,7 @@ public class CreateRestaurantActivity extends AppCompatActivity {
 
         // Send it to the database
         DatabaseReference newRestaurant;
-        if (reference != null)
-        {
+        if (reference != null) {
             newRestaurant = FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
             newRestaurant.child("address").setValue(address);
             newRestaurant.child("businessNumber").setValue(businessID);
@@ -151,23 +163,22 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             onBackPressed();
             finish();
         }
-        else
-            {
+        else {
             newRestaurant= restaurantList.push();
 
-        String foodID = newRestaurant.getRef().toString();
+            String foodID = newRestaurant.getRef().toString();
 
-        // Put that information into a Restaurant object
-        Restaurant r = new Restaurant(url, name, "blank description", address, phoneNumber, businessID, foodID);
+            // Put that information into a Restaurant object
+            Restaurant r = new Restaurant(url, name, "blank description", address, phoneNumber, businessID, foodID);
 
-        newRestaurant.setValue(r)
+            newRestaurant.setValue(r)
 
                 // If it failed, show an error message
                 .addOnFailureListener((Exception e) -> Utils.showToast(this, e.getMessage()))
 
                 // If it succeeded, return to the previous Activity
                 .addOnSuccessListener((task) -> finish());
-            }
+        }
     }
 
     private void openFileChooser() {
@@ -175,6 +186,26 @@ public class CreateRestaurantActivity extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    private void onGpsClick(View v) {
+
+        // Subscribe to a single location update
+        LocationRequest req = new LocationRequest()
+            .setNumUpdates(1)
+            .setMaxWaitTime(5000);
+        
+        try {
+            fusedLoc.requestLocationUpdates(req, new LocationCallbackBuilder(this::onLocationChanged), null);
+        }
+        catch (SecurityException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Disable the button and textbox until the location has arrived
+        gpsButton.setEnabled(false);
+        gpsButton.setText("Getting location...");
+        addressTextbox.setEnabled(false);
     }
 
     @Override
@@ -190,30 +221,25 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             //Access the location where you are going to save the profile picture
             Random rand = new Random();
 
-            int  n = rand.nextInt(1000000000);
+            int n = rand.nextInt(1000000000);
             StorageReference storage = mImageStorage.child("restaurant_images").child(Integer.toString(n));
 
             //Put the file onto the directory and do some tasks when the task is done
-            storage.putFile(imageUri).addOnCompleteListener(new OnCompleteListener < UploadTask.TaskSnapshot > () {
-                @Override
-                public void onComplete(@NonNull Task < UploadTask.TaskSnapshot > task) {
-                    if (task.isSuccessful()) {
-                        //We will need the download URL to get it later on so we need to store this
-                        String download_url = task.getResult().getDownloadUrl().toString();
-                        url = download_url;
-                        //To tell the user that this is done
-                        Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
-                    }
+            storage.putFile(imageUri).addOnCompleteListener(task -> {
+
+                if (task.isSuccessful()) {
+                    //We will need the download URL to get it later on so we need to store this
+                    String download_url = task.getResult().getDownloadUrl().toString();
+                    url = download_url;
+                    //To tell the user that this is done
+                    Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
                 }
             });
-
-
         }
 
-        if (requestCode == TAKE_IMAGE_REQUEST && resultCode == RESULT_OK)
-        {
+        if (requestCode == TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -227,25 +253,61 @@ public class CreateRestaurantActivity extends AppCompatActivity {
             choosenImageView.setImageBitmap(bitmap);
 
             //Put the file onto the directory and do some tasks when the task is done
-            storage.putBytes(dataBAOS).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful())
-                    {
-                        //We will need the download URL to get it later on so we need to store this
-                        String download_url = task.getResult().getDownloadUrl().toString();
+            storage.putBytes(dataBAOS).addOnCompleteListener(task -> {
 
-                        url = download_url;
+                if (task.isSuccessful()) {
+                    //We will need the download URL to get it later on so we need to store this
+                    String download_url = task.getResult().getDownloadUrl().toString();
 
-                        //To tell the user that this is done
-                        Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
-                    }
+                    url = download_url;
+
+                    //To tell the user that this is done
+                    Toast.makeText(CreateRestaurantActivity.this, "The image is updated", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(CreateRestaurantActivity.this, "There was an error!", Toast.LENGTH_LONG).show();
                 }
             });
         }
+    }
+
+    /** Gets called once after the user clicks the GPS button. */
+    private void onLocationChanged(LocationResult result) {
+
+        Location loc = result.getLastLocation();
+
+        // Re-enable the textbox and button
+        gpsButton.setEnabled(true);
+        gpsButton.setText("Choose from GPS");
+        addressTextbox.setEnabled(true);
+
+        // Get the address from the location
+        Geocoder geocoder = new Geocoder(this);
+        List<Address> addresses= null;
+
+        try {
+            addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 100);
+        }
+        catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        // Tell the user if the address is not found
+        if (addresses == null) {
+            Utils.showToast(this, "Could not find address for location (" + loc.getLatitude() + ", " + loc.getLongitude());
+            return;
+        }
+
+        Address addr = addresses.get(0);
+
+        // Combine all of the address lines into one string
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; addr.getAddressLine(i) != null; i++) {
+
+            builder.append(addr.getAddressLine(i));
+        }
+
+        // Put it in the textbox
+        addressTextbox.setText(builder.toString());
     }
 }
