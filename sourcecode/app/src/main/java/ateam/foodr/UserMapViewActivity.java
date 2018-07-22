@@ -19,8 +19,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,14 +41,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback,LocationListener {
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+import static com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE;
+
+public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     // How close you need to be to a restaurant(in meters) for the menu to auto-open
     // It's twice the size of an average restaurant.
@@ -51,12 +62,20 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap mMap;
     private List<Marker> allMakerers = new ArrayList<>();
 
-    private LocationManager locMan;
+    @BindView(R.id.sidebar)             View sidebar;
+    @BindView(R.id.restaurantNameLabel) TextView restaurantNameLabel;
+    @BindView(R.id.restaurantImage)     ImageView restaurantImage;
+    @BindView(R.id.descTextbox)         TextView descTextbox;
+
+    private FusedLocationProviderClient fusedLoc;
+    private LocationCallback locationCallback = new LocationCallbackBuilder(this::onLocationChanged);
+    private Restaurant selectedRestaurant;  // The restaurant currently displayed in the sidebar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_map_view);
+        ButterKnife.bind(this);
 
         // Set up the menu in the top right corner
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -67,7 +86,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        fusedLoc = getFusedLocationProviderClient(this);
     }
 
     @Override
@@ -76,7 +95,10 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
         // Start getting location updates
         try {
-            locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
+            LocationRequest req = new LocationRequest()
+                    .setFastestInterval(5000);
+
+            fusedLoc.requestLocationUpdates(req, locationCallback, null);
         }
         catch (SecurityException e){
             throw new RuntimeException(e);
@@ -89,7 +111,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         
         // Stop getting location updates
         // This way we don't continue polling the GPS unnecessarily
-        locMan.removeUpdates(this);
+        fusedLoc.removeLocationUpdates(locationCallback);
     }
 
     /* Toolbar stuff */
@@ -126,6 +148,15 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         return true;
     }
 
+    private void onMapCameraMove(int reason) {
+
+        // Don't do this if it's not a user-initiated gesture
+        if (reason != REASON_GESTURE)
+            return;
+
+        sidebar.setVisibility(View.INVISIBLE);
+    }
+
 
     /* Map stuff */
 
@@ -156,6 +187,9 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
         // Subscribe to the marker click event
         googleMap.setOnMarkerClickListener(this::onMarkerClick);
+
+        // Close the sidebar when the user moves on the map
+        googleMap.setOnCameraMoveStartedListener(this::onMapCameraMove);
 
         // Add all restaurants to the map
         DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -222,25 +256,19 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     }
 
     private boolean onMarkerClick(Marker marker) {
-        // Get the restaurant from the marker
+
+        // Put the selected restaurant in the sidebar
         Restaurant r = (Restaurant)(marker.getTag());
-
-        // Go to the restaurant's menu.
-        Intent menuIntent = new Intent(this, UserFoodMenu.class);
-        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, r.getRestID());
-
-        startActivity(menuIntent);
+        openSidebar(r);
 
         // Returning false tells Google Maps to run the default behavior
         // in addition to our logic
         return false;
     }
 
-    @Override
-    public void onLocationChanged(Location userLoc) {
+    public void onLocationChanged(LocationResult locRes) {
         // TODO: Recenter the map's camera to the current location
-
-        Log.d("location changed", userLoc.toString());
+        Location userLoc = locRes.getLastLocation();
 
         // Don't do anything if there are no restaurants
         if (allMakerers.isEmpty())
@@ -276,31 +304,34 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
             }
         }
 
-        Log.d("closest dist", "" + closestDist);
-
         // Don't do anything if it's not in the maximum range
         if (closestDist > MAX_RESTAURANT_RANGE)
             return;
 
-        // It was within range, so open that restaurant's menu
+        // It was within range, so put it in the sidebar
+        openSidebar(closest);
+    }
+
+    public void onRestaurantMenuButtonClick(View v) {
+
+        // Open the restaurant's menu in a new activity
         Intent menuIntent = new Intent(this, UserFoodMenu.class);
-        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, closest.getRestID());
+        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, selectedRestaurant.getRestID());
 
         startActivity(menuIntent);
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    /** Opens the sidebar and displays the given restaurant */
+    private void openSidebar(Restaurant r) {
 
-    }
+        sidebar.setVisibility(View.VISIBLE);
+        selectedRestaurant = r;
 
-    @Override
-    public void onProviderEnabled(String provider) {
+        // Load the restaurant's image into the sidebar
+        Picasso.with(this).load(r.getImageurl()).into(restaurantImage);
 
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
+        // Fill out the textboxes
+        restaurantNameLabel.setText(selectedRestaurant.getName());
+        descTextbox.setText(r.getDescription());
     }
 }
