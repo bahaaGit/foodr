@@ -38,9 +38,9 @@
     <LinearLayout
         android:id="@+id/sidebar"
         android:layout_width="180dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:orientation="vertical"
-        android:background="@color/cardview_light_background"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -51,7 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Restaurant Name"
-            android:textSize="20dp"/>
+            android:textColor="@android:color/background_dark"
+            android:textSize="20dp" />
 
         <ImageView
             android:id="@+id/restaurantImage"
@@ -68,8 +69,10 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPupple"
+            android:onClick="onRestaurantMenuButtonClick"
             android:text="View menu"
-            android:onClick="onRestaurantMenuButtonClick"/>
+            android:textColor="@android:color/background_light" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
