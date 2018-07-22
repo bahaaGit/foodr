@@ -49,15 +49,7 @@ public class SendReviewActivity extends AppCompatActivity {
         //private FirebaseAuth mAuth;
         //FirebaseUser currentUser = mAuth.getCurrentUser();
 
-//        if (getIntent().getStringExtra("Position") != null)
-//        {
-//            position = Integer.parseInt(getIntent().getStringExtra("Position"));
-//        }
-//        else
-//            {
-//                position = -1;
-//            }
-
+//
         foodKey  =  getIntent().getStringExtra("Database Reference");
         reference = foodKey;
         reviewRatingBar = (RatingBar)findViewById(R.id.idReviewRatingBar);
@@ -130,13 +122,6 @@ public class SendReviewActivity extends AppCompatActivity {
                     }
 
                 });
-            if (go == 1) {
-                rate = (ratingTotal + rating) / (numberOfRating + 1.0);
-                mDatabase.child("rate").setValue(rate);
-                mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
-                mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
-                go = 0;
-            }
             }
         });
 
@@ -197,14 +182,10 @@ public class SendReviewActivity extends AppCompatActivity {
                             createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(createIntent);
                             finish();
-
-                        }
-
-
-
                 }
             }
+        }
         });
     }
-
 }
+
