@@ -41,7 +41,7 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:background="@color/cardview_light_background"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/map">
@@ -49,7 +49,9 @@
         <TextView
             android:id="@+id/restaurantNameLabel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Restaurant Name"
+            android:textSize="20dp"/>
 
         <ImageView
             android:id="@+id/restaurantImage"
@@ -69,7 +71,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="View menu"
             android:onClick="onRestaurantMenuButtonClick"/>
