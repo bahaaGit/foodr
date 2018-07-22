@@ -61,6 +61,8 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
     @BindView(R.id.sidebar)             View sidebar;
     @BindView(R.id.restaurantNameLabel) TextView restaurantNameLabel;
+    @BindView(R.id.addressLabel)        TextView addressLabel;
+    @BindView(R.id.phoneLabel)          TextView phoneLabel;
 
     private FusedLocationProviderClient fusedLoc;
     private LocationCallback locationCallback = new LocationCallbackBuilder(this::onLocationChanged);
@@ -311,5 +313,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         selectedRestaurant = r;
 
         restaurantNameLabel.setText(selectedRestaurant.getName());
+        addressLabel.setText(r.getAddress());
+        phoneLabel.setText(r.getPhoneNumber());
     }
 }
