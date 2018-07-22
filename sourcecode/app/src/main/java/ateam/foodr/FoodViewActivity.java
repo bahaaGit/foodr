@@ -2,8 +2,10 @@ package ateam.foodr;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +35,8 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
     private ListView foodCommentsList;
     private FloatingActionButton addReviewBtn;
     private ArrayList<Comment> comments;
-
+    Food foodItem;
+    Boolean hasCommenterBefore = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +80,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                 }
                 //dataSnapshot.child("name").getValue().toString();
                 Food foodItem = dataSnapshot.getValue(Food.class) ;
-                
+
                 name.setText(foodItem.getName());
                 desc.setText(foodItem.getDesc());
                 rate.setRating(foodItem.getRate());
@@ -92,10 +97,49 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         addReviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
+
+                mDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        foodItem = dataSnapshot.getValue(Food.class);
+
+                        for (Comment cmt : foodItem.comments) {
+                            if (cmt.getComentId().equals(FirebaseAuth.getInstance().getUid())){
+                                hasCommenterBefore = true;
+                                Log.d("myTag", "cmmmented befores " + foodKey);
+                            }
+
+                        }
+                        if(!hasCommenterBefore){
+                            Intent createIntent = new Intent(FoodViewActivity.this, SendReviewActivity.class);
+                            createIntent.putExtra("Database Reference",foodKey);
+                            startActivity(createIntent);
+                        }else {
+                            final AlertDialog dialog = new AlertDialog.Builder(FoodViewActivity.this)
+                                    .setTitle("Sorry")
+                                    .setMessage("You have have already commented on this food item")
+                                    .setPositiveButton("Ok", null)
+                                    .show();
+
+                            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            positiveButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(FoodViewActivity.this, "Thanks", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 // Show the create restaurant page
-                Intent createIntent = new Intent(FoodViewActivity.this, SendReviewActivity.class);
-                createIntent.putExtra("Database Reference",foodKey);
-                startActivity(createIntent);
             }
         });
     }
