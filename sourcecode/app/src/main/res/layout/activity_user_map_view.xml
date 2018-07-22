@@ -35,4 +35,21 @@
         map:layout_constraintTop_toBottomOf="@+id/appBarLayout"
         tools:context=".UserMapViewActivity" />
 
+    <LinearLayout
+        android:id="@+id/sidebar"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:background="@color/cardview_light_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/map">
+
+        <TextView
+            android:id="@+id/restaurantNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Restaurant name" />
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
