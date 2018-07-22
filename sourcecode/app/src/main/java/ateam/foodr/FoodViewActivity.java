@@ -38,7 +38,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
     private ArrayList<Comment> comments;
     Food foodItem;
     Boolean hasCommenterBefore = false;
-    private String fromFoodView;
+    public static int position = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +47,8 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         comments = new ArrayList<Comment>();
 
 
-        fromFoodView = "no";
         foodKey = getIntent().getStringExtra("Database Reference");
 
-        if (getIntent().getStringExtra("fromSendRW") != null)
-        {
-            fromFoodView = getIntent().getStringExtra("fromSendRW");
-        }
 
         restImage = findViewById(R.id.idFoodImg);
         name = findViewById(R.id.idFoodName);
@@ -229,8 +224,33 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
             commenterTime = convertView.findViewById(R.id.idCommentTime);
             editButton = convertView.findViewById(R.id.id_commentEdit);
 
-            if (!comments.get(position).getComentId().equals(FirebaseAuth.getInstance().getUid()))
-                editButton.setVisibility(View.INVISIBLE);
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent createIntent = new Intent(FoodViewActivity.this, SendReviewActivity.class);
+
+                    createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    createIntent.putExtra("Database Reference",foodKey);
+
+                    //createIntent.putExtra("Position",position);
+
+                    startActivity(createIntent);
+
+                    finish();
+                }
+            });
+
+            editButton.setVisibility(View.INVISIBLE);
+
+            if (comments.get(position).getComentId().equals(FirebaseAuth.getInstance().getUid()))
+            {
+                editButton.setVisibility(View.VISIBLE);
+                FoodViewActivity.position = position;
+
+
+            }
+
 
             commenterName.setText(comments.get(position).getCommenter());
             commenterDesc.setText(comments.get(position).getCommentTxt());

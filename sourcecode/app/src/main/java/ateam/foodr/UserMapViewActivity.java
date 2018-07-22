@@ -76,7 +76,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
                                                     // so the app doesn't constantly open the same
                                                     // restaurant over and over again.
 
-    private Restaurant selectedRestaurant;  // The restaurant currently displayed in the sidebar
+    public static Restaurant selectedRestaurant;  // The restaurant currently displayed in the sidebar
 
 
     @Override
