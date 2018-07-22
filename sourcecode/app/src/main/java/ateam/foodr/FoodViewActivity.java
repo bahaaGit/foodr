@@ -174,7 +174,15 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         public int getCount() {
             if (comments == null)
                 return 0;
-            return comments.size();
+            else
+            {
+                if (comments.size() != 0 && comments.get(0).getComentId().equals(""))
+                {
+                    comments.remove(0);
+                    notifyDataSetChanged();
+                }
+                return comments.size();
+            }
         }
 
         @Override
@@ -196,13 +204,11 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
             commenterDesc = convertView.findViewById(R.id.idCommenterDesc);
             commenterName = convertView.findViewById(R.id.idCommenterName);
             commenterTime = convertView.findViewById(R.id.idCommentTime);
-            commenterTitle = convertView.findViewById(R.id.idCommenterTitle);
 
-             if (position == 0)
-                 commenterTitle.setText("");
-             commenterName.setText(comments.get(position).getCommenter());
-             commenterDesc.setText(comments.get(position).getCommentTxt());
-             commenterTime.setText(comments.get(position).getTime());
+
+            commenterName.setText(comments.get(position).getCommenter());
+            commenterDesc.setText(comments.get(position).getCommentTxt());
+            commenterTime.setText(comments.get(position).getTime());
              return convertView;
         }
     }
