@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -56,14 +58,19 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
     private GoogleMap mMap;
     private List<Marker> allMakerers = new ArrayList<>();
-    
+
+    @BindView(R.id.sidebar)             View sidebar;
+    @BindView(R.id.restaurantNameLabel) TextView restaurantNameLabel;
+
     private FusedLocationProviderClient fusedLoc;
     private LocationCallback locationCallback = new LocationCallbackBuilder(this::onLocationChanged);
+    private Restaurant selectedRestaurant;  // The restaurant currently displayed in the sidebar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_map_view);
+        ButterKnife.bind(this);
 
         // Set up the menu in the top right corner
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -232,14 +239,10 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     }
 
     private boolean onMarkerClick(Marker marker) {
-        // Get the restaurant from the marker
+
+        // Put the selected restaurant in the sidebar
         Restaurant r = (Restaurant)(marker.getTag());
-
-        // Go to the restaurant's menu.
-        Intent menuIntent = new Intent(this, UserFoodMenu.class);
-        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, r.getRestID());
-
-        startActivity(menuIntent);
+        openSidebar(r);
 
         // Returning false tells Google Maps to run the default behavior
         // in addition to our logic
@@ -249,9 +252,6 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     public void onLocationChanged(LocationResult locRes) {
         // TODO: Recenter the map's camera to the current location
         Location userLoc = locRes.getLastLocation();
-
-        if (2 == 2)
-            return;
 
         // Don't do anything if there are no restaurants
         if (allMakerers.isEmpty())
@@ -287,16 +287,29 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
             }
         }
 
-        Log.d("closest dist", "" + closestDist);
-
         // Don't do anything if it's not in the maximum range
         if (closestDist > MAX_RESTAURANT_RANGE)
             return;
 
-        // It was within range, so open that restaurant's menu
+        // It was within range, so put it in the sidebar
+        openSidebar(closest);
+    }
+
+    public void onRestaurantMenuButtonClick(View v) {
+
+        // Open the restaurant's menu in a new activity
         Intent menuIntent = new Intent(this, UserFoodMenu.class);
-        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, closest.getRestID());
+        menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, selectedRestaurant.getRestID());
 
         startActivity(menuIntent);
+    }
+
+    /** Opens the sidebar and displays the given restaurant */
+    private void openSidebar(Restaurant r) {
+
+        sidebar.setVisibility(View.VISIBLE);
+        selectedRestaurant = r;
+
+        restaurantNameLabel.setText(selectedRestaurant.getName());
     }
 }
