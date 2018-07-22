@@ -65,8 +65,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     @BindView(R.id.sidebar)             View sidebar;
     @BindView(R.id.restaurantNameLabel) TextView restaurantNameLabel;
     @BindView(R.id.restaurantImage)     ImageView restaurantImage;
-    @BindView(R.id.addressLabel)        TextView addressLabel;
-    @BindView(R.id.phoneLabel)          TextView phoneLabel;
+    @BindView(R.id.descTextbox)         TextView descTextbox;
 
     private FusedLocationProviderClient fusedLoc;
     private LocationCallback locationCallback = new LocationCallbackBuilder(this::onLocationChanged);
@@ -328,10 +327,11 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         sidebar.setVisibility(View.VISIBLE);
         selectedRestaurant = r;
 
+        // Load the restaurant's image into the sidebar
         Picasso.with(this).load(r.getImageurl()).into(restaurantImage);
 
+        // Fill out the textboxes
         restaurantNameLabel.setText(selectedRestaurant.getName());
-        addressLabel.setText(r.getAddress());
-        phoneLabel.setText(r.getPhoneNumber());
+        descTextbox.setText(r.getDescription());
     }
 }
