@@ -5,15 +5,24 @@ public class Comment {
     private String time;
     private String commenter;
     private String commentTxt;
-    public  String comentId;
+    private  String comentId;
 
     public Comment() {
 
     }
-    public Comment(String time, String commenter, String commentTxt) {
+    public Comment(String comentId, String commenter, String commentTxt,String time) {
         this.time = time;
         this.commenter = commenter;
         this.commentTxt = commentTxt;
+        this.comentId = comentId;
+    }
+
+    public String getComentId() {
+        return comentId;
+    }
+
+    public void setComentId(String comentId) {
+        this.comentId = comentId;
     }
 
     public String getTime() {

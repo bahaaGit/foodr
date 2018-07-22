@@ -11,6 +11,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SendReviewActivity extends AppCompatActivity {
     private String reference;
@@ -33,13 +36,18 @@ public class SendReviewActivity extends AppCompatActivity {
     public double rate;
     public int go;
     DatabaseReference mDatabase;
+    DatabaseReference usrRef;
+    String usr;
     Food foodItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_review);
 
-
+        //Check if a user is logged in
+        //FireBase Authentication Linker
+        //private FirebaseAuth mAuth;
+        //FirebaseUser currentUser = mAuth.getCurrentUser();
 
         foodKey  =  getIntent().getStringExtra("Database Reference");
         reference = foodKey;
@@ -56,8 +64,9 @@ public class SendReviewActivity extends AppCompatActivity {
         }
         rating = 0.1;
         go = 0;
-
+        String key = "https://foodr-6f6d1.firebaseio.com/Users/"+FirebaseAuth.getInstance().getUid();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
+        usrRef = FirebaseDatabase.getInstance().getReferenceFromUrl(key);
 
         reviewRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -94,26 +103,31 @@ public class SendReviewActivity extends AppCompatActivity {
                 numberOfRating = Double.parseDouble(dataSnapshot.child("numOfRating").getValue().toString());
                 foodItem = dataSnapshot.getValue(Food.class);
                 go = 1;
-
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+            });
+                usrRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                         usr = dataSnapshot.child("user_name").getValue().toString();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                if (go == 1)
-            {
+                    }
 
+                });
+            if (go == 1) {
                 rate = (ratingTotal + rating) / (numberOfRating + 1.0);
                 mDatabase.child("rate").setValue(rate);
                 mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
                 mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
                 go = 0;
             }
-
             }
         });
 
@@ -130,16 +144,19 @@ public class SendReviewActivity extends AppCompatActivity {
                     mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
                     mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
                     reviewRatingBar.setRating((float) rate);
-                    Comment commnt = new Comment("23:34","mesm","");
-                    commnt.setCommentTxt(feedback.getText().toString());
+                    Date date = new Date();
+
+                    // display time and date
+                    String sTimeNow = String.format("%tc", date);
+                    Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow);
+
                     foodItem.comments.add(commnt);
                     mDatabase.child("comments").setValue(foodItem.comments);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
 
-                    // They did not mark themselves as an admin, so go to the map view
-                    //Programmatically press the back button
-                    onBackPressed();
-                    //finish();
+                    Intent createIntent = new Intent(SendReviewActivity.this, FoodViewActivity.class);
+                    createIntent.putExtra("Database Reference",foodKey);
+                    startActivity(createIntent);
                 }
             }
         });
