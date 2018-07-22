@@ -49,6 +49,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+import static com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE;
 
 public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -175,6 +176,16 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
         // Subscribe to the marker click event
         googleMap.setOnMarkerClickListener(this::onMarkerClick);
+
+        // Close the sidebar when the user moves on the map
+        googleMap.setOnCameraMoveStartedListener((int reason) -> {
+
+            // Don't do this if it's not a user-initiated gesture
+            if (reason != REASON_GESTURE)
+                return;
+
+            sidebar.setVisibility(View.INVISIBLE);
+        });
 
         // Add all restaurants to the map
         DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("Users");
