@@ -67,9 +67,17 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
     @BindView(R.id.restaurantImage)     ImageView restaurantImage;
     @BindView(R.id.descTextbox)         TextView descTextbox;
 
-    private FusedLocationProviderClient fusedLoc;
-    private LocationCallback locationCallback = new LocationCallbackBuilder(this::onLocationChanged);
+    private FusedLocationProviderClient fusedLoc;   // Provides us with location updates
+    private LocationCallback locationCallback =     // A wrapper around the location callback function
+            new LocationCallbackBuilder(this::onLocationChanged);
+
+    private Restaurant lastAutoOpenedRestaurant;    // The last restaurant that was automatically
+                                                    // opened via GPS.  We need to remember this
+                                                    // so the app doesn't constantly open the same
+                                                    // restaurant over and over again.
+
     private Restaurant selectedRestaurant;  // The restaurant currently displayed in the sidebar
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,7 +316,12 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         if (closestDist > MAX_RESTAURANT_RANGE)
             return;
 
-        // It was within range, so put it in the sidebar
+        // Don't do anything if we've already auto-opened this restaurant
+        if (lastAutoOpenedRestaurant == closest)
+            return;
+
+        // It was within range, so auto-open it in the sidebar
+        lastAutoOpenedRestaurant = closest;
         openSidebar(closest);
     }
 
