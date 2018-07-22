@@ -250,6 +250,9 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         // TODO: Recenter the map's camera to the current location
         Location userLoc = locRes.getLastLocation();
 
+        if (2 == 2)
+            return;
+
         // Don't do anything if there are no restaurants
         if (allMakerers.isEmpty())
             return;
