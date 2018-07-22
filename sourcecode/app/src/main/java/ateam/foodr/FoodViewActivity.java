@@ -155,7 +155,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
             if(position == 0){
                 return convertView;
             }
-            commenterName.setText("Commenter");
+            commenterName.setText(comments.get(position).getCommenter());
             commenterDesc.setText(comments.get(position).getCommentTxt());
             return convertView;
         }
