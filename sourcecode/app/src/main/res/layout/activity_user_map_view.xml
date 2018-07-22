@@ -37,11 +37,11 @@
 
     <LinearLayout
         android:id="@+id/sidebar"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:background="@color/cardview_light_background"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/map">
@@ -50,7 +50,14 @@
             android:id="@+id/restaurantNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        
+
+        <ImageView
+            android:id="@+id/idFoodImg"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/topmenubar2" />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
