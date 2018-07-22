@@ -29,6 +29,15 @@ public class UserFoodMenu extends AppCompatActivity implements ChildEventListene
     private ImageView restImage;
     private android.support.v7.widget.Toolbar toolbar;
 
+    @Override
+    public void onBackPressed()
+    {
+        Intent createIntent = new Intent(UserFoodMenu.this, UserMapViewActivity.class);
+        //createIntent.putExtra(ActivityParams.RESTAURANT_KEY, UserMapViewActivity.selectedRestaurant.getRestID());
+        createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(createIntent);
+        finish();
+    }
 
 
     @Override

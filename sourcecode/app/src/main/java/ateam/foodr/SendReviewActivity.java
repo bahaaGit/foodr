@@ -49,15 +49,7 @@ public class SendReviewActivity extends AppCompatActivity {
         //private FirebaseAuth mAuth;
         //FirebaseUser currentUser = mAuth.getCurrentUser();
 
-//        if (getIntent().getStringExtra("Position") != null)
-//        {
-//            position = Integer.parseInt(getIntent().getStringExtra("Position"));
-//        }
-//        else
-//            {
-//                position = -1;
-//            }
-
+//
         foodKey  =  getIntent().getStringExtra("Database Reference");
         reference = foodKey;
         reviewRatingBar = (RatingBar)findViewById(R.id.idReviewRatingBar);
@@ -130,13 +122,6 @@ public class SendReviewActivity extends AppCompatActivity {
                     }
 
                 });
-            if (go == 1) {
-                rate = (ratingTotal + rating) / (numberOfRating + 1.0);
-                mDatabase.child("rate").setValue(rate);
-                mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
-                mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
-                go = 0;
-            }
             }
         });
 
@@ -147,61 +132,60 @@ public class SendReviewActivity extends AppCompatActivity {
                 if (feedback.getText().toString().isEmpty()) {
                     Toast.makeText(SendReviewActivity.this, "Please fill in feedback text box", Toast.LENGTH_LONG).show();
                 } else {
-                    if (FoodViewActivity.position == -1){
+                    if (FoodViewActivity.position != -1 && foodItem.comments.get(FoodViewActivity.position + 1).getComentId().equals(FirebaseAuth.getInstance().getUid())){
 
-                    rate = (ratingTotal + rating) / (numberOfRating + 1.0);
-                    mDatabase.child("rate").setValue(rate);
-                    mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
-                    mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
-                    reviewRatingBar.setRating((float) rate);
-                    Date date = new Date();
+                        rate = (ratingTotal + rating - foodItem.comments.get(FoodViewActivity.position + 1).getRating())
+                                / (numberOfRating + 0.0);
+                        mDatabase.child("rate").setValue(rate);
+                        mDatabase.child("totalOfRating").setValue(ratingTotal + rating - foodItem.comments.get(FoodViewActivity.position + 1).getRating());
+                        mDatabase.child("numOfRating").setValue(numberOfRating);
+                        //reviewRatingBar.setRating((float) rate);
+                        Date date = new Date();
 
-                    // display time and date
-                    String sTimeNow = String.format("%tc", date);
-                    Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow, rating);
+                        // display time and date
+                        String sTimeNow = String.format("%tc", date);
+                        Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow, rating);
 
-                    foodItem.comments.add(commnt);
-                    mDatabase.child("comments").setValue(foodItem.comments);
-                    Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
+                        // foodItem.comments.remove(position);
+                        foodItem.comments.set(FoodViewActivity.position + 1, commnt);
+                        mDatabase.child("comments").setValue(foodItem.comments);
+                        Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
 
-                    Intent createIntent = new Intent(SendReviewActivity.this, UserFoodMenu.class);
-                    createIntent.putExtra(ActivityParams.RESTAURANT_KEY, UserMapViewActivity.selectedRestaurant.getRestID());
-                    createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(createIntent);
-                    finish();
+                        Intent createIntent = new Intent(SendReviewActivity.this, UserFoodMenu.class);
+                        //createIntent.putExtra("Database Reference",foodKey);
+                        createIntent.putExtra(ActivityParams.RESTAURANT_KEY, UserMapViewActivity.selectedRestaurant.getRestID());
+                        createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(createIntent);
+                        finish();
+
+
                     } else
                         {
 
-                            rate = (ratingTotal + rating - foodItem.comments.get(FoodViewActivity.position + 1).getRating())
-                                    / (numberOfRating + 0.0);
+                            rate = (ratingTotal + rating) / (numberOfRating + 1.0);
                             mDatabase.child("rate").setValue(rate);
                             mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
-                            mDatabase.child("numOfRating").setValue(numberOfRating);
-                            reviewRatingBar.setRating((float) rate);
+                            mDatabase.child("numOfRating").setValue(numberOfRating + 1.0);
+                            //reviewRatingBar.setRating((float) rate);
                             Date date = new Date();
 
                             // display time and date
                             String sTimeNow = String.format("%tc", date);
                             Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow, rating);
 
-                           // foodItem.comments.remove(position);
-                            foodItem.comments.set(FoodViewActivity.position + 1, commnt);
+                            foodItem.comments.add(commnt);
                             mDatabase.child("comments").setValue(foodItem.comments);
-                            Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback!", Toast.LENGTH_SHORT).show();
 
                             Intent createIntent = new Intent(SendReviewActivity.this, UserFoodMenu.class);
-                            //createIntent.putExtra("Database Reference",foodKey);
                             createIntent.putExtra(ActivityParams.RESTAURANT_KEY, UserMapViewActivity.selectedRestaurant.getRestID());
                             createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(createIntent);
                             finish();
-                        }
-
-
-
                 }
             }
+        }
         });
     }
-
 }
+

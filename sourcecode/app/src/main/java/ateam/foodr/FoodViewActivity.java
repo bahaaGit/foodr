@@ -38,7 +38,9 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
     private ArrayList<Comment> comments;
     Food foodItem;
     Boolean hasCommenterBefore = false;
-    public static int position = -1;
+
+    public static int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,8 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
 
 
         foodKey = getIntent().getStringExtra("Database Reference");
+
+        FoodViewActivity.position = -1;
 
 
         restImage = findViewById(R.id.idFoodImg);
