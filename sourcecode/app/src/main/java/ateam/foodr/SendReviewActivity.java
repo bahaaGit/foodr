@@ -66,8 +66,6 @@ public class SendReviewActivity extends AppCompatActivity {
         go = 0;
         String key = "https://foodr-6f6d1.firebaseio.com/Users/"+FirebaseAuth.getInstance().getUid();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
-        Log.d("myTag", "This is my message " + key);
-        Log.d("myTag", "This is my message " + foodKey);
         usrRef = FirebaseDatabase.getInstance().getReferenceFromUrl(key);
 
         reviewRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {

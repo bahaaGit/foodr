@@ -108,7 +108,6 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                         for (Comment cmt : foodItem.comments) {
                             if (cmt.getComentId().equals(FirebaseAuth.getInstance().getUid())){
                                 hasCommenterBefore = true;
-                                Log.d("myTag", "cmmmented befores " + foodKey);
                             }
 
                         }
@@ -192,15 +191,18 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         public View getView(int position, View convertView, ViewGroup parent) {
 
             convertView = getLayoutInflater().inflate(R.layout.rl_comments_item,null);
-            TextView commenterName, commenterDesc;
+            TextView commenterName, commenterDesc,commenterTime;
 
             commenterDesc = convertView.findViewById(R.id.idCommenterDesc);
             commenterName = convertView.findViewById(R.id.idCommenterName);
+            commenterTime = convertView.findViewById(R.id.idCommentTime);
             if(position == 0){
                 return convertView;
             }
             commenterName.setText(comments.get(position).getCommenter());
             commenterDesc.setText(comments.get(position).getCommentTxt());
+            commenterTime.setText(comments.get(position).getTime());
+
             return convertView;
         }
     }

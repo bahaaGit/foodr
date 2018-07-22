@@ -33,6 +33,18 @@
             android:textStyle="bold|italic"
             android:layout_marginBottom="0dp"
             />
+
+        <TextView
+            android:id="@+id/idCommentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/idCommenterTitle"
+            android:layout_toEndOf="@+id/idCommenterName"
+            android:padding="5dp"
+            android:paddingTop="5dp"
+            android:text="Sun Jul 22 10:45:20 GMT 2018"
+            android:textSize="12sp"
+            android:textStyle="italic" />
         <TextView
             android:paddingTop="5dp"
             android:id="@+id/idCommenterDesc"
