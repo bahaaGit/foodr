@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +64,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
     @BindView(R.id.sidebar)             View sidebar;
     @BindView(R.id.restaurantNameLabel) TextView restaurantNameLabel;
+    @BindView(R.id.restaurantImage)     ImageView restaurantImage;
     @BindView(R.id.addressLabel)        TextView addressLabel;
     @BindView(R.id.phoneLabel)          TextView phoneLabel;
 
@@ -146,6 +149,15 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         return true;
     }
 
+    private void onMapCameraMove(int reason) {
+
+        // Don't do this if it's not a user-initiated gesture
+        if (reason != REASON_GESTURE)
+            return;
+
+        sidebar.setVisibility(View.INVISIBLE);
+    }
+
 
     /* Map stuff */
 
@@ -178,14 +190,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         googleMap.setOnMarkerClickListener(this::onMarkerClick);
 
         // Close the sidebar when the user moves on the map
-        googleMap.setOnCameraMoveStartedListener((int reason) -> {
-
-            // Don't do this if it's not a user-initiated gesture
-            if (reason != REASON_GESTURE)
-                return;
-
-            sidebar.setVisibility(View.INVISIBLE);
-        });
+        googleMap.setOnCameraMoveStartedListener(this::onMapCameraMove);
 
         // Add all restaurants to the map
         DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -322,6 +327,8 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
         sidebar.setVisibility(View.VISIBLE);
         selectedRestaurant = r;
+
+        Picasso.with(this).load(r.getImageurl()).into(restaurantImage);
 
         restaurantNameLabel.setText(selectedRestaurant.getName());
         addressLabel.setText(r.getAddress());
