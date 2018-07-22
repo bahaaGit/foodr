@@ -21,6 +21,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,7 +46,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback,LocationListener {
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+
+public class UserMapViewActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     // How close you need to be to a restaurant(in meters) for the menu to auto-open
     // It's twice the size of an average restaurant.
@@ -50,8 +56,9 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
     private GoogleMap mMap;
     private List<Marker> allMakerers = new ArrayList<>();
-
-    private LocationManager locMan;
+    
+    private FusedLocationProviderClient fusedLoc;
+    private LocationCallback locationCallback = new LocationCallbackBuilder(this::onLocationChanged);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +74,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        fusedLoc = getFusedLocationProviderClient(this);
     }
 
     @Override
@@ -76,7 +83,10 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
 
         // Start getting location updates
         try {
-            locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
+            LocationRequest req = new LocationRequest()
+                    .setFastestInterval(5000);
+
+            fusedLoc.requestLocationUpdates(req, locationCallback, null);
         }
         catch (SecurityException e){
             throw new RuntimeException(e);
@@ -89,7 +99,7 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         
         // Stop getting location updates
         // This way we don't continue polling the GPS unnecessarily
-        locMan.removeUpdates(this);
+        fusedLoc.removeLocationUpdates(locationCallback);
     }
 
     /* Toolbar stuff */
@@ -236,11 +246,9 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         return false;
     }
 
-    @Override
-    public void onLocationChanged(Location userLoc) {
+    public void onLocationChanged(LocationResult locRes) {
         // TODO: Recenter the map's camera to the current location
-
-        Log.d("location changed", userLoc.toString());
+        Location userLoc = locRes.getLastLocation();
 
         // Don't do anything if there are no restaurants
         if (allMakerers.isEmpty())
@@ -287,20 +295,5 @@ public class UserMapViewActivity extends AppCompatActivity implements OnMapReady
         menuIntent.putExtra(ActivityParams.RESTAURANT_KEY, closest.getRestID());
 
         startActivity(menuIntent);
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 }
