@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,7 +38,7 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
     private ArrayList<Comment> comments;
     Food foodItem;
     Boolean hasCommenterBefore = false;
-
+    private String fromFoodView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,13 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         comments = new ArrayList<Comment>();
 
 
+        fromFoodView = "no";
         foodKey = getIntent().getStringExtra("Database Reference");
+
+        if (getIntent().getStringExtra("fromSendRW") != null)
+        {
+            fromFoodView = getIntent().getStringExtra("fromSendRW");
+        }
 
         restImage = findViewById(R.id.idFoodImg);
         name = findViewById(R.id.idFoodName);
@@ -100,9 +107,10 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
 
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(foodKey);
 
-                mDatabase.addValueEventListener(new ValueEventListener() {
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+
                         foodItem = dataSnapshot.getValue(Food.class);
 
                         for (Comment cmt : foodItem.comments) {
@@ -111,16 +119,26 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                             }
 
                         }
+
                         if(!hasCommenterBefore){
                             Intent createIntent = new Intent(FoodViewActivity.this, SendReviewActivity.class);
+
+                            createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
                             createIntent.putExtra("Database Reference",foodKey);
+
                             startActivity(createIntent);
+
+                            finish();
                         }else {
-                            final AlertDialog dialog = new AlertDialog.Builder(FoodViewActivity.this)
+                            try
+                            {
+                                final AlertDialog dialog = new AlertDialog.Builder(FoodViewActivity.this)
                                     .setTitle("Sorry")
                                     .setMessage("You have have already commented on this food item")
                                     .setPositiveButton("Ok", null)
                                     .show();
+
 
                             Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
                             positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +148,10 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
                                     dialog.dismiss();
                                 }
                             });
+                            } catch (WindowManager.BadTokenException e)
+                            {
+                                return;
+                            }
                         }
                     }
 
@@ -199,12 +221,16 @@ public class FoodViewActivity extends AppCompatActivity implements ChildEventLis
         public View getView(int position, View convertView, ViewGroup parent) {
 
             convertView = getLayoutInflater().inflate(R.layout.rl_comments_item,null);
+            ImageView editButton;
             TextView commenterName, commenterDesc,commenterTime ,commenterTitle ;
 
             commenterDesc = convertView.findViewById(R.id.idCommenterDesc);
             commenterName = convertView.findViewById(R.id.idCommenterName);
             commenterTime = convertView.findViewById(R.id.idCommentTime);
+            editButton = convertView.findViewById(R.id.id_commentEdit);
 
+            if (!comments.get(position).getComentId().equals(FirebaseAuth.getInstance().getUid()))
+                editButton.setVisibility(View.INVISIBLE);
 
             commenterName.setText(comments.get(position).getCommenter());
             commenterDesc.setText(comments.get(position).getCommentTxt());

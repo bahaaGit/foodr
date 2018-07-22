@@ -10,8 +10,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
         android:padding="10dp"
         android:weightSum="10"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,12 +65,12 @@
             android:text="Tomato tomato atoamma "
             android:textSize="18sp"
             android:textStyle="bold|italic" />
+
         <ListView
             android:id="@+id/idFoodCommentsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/idFoodDesc"
-            ></ListView>
+            android:layout_below="@+id/idFoodDesc"></ListView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/idFoodAddReview"
@@ -81,8 +79,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_gravity="bottom|right"
-            android:layout_marginBottom="39dp"
-            android:layout_marginEnd="27dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="22dp"
+            android:src="@android:drawable/ic_menu_edit"
             app:backgroundTint="@color/colorPupple"
             app:fabSize="normal" />
 

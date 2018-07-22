@@ -39,6 +39,7 @@ public class SendReviewActivity extends AppCompatActivity {
     DatabaseReference usrRef;
     String usr;
     Food foodItem;
+    public static int lock = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,7 +157,13 @@ public class SendReviewActivity extends AppCompatActivity {
 
                     Intent createIntent = new Intent(SendReviewActivity.this, FoodViewActivity.class);
                     createIntent.putExtra("Database Reference",foodKey);
+                    createIntent.putExtra("fromSendRW", "yes");
+                    createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(createIntent);
+                    finish();
+
+
+
                 }
             }
         });

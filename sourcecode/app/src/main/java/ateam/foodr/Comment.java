@@ -6,11 +6,11 @@ public class Comment {
     private String commenter;
     private String commentTxt;
     private  String comentId;
-
     public Comment() {
 
     }
-    public Comment(String comentId, String commenter, String commentTxt,String time) {
+
+    public Comment(String comentId, String commenter, String commentTxt, String time) {
         this.time = time;
         this.commenter = commenter;
         this.commentTxt = commentTxt;
