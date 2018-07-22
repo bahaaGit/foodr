@@ -49,6 +49,15 @@ public class SendReviewActivity extends AppCompatActivity {
         //private FirebaseAuth mAuth;
         //FirebaseUser currentUser = mAuth.getCurrentUser();
 
+//        if (getIntent().getStringExtra("Position") != null)
+//        {
+//            position = Integer.parseInt(getIntent().getStringExtra("Position"));
+//        }
+//        else
+//            {
+//                position = -1;
+//            }
+
         foodKey  =  getIntent().getStringExtra("Database Reference");
         reference = foodKey;
         reviewRatingBar = (RatingBar)findViewById(R.id.idReviewRatingBar);
@@ -138,6 +147,7 @@ public class SendReviewActivity extends AppCompatActivity {
                 if (feedback.getText().toString().isEmpty()) {
                     Toast.makeText(SendReviewActivity.this, "Please fill in feedback text box", Toast.LENGTH_LONG).show();
                 } else {
+                    if (FoodViewActivity.position == -1){
 
                     rate = (ratingTotal + rating) / (numberOfRating + 1.0);
                     mDatabase.child("rate").setValue(rate);
@@ -148,15 +158,47 @@ public class SendReviewActivity extends AppCompatActivity {
 
                     // display time and date
                     String sTimeNow = String.format("%tc", date);
-                    Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow);
+                    Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow, rating);
 
                     foodItem.comments.add(commnt);
                     mDatabase.child("comments").setValue(foodItem.comments);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
 
-                    Intent createIntent = new Intent(SendReviewActivity.this, FoodViewActivity.class);
-                    createIntent.putExtra("Database Reference",foodKey);
+                    Intent createIntent = new Intent(SendReviewActivity.this, UserFoodMenu.class);
+                    createIntent.putExtra(ActivityParams.RESTAURANT_KEY, UserMapViewActivity.selectedRestaurant.getRestID());
+                    createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(createIntent);
+                    finish();
+                    } else
+                        {
+
+                            rate = (ratingTotal + rating - foodItem.comments.get(FoodViewActivity.position + 1).getRating())
+                                    / (numberOfRating + 0.0);
+                            mDatabase.child("rate").setValue(rate);
+                            mDatabase.child("totalOfRating").setValue(ratingTotal + rating);
+                            mDatabase.child("numOfRating").setValue(numberOfRating);
+                            reviewRatingBar.setRating((float) rate);
+                            Date date = new Date();
+
+                            // display time and date
+                            String sTimeNow = String.format("%tc", date);
+                            Comment commnt = new Comment(FirebaseAuth.getInstance().getUid(),usr,feedback.getText().toString(), sTimeNow, rating);
+
+                           // foodItem.comments.remove(position);
+                            foodItem.comments.set(FoodViewActivity.position + 1, commnt);
+                            mDatabase.child("comments").setValue(foodItem.comments);
+                            Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
+
+                            Intent createIntent = new Intent(SendReviewActivity.this, UserFoodMenu.class);
+                            //createIntent.putExtra("Database Reference",foodKey);
+                            createIntent.putExtra(ActivityParams.RESTAURANT_KEY, UserMapViewActivity.selectedRestaurant.getRestID());
+                            createIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(createIntent);
+                            finish();
+                        }
+
+
+
                 }
             }
         });

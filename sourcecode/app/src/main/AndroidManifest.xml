@@ -35,7 +35,8 @@
         <activity
             android:name=".RegistrationActivity"
             android:parentActivityName=".SimplerLoginActivity" />
-        <activity android:name=".UserFoodMenu" />
+        <activity android:name=".UserFoodMenu"
+            android:parentActivityName=".UserMapViewActivity"/>
         <activity android:name=".CreateRestaurantActivity" />
         <activity android:name=".SendReviewActivity" />
         <activity android:name=".ResturantsActivity" />

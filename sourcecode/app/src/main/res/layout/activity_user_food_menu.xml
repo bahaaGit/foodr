@@ -7,12 +7,29 @@
     android:fitsSystemWindows="true"
     tools:context=".UserFoodMenu">
 
-
-    <android.support.design.widget.AppBarLayout
+    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarofUserMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp"
         android:background="@color/colorWhitish"
+        android:fitsSystemWindows="true"
         android:theme="@style/AppTheme">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -26,33 +43,36 @@
 
             <ImageButton
                 android:id="@+id/idUserFoodMTopImg"
-                android:background="@color/colorWhitish"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:src="@drawable/topmenubar3"
+                android:background="@color/colorWhitish"
                 android:contentDescription="@string/app_name"
-                android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/topmenubar3"
+                app:layout_collapseMode="parallax" />
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="308dp">
+
+
+    </android.support.v7.widget.RecyclerView>
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="250dp">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-        </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        app:layout_anchor="@+id/appBarLayout2"
+        app:layout_anchorGravity="bottom|center">
 
     </android.support.v4.widget.NestedScrollView>
 

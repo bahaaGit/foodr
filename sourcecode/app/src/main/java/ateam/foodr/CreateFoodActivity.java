@@ -239,7 +239,7 @@ public class CreateFoodActivity extends AppCompatActivity
                 newFood = foodList.push();
 
         ArrayList<Comment> newComment = new ArrayList<>();
-        Comment initCommt = new Comment("","","","");
+        Comment initCommt = new Comment("","","","", 0.0);
                 newComment.add(initCommt);
         Food f = new Food
                 (

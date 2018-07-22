@@ -27,6 +27,7 @@ public class UserFoodMenu extends AppCompatActivity implements ChildEventListene
     private String restaurantKey;
     UserFoodMenuAdapter adapter;
     private ImageView restImage;
+    private android.support.v7.widget.Toolbar toolbar;
 
 
 
@@ -37,6 +38,12 @@ public class UserFoodMenu extends AppCompatActivity implements ChildEventListene
 
         // Populate the food list
         restaurantKey = getIntent().getStringExtra(ActivityParams.RESTAURANT_KEY);
+
+        toolbar =  findViewById(R.id.toolbarofUserMenu);
+        setSupportActionBar(toolbar);
+
+        //This puts the arrow to go back to the view that we set in the AndroidManifest.xml file specificly for this view
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set up the recycler view
         adapter = new UserFoodMenuAdapter(this,foodList);

@@ -6,15 +6,25 @@ public class Comment {
     private String commenter;
     private String commentTxt;
     private  String comentId;
-
+    private double rating;
     public Comment() {
 
     }
-    public Comment(String comentId, String commenter, String commentTxt,String time) {
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public Comment(String comentId, String commenter, String commentTxt, String time, double rating) {
         this.time = time;
         this.commenter = commenter;
         this.commentTxt = commentTxt;
         this.comentId = comentId;
+        this.rating = rating;
     }
 
     public String getComentId() {
