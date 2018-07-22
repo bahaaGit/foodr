@@ -58,10 +58,8 @@
 
         <activity
             android:name=".UserMapViewActivity"
-            android:label="@string/title_activity_user_map_view"></activity>
+            android:label="@string/title_activity_user_map_view" />
+        <activity android:name=".PermissionsNotGiven"></activity>
     </application>
-
-
-
 
 </manifest>

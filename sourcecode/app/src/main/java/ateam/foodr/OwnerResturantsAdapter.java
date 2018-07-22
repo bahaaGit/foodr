@@ -1,6 +1,9 @@
 package ateam.foodr;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -81,7 +84,7 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
     public class OwnerResturantsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
     View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener{
 
-        ImageView oResturantImg;
+        ImageView oResturantImg, editButton, RemoveButton;
         TextView oResturantName,oResturantLoc;
         public OwnerResturantsViewHolder(View itemView){
             super(itemView);
@@ -89,9 +92,28 @@ public class OwnerResturantsAdapter extends RecyclerView.Adapter<OwnerResturants
             oResturantImg = itemView.findViewById(R.id.idOResturantImg);
             oResturantName = itemView.findViewById(R.id.idOResturantName);
             oResturantLoc = itemView.findViewById(R.id.idOResturantLocation);
+            editButton = itemView.findViewById(R.id.editPen);
+            RemoveButton = itemView.findViewById(R.id.Remove_Btn);
 
             itemView.setOnClickListener(this);
-            itemView.setOnCreateContextMenuListener(this);
+            //itemView.setOnCreateContextMenuListener(this);
+            editButton.setOnClickListener((View v) ->  mListener.onEditClick(getAdapterPosition()));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+
+            builder.setTitle("Confirm");
+            builder.setMessage("Are you sure you want to Delete?");
+
+            builder.setPositiveButton("YES", (dialog, which) -> {
+                dialog.dismiss();
+                mListener.onDeleteClick(getAdapterPosition());
+            });
+
+            builder.setNegativeButton("NO", (dialog, which) -> dialog.dismiss());
+
+            AlertDialog alert = builder.create();
+
+            RemoveButton.setOnClickListener((View v) -> alert.show());
         }
 
         @Override

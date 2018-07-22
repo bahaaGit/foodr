@@ -136,8 +136,9 @@ public class SendReviewActivity extends AppCompatActivity {
                     mDatabase.child("comments").setValue(foodItem.comments);
                     Toast.makeText(SendReviewActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
 
+                    // They did not mark themselves as an admin, so go to the map view
                     //Programmatically press the back button
-                    //onBackPressed();
+                    onBackPressed();
                     //finish();
                 }
             }
